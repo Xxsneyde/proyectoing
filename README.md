@@ -9,14 +9,18 @@ celulares de la misma WiFi. El asistente de voz (Whisper + reglas + LLM pequeño
 Para mostrarlo a un cliente: el ERP completo con datos de demostración de 3 sedes y 90 días.
 La voz y el asistente no van (necesitan el modelo de IA del PC de la tienda).
 
-**Render, plan gratis:**
-1. Entrar a render.com con la cuenta de GitHub.
-2. *New* → *Blueprint* → elegir este repositorio → *Apply* (usa `render.yaml`).
-3. En unos minutos queda publicado en `https://ferreteria-erp.onrender.com` (o el nombre que asigne Render).
+**Vercel (plan Hobby, gratis):**
+1. vercel.com → *Add New…* → *Project* → importar el repositorio de GitHub.
+2. *Framework Preset*: **Other**. No hace falta cambiar nada más (`vercel.json` ya apunta a `api/index.py`).
+3. *Deploy*. Queda en `https://<nombre-del-proyecto>.vercel.app`.
 
-Tener en cuenta: el plan gratis se duerme tras 15 minutos sin visitas (la primera visita tarda
-cerca de un minuto en despertarlo) y cada arranque vuelve a los datos de demostración, así que lo que
-el cliente registre se borra. Usuarios de prueba: ver la tabla de abajo (contraseña `demo2026`).
+Cómo se comporta: Vercel no guarda archivos, así que cada instancia arma su base con los datos de
+demostración al arrancar (~2 s la primera visita). Lo que el cliente registre dura mientras la
+instancia siga activa y se pierde cuando Vercel la recicla (tras un rato sin visitas). La sesión va
+firmada en la cookie, así que no se cierra si cambia la instancia. Opcional: definir la variable de
+entorno `ERP_SECRETO` con un texto aleatorio para firmar las sesiones.
+
+**Render (alternativa, plan gratis):** *New* → *Blueprint* → elegir el repositorio (usa `render.yaml`).
 
 Con Docker en cualquier otro hosting: `docker build -t ferreteria . && docker run -p 8000:8000 ferreteria`.
 Sin Docker: `pip install -r requirements.txt && python servidor_erp.py --nube` (puerto de la variable `PORT`).

@@ -67,7 +67,14 @@ def cambiar_sede(sede_id: int = Form(...), ctx: Ctx = Depends(requiere())):
         auth.cambiar_sede(ctx.con, ctx.usuario, sede_id)
     nombre = valor(ctx.con, "SELECT nombre FROM sedes WHERE id = ?", sede_id)
     destino = ctx.request.headers.get("HX-Current-URL", "/")
-    return redirigir(ctx, destino.split("?")[0] if "/panel" not in destino else "/panel", f"Ahora trabajas en la sede {nombre}.")
+    resp = redirigir(ctx, destino.split("?")[0] if "/panel" not in destino else "/panel", f"Ahora trabajas en la sede {nombre}.")
+    if auth.SESIONES_FIRMADAS:  # la sede va dentro de la cookie firmada: se emite una nueva
+        expira = valor(ctx.con, "SELECT expira FROM sesiones WHERE token = ?", ctx.usuario["token"])
+        token = auth.token_firmado(ctx.usuario["id"], sede_id, expira)
+        with transaccion(ctx.con):
+            ctx.con.execute("UPDATE sesiones SET token = ? WHERE token = ?", (token, ctx.usuario["token"]))
+        resp.set_cookie("sesion", token, httponly=True, samesite="lax", secure=True, max_age=12 * 3600)
+    return resp
 
 
 def _datos_panel(ctx: Ctx) -> dict:

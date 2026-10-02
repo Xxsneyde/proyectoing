@@ -1,0 +1,13 @@
+.venv
+models
+tools
+datos
+certs
+bench
+tests
+web
+demo_voz.py
+servidor_movil.py
+Dockerfile
+render.yaml
+**/__pycache__

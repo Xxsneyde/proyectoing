@@ -2,6 +2,7 @@
 
 import hashlib
 import hmac
+import os
 import secrets
 import time
 from datetime import datetime, timedelta
@@ -38,6 +39,10 @@ PERMISOS = {
     "admin": {"admin"},
     "asistente": _TODOS,
 }
+
+# En la versión web (Vercel u otro hosting sin disco permanente) cada instancia arma su propia base.
+# La sesión va firmada en la cookie para que sobreviva aunque otra instancia atienda la siguiente visita.
+SESIONES_FIRMADAS = False
 
 INICIO_POR_ROL = {"admin": "/panel", "administrador": "/panel", "cajero": "/ventas/pos", "bodeguero": "/conteos"}
 DURACION_SESION = timedelta(hours=12)
@@ -80,17 +85,44 @@ def iniciar_sesion(con, usuario: str, clave: str) -> str:
         raise ErrorNegocio("Usuario o contraseña incorrectos.")
     _intentos.pop(usuario, None)
     sede = u["sede_id"] or uno(con, "SELECT id FROM sedes WHERE activa = 1 ORDER BY id")["id"]
-    token = secrets.token_urlsafe(32)
     expira = (datetime.now() + DURACION_SESION).strftime("%Y-%m-%d %H:%M:%S")
+    token = token_firmado(u["id"], sede, expira) if SESIONES_FIRMADAS else secrets.token_urlsafe(32)
     con.execute("INSERT INTO sesiones (token, usuario_id, sede_id, expira) VALUES (?, ?, ?, ?)",
                 (token, u["id"], sede, expira))
     con.execute("DELETE FROM sesiones WHERE expira < ?", (ahora(),))
     return token
 
 
+def _firma(cuerpo: str) -> str:
+    secreto = (os.environ.get("ERP_SECRETO") or "ferreteria-version-de-prueba").encode()
+    return hmac.new(secreto, cuerpo.encode(), hashlib.sha256).hexdigest()[:40]
+
+
+def token_firmado(usuario_id: int, sede_id: int, expira: str) -> str:
+    cuerpo = f"{usuario_id}.{sede_id}.{expira.replace(' ', 'T')}.{secrets.token_hex(8)}"
+    return f"{cuerpo}.{_firma(cuerpo)}"
+
+
+def _rehidratar(con, token: str):
+    """Si la sesión firmada no está en esta base (otra instancia), la vuelve a crear."""
+    partes = token.split(".")
+    if len(partes) != 5 or not hmac.compare_digest(partes[4], _firma(".".join(partes[:4]))):
+        return
+    try:
+        usuario_id, sede_id, expira = int(partes[0]), int(partes[1]), partes[2].replace("T", " ")
+    except ValueError:
+        return
+    if expira > ahora() and uno(con, "SELECT 1 FROM usuarios WHERE id = ? AND activo = 1", usuario_id) \
+            and uno(con, "SELECT 1 FROM sedes WHERE id = ? AND activa = 1", sede_id):
+        con.execute("INSERT OR IGNORE INTO sesiones (token, usuario_id, sede_id, expira) VALUES (?, ?, ?, ?)",
+                    (token, usuario_id, sede_id, expira))
+
+
 def usuario_de_sesion(con, token: str | None) -> dict | None:
     if not token:
         return None
+    if SESIONES_FIRMADAS and not uno(con, "SELECT 1 FROM sesiones WHERE token = ?", token):
+        _rehidratar(con, token)
     fila = uno(con, """
         SELECT u.id, u.nombre, u.usuario, u.rol, u.sede_id AS sede_fija, s.token, s.sede_id,
                se.nombre AS sede

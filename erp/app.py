@@ -21,6 +21,9 @@ def crear_app(motor_voz=None, nube: bool = False) -> FastAPI:
     app = FastAPI(title="ERP Ferretería", docs_url=None, redoc_url=None, openapi_url=None)
     app.state.motor_voz = motor_voz
     app.state.nube = nube  # versión de prueba en internet: sin IA
+    if nube:
+        from erp import auth
+        auth.SESIONES_FIRMADAS = True
     from erp.asistente.cerebro import Cerebro
     from erp.asistente.conversacion import Asistente
     llm = getattr(motor_voz, "llm", None)

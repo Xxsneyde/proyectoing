@@ -177,3 +177,30 @@ def test_asistente_sin_modelo_no_rompe_la_pagina(base):
     assert "modelo de lenguaje local" in c.get("/asistente").text
     r = c.post("/api/asistente/mensaje", json={"texto": "¿cuánto cemento hay?"}).json()
     assert "sin voz" in r["mensajes"][-1]["texto"]
+
+
+def test_en_la_web_la_sesion_sobrevive_a_una_instancia_nueva(tmp_path):
+    """En Vercel cada instancia arma su propia base: la cookie firmada debe seguir sirviendo."""
+    import erp.auth
+    from erp.app import crear_app
+    original = erp.db.RUTA_DB
+    try:
+        bases = []
+        for k in range(2):
+            ruta = tmp_path / f"instancia{k}.db"
+            con = erp.db.conectar(ruta)
+            demo.generar(con, dias=3, aviso=lambda *_: None)
+            con.close()
+            bases.append(ruta)
+        erp.db.RUTA_DB = bases[0]
+        primera = TestClient(crear_app(nube=True), base_url="https://testserver")
+        token = primera.post("/ingresar", data={"usuario": "dueno", "clave": demo.CLAVE_DEMO}, follow_redirects=False).cookies["sesion"]
+        erp.db.RUTA_DB = bases[1]
+        segunda = TestClient(crear_app(nube=True), base_url="https://testserver")
+        segunda.cookies.set("sesion", token)
+        assert segunda.get("/panel", follow_redirects=False).status_code == 200
+        segunda.cookies.set("sesion", token[:-3] + "000")
+        assert segunda.get("/panel", follow_redirects=False).status_code == 303
+    finally:
+        erp.db.RUTA_DB = original
+        erp.auth.SESIONES_FIRMADAS = False
