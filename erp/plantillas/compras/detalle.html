@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% from "macros.html" import estado %}
+{% block titulo %}Orden {{ c.numero }}{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <div><div class="migas"><a href="/compras">Compras</a></div>
+    <h1>Orden <span class="mono" style="font-size:22px">{{ c.numero }}</span></h1>
+    <p>{{ c.proveedor }} · sede {{ c.sede }} · creada por {{ c.usuario }} el {{ c.creada|fecha }}</p></div>
+  <div class="acciones">{{ estado(c.estado) }}{% if c.pagada %}<span class="insignia bien">Pagada {{ c.pagada|fecha_corta }}</span>{% endif %}</div>
+</div>
+{% if c.nota %}<div class="aviso-caja info">{{ icono('info') }}<span>{{ c.nota }}</span></div>{% endif %}
+
+<div class="rejilla rejilla-panel">
+  <section class="tarjeta">
+    <div class="tarjeta-titulo"><div><h2>{{ 'Recibir mercancía' if c.estado in ('borrador', 'enviada', 'parcial') and puede(usuario, 'compras.recibir') else 'Productos' }}</h2>
+      {% if c.estado in ('borrador', 'enviada', 'parcial') and puede(usuario, 'compras.recibir') %}<p>Escribe lo que realmente llegó. Lo recibido entra al inventario y actualiza el costo promedio.</p>{% endif %}</div></div>
+    <div class="tarjeta-cuerpo">
+    {% if c.estado in ('borrador', 'enviada', 'parcial') and puede(usuario, 'compras.recibir') %}
+    <form class="pila" hx-post="/compras/{{ c.id }}/recibir" hx-confirm="¿Registrar la mercancía recibida? Entra al inventario de {{ c.sede }}.">
+      <div class="tabla-contenedor"><table class="tabla">
+        <thead><tr><th>Producto</th><th class="num">Pedido</th><th class="num">Ya recibido</th><th class="num">Llega ahora</th><th class="num ocultar-movil">Costo unitario</th></tr></thead>
+        <tbody>{% for i in items %}<tr>
+          <td><b>{{ i.nombre }}</b><br><span class="mono tenue">{{ i.codigo }}</span></td>
+          <td class="num">{{ i.cantidad|cant }} <span class="tenue pequeno">{{ i.unidad }}</span></td>
+          <td class="num secundario">{{ i.recibido|cant }}</td>
+          <td class="num">{% if i.recibido < i.cantidad %}<input name="recibido_{{ i.id }}" inputmode="decimal" value="{{ (i.cantidad - i.recibido)|cant }}" style="width:90px;text-align:right" aria-label="Cantidad que llega de {{ i.nombre }}">{% else %}<span class="insignia bien">Completo</span>{% endif %}</td>
+          <td class="num ocultar-movil">{% if i.recibido < i.cantidad %}<input name="costo_{{ i.id }}" inputmode="numeric" value="{{ i.costo_unitario|round|int }}" style="width:110px;text-align:right" aria-label="Costo de {{ i.nombre }}">{% else %}{{ i.costo_unitario|pesos }}{% endif %}</td>
+        </tr>{% endfor %}</tbody>
+      </table></div>
+      <div class="fila" style="gap:12px">
+        <label class="campo" style="flex:1;min-width:200px">Número de factura del proveedor<input name="factura" value="{{ c.factura_proveedor }}" placeholder="Ej.: FV-12345"></label>
+        <button class="btn btn-primario" style="align-self:flex-end">{{ icono('check') }} Registrar recepción</button>
+      </div>
+    </form>
+    {% else %}
+      <div class="tabla-contenedor"><table class="tabla">
+        <thead><tr><th>Producto</th><th class="num">Pedido</th><th class="num">Recibido</th><th class="num">Costo</th><th class="num">Subtotal</th></tr></thead>
+        <tbody>{% for i in items %}<tr>
+          <td><a class="fila-enlace" href="/productos/{{ i.producto_id }}">{{ i.nombre }}</a></td>
+          <td class="num">{{ i.cantidad|cant }}</td>
+          <td class="num">{% if i.recibido < i.cantidad %}<span class="insignia aviso">{{ i.recibido|cant }}</span>{% else %}{{ i.recibido|cant }}{% endif %}</td>
+          <td class="num">{{ i.costo_unitario|pesos }}</td><td class="num">{{ (i.recibido * i.costo_unitario)|pesos }}</td>
+        </tr>{% endfor %}</tbody>
+      </table></div>
+    {% endif %}
+    </div>
+  </section>
+
+  <div class="pila">
+    <section class="tarjeta tarjeta-cuerpo pila">
+      <dl class="lista-def">
+        <dt>Proveedor</dt><dd>{{ c.proveedor }}<br><span class="tenue mono">{{ c.nit }}</span></dd>
+        {% if c.contacto %}<dt>Contacto</dt><dd>{{ c.contacto }}{% if c.telefono %}<br>{{ c.telefono }}{% endif %}</dd>{% endif %}
+        <dt>Valor pedido</dt><dd>{{ pedido|pesos }}</dd>
+        <dt>Valor recibido</dt><dd><b>{{ c.total|pesos if c.recibida else '—' }}</b></dd>
+        {% if c.factura_proveedor %}<dt>Factura</dt><dd>{{ c.factura_proveedor }}</dd>{% endif %}
+        {% if c.recibida %}<dt>Recibida</dt><dd>{{ c.recibida|fecha }}</dd>{% endif %}
+        {% if c.vence %}<dt>Pagar antes de</dt><dd>{{ c.vence|fecha_corta }}</dd>{% endif %}
+      </dl>
+    </section>
+    {% if puede(usuario, 'compras.gestionar') %}
+      {% if c.estado == 'borrador' %}
+      <form class="tarjeta tarjeta-cuerpo pila" hx-post="/compras/{{ c.id }}/enviar">
+        <div><h2>Enviar al proveedor</h2><p class="tenue pequeno">Márcala como enviada cuando hagas el pedido por teléfono, correo o WhatsApp.</p></div>
+        <div><button class="btn btn-primario">Marcar como enviada</button></div>
+      </form>
+      {% endif %}
+      {% if c.estado in ('parcial', 'recibida') and not c.pagada %}
+      <form class="tarjeta tarjeta-cuerpo pila" hx-post="/compras/{{ c.id }}/pagar" hx-confirm="¿Registrar el pago de {{ c.total|pesos }} a {{ c.proveedor }}?">
+        <div><h2>Pago al proveedor</h2><p class="tenue pequeno">{{ c.total|pesos }} · vence {{ c.vence|fecha_corta }}</p></div>
+        <div><button class="btn">Registrar pago</button></div>
+      </form>
+      {% endif %}
+      {% if c.estado in ('borrador', 'enviada') %}
+      <form class="tarjeta tarjeta-cuerpo pila" hx-post="/compras/{{ c.id }}/anular" hx-confirm="¿Anular la orden {{ c.numero }}?">
+        <h2>Anular orden</h2>
+        <label class="campo">Motivo<input name="motivo" required placeholder="Ej.: el proveedor no tiene existencias"></label>
+        <div><button class="btn btn-peligro">Anular</button></div>
+      </form>
+      {% endif %}
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

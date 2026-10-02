@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block titulo %}Nueva orden de compra{% endblock %}
+{% block scripts %}
+<script>
+function ordenCompra(sugerido) {
+  return {
+    sugerido, proveedor: "", items: [], nota: "", enviando: false,
+    cargarSugerido(id) {
+      this.proveedor = String(id);
+      this.items = (this.sugerido[id] || []).map((i) => ({ ...i }));
+    },
+    agregar(p) {
+      if (this.items.some((i) => i.producto_id === p.id)) return avisar("Ese producto ya está en la orden.", "error");
+      this.items.push({ producto_id: p.id, nombre: p.nombre, codigo: p.codigo, unidad: p.unidad, cantidad: 1,
+                        costo: Math.round(p.costo), existencia: p.existencia, minimo: null, maximo: null });
+    },
+    quitar(i) { this.items = this.items.filter((x) => x !== i); },
+    get total() { return this.items.reduce((s, i) => s + Math.round(Number(i.cantidad || 0) * Number(i.costo || 0)), 0); },
+    async guardar(enviar) {
+      if (!this.proveedor) return avisar("Elige el proveedor.", "error");
+      if (!this.items.length) return avisar("La orden no tiene productos.", "error");
+      this.enviando = true;
+      try {
+        const r = await api("/api/compras", { method: "POST", body: {
+          proveedor_id: Number(this.proveedor), nota: this.nota, enviar,
+          items: this.items.map((i) => ({ producto_id: i.producto_id, cantidad: Number(i.cantidad), costo: Number(i.costo) })) } });
+        window.location.href = `/compras/${r.id}`;
+      } catch (e) { avisar(e.message, "error"); this.enviando = false; }
+    },
+  };
+}
+</script>
+{% endblock %}
+{% block contenido %}
+<div class="pila" x-data="ordenCompra({{ sugerido_json }})">
+<div class="encabezado">
+  <div><div class="migas"><a href="/compras">Compras</a></div><h1>Nueva orden de compra</h1><p>Para la sede {{ usuario.sede }}</p></div>
+</div>
+
+{% if sugerido %}
+<section class="tarjeta">
+  <div class="tarjeta-titulo"><div><h2>Pedido sugerido</h2><p>Productos en o bajo el mínimo, con la cantidad para llegar al máximo. Elige un proveedor para cargarlo.</p></div></div>
+  <div class="tarjeta-cuerpo rejilla rejilla-4" style="padding-top:12px">
+    {% for g in sugerido if g.proveedor_id %}
+    <button type="button" class="tarjeta stat" style="text-align:left;cursor:pointer;font:inherit;color:inherit"
+            :style="proveedor === '{{ g.proveedor_id }}' && 'border-color:var(--tinta)'" @click="cargarSugerido({{ g.proveedor_id }})">
+      <span class="etiqueta">{{ g.proveedor }}</span>
+      <span class="valor" style="font-size:20px">{{ g.total|pesos }}</span>
+      <span class="delta">{{ g['items']|length }} productos por pedir</span>
+    </button>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section class="tarjeta tarjeta-cuerpo pila">
+  <div class="formulario">
+    <label class="campo">Proveedor
+      <select x-model="proveedor"><option value="">Elige el proveedor</option>
+        {% for p in proveedores %}<option value="{{ p.id }}">{{ p.nombre }} · {{ p.plazo_dias }} días</option>{% endfor %}</select></label>
+    <label class="campo ancho">Nota <small>opcional</small><input x-model="nota" placeholder="Ej.: entregar antes del jueves"></label>
+  </div>
+
+  <div class="fila" style="flex-wrap:nowrap;gap:8px" x-data="buscadorProductos((p) => agregar(p))" @click.outside="abierto = false">
+    <div class="buscador-global" style="max-width:none">
+      {{ icono('buscar') }}
+      <input type="search" placeholder="Agregar producto: nombre o código" autocomplete="off" x-model="q" @input.debounce.150ms="buscar()"
+             @keydown.enter.prevent="enter()" @keydown.down.prevent="mover(1)" @keydown.up.prevent="mover(-1)" aria-label="Agregar producto">
+      <div class="resultados" x-show="abierto" x-cloak>
+        <template x-for="(p, i) in resultados" :key="p.id">
+          <button type="button" @click="elegir(p)" :class="{ activo: i === activo }"><span x-text="p.nombre"></span>
+            <span class="tenue pequeno" x-text="'hay ' + cant(p.existencia) + ' · costo ' + pesos(p.costo)"></span></button>
+        </template>
+      </div>
+    </div>
+    <button type="button" class="btn" @click="camara()" aria-label="Escanear con la cámara">{{ icono('camara') }}</button>
+  </div>
+
+  <template x-if="!items.length"><div class="estado-vacio">{{ icono('compra') }}<b>Sin productos</b><span>Carga un pedido sugerido o agrega productos.</span></div></template>
+  <div class="tabla-contenedor" x-show="items.length">
+    <table class="tabla">
+      <thead><tr><th>Producto</th><th class="num ocultar-movil">Hay / mín / máx</th><th class="num">Cantidad</th><th class="num">Costo unitario</th><th class="num">Subtotal</th><th></th></tr></thead>
+      <tbody>
+        <template x-for="i in items" :key="i.producto_id">
+          <tr>
+            <td><b x-text="i.nombre"></b><br><span class="mono tenue" x-text="i.codigo"></span></td>
+            <td class="num ocultar-movil secundario" x-text="cant(i.existencia) + (i.minimo !== null ? ' / ' + cant(i.minimo) + ' / ' + cant(i.maximo) : '')"></td>
+            <td class="num"><input x-model="i.cantidad" inputmode="decimal" style="width:84px;text-align:right" aria-label="Cantidad"></td>
+            <td class="num"><input x-model="i.costo" inputmode="numeric" style="width:110px;text-align:right" aria-label="Costo unitario"></td>
+            <td class="num"><b x-text="pesos(Number(i.cantidad || 0) * Number(i.costo || 0))"></b></td>
+            <td><button type="button" class="btn btn-fantasma btn-chico" @click="quitar(i)" aria-label="Quitar">{{ icono('x') }}</button></td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+  </div>
+  <div class="fila separa">
+    <span><span class="tenue">Total de la orden</span> <b style="font-size:20px" x-text="pesos(total)"></b> <span class="tenue pequeno">costo sin IVA</span></span>
+    <div class="acciones">
+      <button type="button" class="btn" @click="guardar(false)" :disabled="enviando">Guardar borrador</button>
+      <button type="button" class="btn btn-primario" @click="guardar(true)" :disabled="enviando">Crear y marcar enviada</button>
+    </div>
+  </div>
+</section>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block titulo %}Productos{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <div><h1>Productos</h1><p>Catálogo de todas las sedes · existencias de la sede {{ usuario.sede }}</p></div>
+  <div class="acciones">
+    {% if puede(usuario, 'productos.editar') %}<a class="btn btn-primario" href="/productos/nuevo">{{ icono('mas') }} Nuevo producto</a>{% endif %}
+  </div>
+</div>
+<section class="tarjeta">
+  <form class="filtros tarjeta-cuerpo" style="padding-bottom:12px" hx-get="/productos" hx-target="#tabla" hx-push-url="true"
+        hx-trigger="input changed delay:200ms from:input, change from:select">
+    <input type="search" name="q" value="{{ q }}" placeholder="Nombre o código de barras" aria-label="Buscar" style="flex:1;min-width:220px">
+    <select name="categoria" aria-label="Categoría">
+      <option value="">Todas las categorías</option>
+      {% for c in categorias %}<option value="{{ c.id }}" {% if c.id == categoria %}selected{% endif %}>{{ c.nombre }}</option>{% endfor %}
+    </select>
+    <select name="filtro" aria-label="Estado">
+      <option value="">Activos</option><option value="inactivos" {% if filtro == 'inactivos' %}selected{% endif %}>Inactivos</option>
+    </select>
+  </form>
+  <div id="tabla">{% include "productos/_tabla.html" %}</div>
+</section>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% from "macros.html" import vacio, paginacion %}
+{% block titulo %}Auditoría{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <div><h1>Auditoría</h1><p>Quién hizo qué y cuándo · {{ total }} acciones{{ '' if usuario.todas_las_sedes else ' en la sede ' ~ usuario.sede }}</p></div>
+</div>
+<section class="tarjeta">
+  <form class="filtros tarjeta-cuerpo" style="padding-bottom:12px" method="get">
+    <select name="usuario" aria-label="Usuario"><option value="">Todos los usuarios</option>
+      {% for u in usuarios %}<option value="{{ u.id }}" {% if usuario_f == u.id|string %}selected{% endif %}>{{ u.nombre }}</option>{% endfor %}</select>
+    <select name="modulo" aria-label="Módulo"><option value="">Todos los módulos</option>
+      {% for k, n in modulos.items() %}<option value="{{ k }}" {% if modulo == k %}selected{% endif %}>{{ n }}</option>{% endfor %}</select>
+    <input type="date" name="desde" value="{{ desde }}" aria-label="Desde"><input type="date" name="hasta" value="{{ hasta }}" aria-label="Hasta">
+    <input type="search" name="q" value="{{ q }}" placeholder="Buscar en el detalle" aria-label="Buscar">
+    <button class="btn">Filtrar</button>
+  </form>
+  {% if filas %}
+  <div class="tabla-contenedor"><table class="tabla">
+    <thead><tr><th>Fecha</th><th>Usuario</th><th>Acción</th><th>Detalle</th><th class="ocultar-movil">Sede</th></tr></thead>
+    <tbody>{% for a in filas %}<tr>
+      <td class="secundario" style="white-space:nowrap">{{ a.fecha|fecha }}</td><td>{{ a.usuario or 'Sistema' }}</td>
+      <td><b>{{ a.accion_texto }}</b></td><td>{{ a.detalle }}</td><td class="ocultar-movil secundario">{{ a.sede or '—' }}</td>
+    </tr>{% endfor %}</tbody>
+  </table></div>
+  {{ paginacion(pagina, paginas, '/auditoria?usuario=' ~ usuario_f ~ '&modulo=' ~ modulo ~ '&desde=' ~ desde ~ '&hasta=' ~ hasta ~ '&q=' ~ (q|urlencode)) }}
+  {% else %}{{ vacio('No hay acciones con estos filtros', '', 'auditoria') }}{% endif %}
+</section>
+{% endblock %}

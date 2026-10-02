@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% set editando = producto and producto.id %}
+{% block titulo %}{{ 'Editar producto' if editando else 'Nuevo producto' }}{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <div>
+    <div class="migas"><a href="/productos">Productos</a>{% if editando %} / <a href="/productos/{{ producto.id }}">{{ producto.nombre }}</a>{% endif %}</div>
+    <h1>{{ 'Editar producto' if editando else 'Nuevo producto' }}</h1>
+  </div>
+</div>
+<form class="tarjeta tarjeta-cuerpo pila" hx-post="{{ '/productos/' ~ producto.id ~ '/editar' if editando else '/productos/nuevo' }}" x-data="{ precio: '{{ producto.precio if producto else '' }}', costo: '{{ (producto.costo|round|int) if producto and producto.costo else '' }}', iva: {{ producto.iva if producto else 19 }} }">
+  <div class="formulario">
+    <label class="campo">Código de barras
+      <div class="fila" style="gap:8px;flex-wrap:nowrap">
+        <input name="codigo" required value="{{ producto.codigo if producto else '' }}" inputmode="numeric" autocomplete="off" x-ref="codigo">
+        <button type="button" class="btn" @click="escanearCamara(c => $refs.codigo.value = c)" aria-label="Escanear">{{ icono('camara') }}</button>
+      </div>
+      <small>Escanea con el lector o la cámara, o escribe el código.</small>
+    </label>
+    <label class="campo ancho">Nombre
+      <input name="nombre" required value="{{ producto.nombre if producto else '' }}" placeholder="Ej.: Tubo PVC presión 1/2 pulgada">
+      <small>Como lo dicen los empleados: así también lo entiende el asistente de voz.</small>
+    </label>
+    <label class="campo">Categoría
+      <select name="categoria_id"><option value="">Sin categoría</option>
+        {% for c in categorias %}<option value="{{ c.id }}" {% if producto and producto.categoria_id == c.id %}selected{% endif %}>{{ c.nombre }}</option>{% endfor %}
+      </select>
+    </label>
+    <label class="campo">Marca<input name="marca" value="{{ producto.marca if producto else '' }}"></label>
+    <label class="campo">Unidad de venta
+      <select name="unidad">{% for u in unidades %}<option {% if producto and producto.unidad == u %}selected{% endif %}>{{ u }}</option>{% endfor %}</select>
+    </label>
+    <label class="campo">Proveedor habitual
+      <select name="proveedor_id"><option value="">—</option>
+        {% for pr in proveedores %}<option value="{{ pr.id }}" {% if producto and producto.proveedor_id == pr.id %}selected{% endif %}>{{ pr.nombre }}</option>{% endfor %}
+      </select>
+    </label>
+    <label class="campo">Precio de venta (con IVA)<input name="precio" required inputmode="numeric" x-model="precio"></label>
+    <label class="campo">IVA
+      <select name="iva" x-model.number="iva"><option value="19">19 %</option><option value="5">5 %</option><option value="0">Excluido (0 %)</option></select>
+    </label>
+    <label class="campo">Costo (sin IVA)<input name="costo" inputmode="numeric" x-model="costo">
+      <small x-show="precio && costo" x-text="'Margen: ' + (100 * (Number(precio) / (1 + iva / 100) - Number(costo)) / (Number(precio) / (1 + iva / 100))).toFixed(1).replace('.', ',') + ' %'"></small>
+    </label>
+    {% if not editando %}
+    <label class="campo">Mínimo en {{ usuario.sede }}<input name="minimo" inputmode="decimal" value="0"></label>
+    <label class="campo">Máximo en {{ usuario.sede }}<input name="maximo" inputmode="decimal" value="0"></label>
+    <label class="campo">Ubicación<input name="ubicacion" placeholder="pasillo 3 estante b"></label>
+    <label class="campo">Existencia inicial en {{ usuario.sede }}<input name="inicial" inputmode="decimal" value="0"></label>
+    {% else %}
+    <label class="casilla ancho"><input type="checkbox" name="activo" value="1" {% if producto.activo %}checked{% endif %}> Producto activo (se puede vender y contar)</label>
+    {% endif %}
+  </div>
+  <div class="acciones">
+    <button class="btn btn-primario">{{ 'Guardar cambios' if editando else 'Crear producto' }}</button>
+    <a class="btn" href="{{ '/productos/' ~ producto.id if editando else '/productos' }}">Cancelar</a>
+  </div>
+</form>
+{% endblock %}

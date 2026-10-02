@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block titulo %}Mi cuenta{% endblock %}
+{% block contenido %}
+<div class="encabezado"><div><h1>Mi cuenta</h1><p>{{ usuario.nombre }} · {{ usuario.rol_nombre }} · usuario <span class="mono">{{ usuario.usuario }}</span></p></div></div>
+<form class="tarjeta tarjeta-cuerpo pila" style="max-width:480px" hx-post="/cuenta/clave">
+  <h2>Cambiar contraseña</h2>
+  <label class="campo">Contraseña actual<input name="actual" type="password" required autocomplete="current-password"></label>
+  <label class="campo">Nueva contraseña<input name="nueva" type="password" required minlength="8" autocomplete="new-password"><small>Mínimo 8 caracteres</small></label>
+  <label class="campo">Repite la nueva contraseña<input name="confirmar" type="password" required minlength="8" autocomplete="new-password"></label>
+  <div><button class="btn btn-primario">Cambiar contraseña</button></div>
+</form>
+{% endblock %}

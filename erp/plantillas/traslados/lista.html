@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% from "macros.html" import vacio, estado %}
+{% macro tabla(filas, mostrar_quien=True) %}
+<div class="tabla-contenedor"><table class="tabla">
+  <thead><tr><th>Traslado</th><th>Ruta</th><th>Estado</th><th class="ocultar-movil">Fecha</th><th class="num">Valor al costo</th></tr></thead>
+  <tbody>{% for t in filas %}<tr>
+    <td><a class="fila-enlace mono" href="/traslados/{{ t.id }}">{{ t.numero }}</a><br><span class="tenue pequeno">{{ t.lineas }} productos</span></td>
+    <td>{{ t.origen }} → {{ t.destino }}{% if t.nota %}<br><span class="tenue pequeno">{{ t.nota }}</span>{% endif %}</td>
+    <td>{{ estado(t.estado) }}</td>
+    <td class="ocultar-movil secundario">{{ (t.recibido or t.enviado or t.creado)|fecha }}{% if mostrar_quien %}<br>{{ t.recibe or t.envia }}{% endif %}</td>
+    <td class="num">{{ t.valor|pesos }}</td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% endmacro %}
+{% block titulo %}Traslados{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <div><h1>Traslados entre sedes</h1><p>Sede {{ usuario.sede }} · la mercancía en camino no cuenta en ninguna sede hasta recibirla</p></div>
+  <div class="acciones"><a class="btn btn-primario" href="/traslados/nuevo">{{ icono('mas') }} Nuevo traslado</a></div>
+</div>
+{% if por_recibir %}
+<section class="tarjeta">
+  <div class="tarjeta-titulo"><div><h2>Llega a {{ usuario.sede }}</h2><p>Revísalo al llegar y registra lo que realmente vino</p></div></div>
+  <div class="tarjeta-cuerpo">{{ tabla(por_recibir) }}</div>
+</section>
+{% endif %}
+<section class="tarjeta">
+  <div class="tarjeta-titulo"><div><h2>En camino a otras sedes</h2></div></div>
+  <div class="tarjeta-cuerpo">{% if en_camino %}{{ tabla(en_camino) }}{% else %}{{ vacio('No hay envíos en camino', '', 'traslado') }}{% endif %}</div>
+</section>
+{% if borradores %}
+<section class="tarjeta">
+  <div class="tarjeta-titulo"><h2>Borradores</h2></div>
+  <div class="tarjeta-cuerpo">{{ tabla(borradores, False) }}</div>
+</section>
+{% endif %}
+<section class="tarjeta">
+  <div class="tarjeta-titulo"><h2>Recientes</h2></div>
+  <div class="tarjeta-cuerpo">{% if recientes %}{{ tabla(recientes) }}{% else %}{{ vacio('Sin traslados todavía') }}{% endif %}</div>
+</section>
+{% endblock %}

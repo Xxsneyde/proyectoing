@@ -1,0 +1,289 @@
+{% extends "base.html" %}
+{% block titulo %}Asistente{% endblock %}
+{% block scripts %}
+<script>
+function asistente(cfg) {
+  const leer = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : v === "1"; } catch { return d; } };
+  const guardar = (k, v) => { try { localStorage.setItem(k, v ? "1" : "0"); } catch {} };
+  return {
+    ...cfg.inicial, activo: cfg.activo, vozActiva: cfg.voz,
+    texto: "", pensando: false, segundos: 0, reloj: null,
+    hablar: leer("asistente.hablar", true), manos: leer("asistente.manos", false),
+    estado: "listo", nivel: 0, flujo: null, grabador: null, trozos: [], audioCtx: null, analizador: null,
+    vigilante: null, descartar: false, reproductor: null,
+    init() {
+      this.$watch("hablar", (v) => { guardar("asistente.hablar", v); if (!v) this.callar(); });
+      this.$watch("manos", (v) => { guardar("asistente.manos", v); if (!v && this.estado !== "escuchando") this.soltarMicrofono(); });
+      this.bajar();
+    },
+    bajar() { this.$nextTick(() => { const c = this.$refs.chat; if (c) c.scrollTop = c.scrollHeight; }); },
+    activa(m) { return m.id === this.pendiente_id; },
+    aplicar(r) {
+      this.mensajes = r.mensajes; this.notas = r.notas; this.pendiente_id = r.pendiente_id;
+      this.bajar();
+      if (r.audio && this.hablar) this.reproducir(r.audio); else this.despuesDeResponder();
+    },
+    esperar() { this.pensando = true; this.segundos = 0; clearInterval(this.reloj); this.reloj = setInterval(() => this.segundos++, 1000); this.bajar(); },
+    listo() { this.pensando = false; clearInterval(this.reloj); },
+    async enviar(fijo) {
+      const texto = (fijo ?? this.texto).trim();
+      if (!texto || this.pensando) return;
+      this.desbloquearAudio();
+      this.texto = "";
+      this.mensajes.push({ id: "tmp" + Date.now(), rol: "usuario", texto });
+      this.esperar();
+      try { this.aplicar(await api("/api/asistente/mensaje", { method: "POST", body: { texto, hablar: this.hablar } })); }
+      catch (e) { avisar(e.message, "error"); this.mensajes.pop(); this.texto = texto; }
+      finally { this.listo(); }
+    },
+    async boton(m, tipo, opcion = null) {
+      if (this.pensando) return;
+      this.desbloquearAudio();
+      const campos = {};
+      if (tipo === "confirmar" && m.propuesta?.campos) for (const c of m.propuesta.campos) campos[c.clave] = c.valor;
+      this.esperar();
+      try { this.aplicar(await api("/api/asistente/boton", { method: "POST", body: { tipo, mensaje_id: m.id, opcion, campos, hablar: this.hablar } })); }
+      catch (e) { avisar(e.message, "error"); }
+      finally { this.listo(); }
+    },
+    async nueva() {
+      this.callar();
+      try { this.aplicar(await api("/api/asistente/nueva", { method: "POST" })); } catch (e) { avisar(e.message, "error"); }
+    },
+    async borrarNota(n) {
+      if (!confirm("¿Borrar esta nota de la memoria?")) return;
+      try { const r = await api(`/api/asistente/notas/${n.id}/borrar`, { method: "POST" }); this.notas = r.notas; }
+      catch (e) { avisar(e.message, "error"); }
+    },
+    escanear(campo) { escanearCamara((codigo) => { campo.valor = codigo; }); },
+    etiqueta(estado) { return { confirmada: "Hecho", cancelada: "Cancelado", reemplazada: "Reemplazado", pendiente: "Sin confirmar" }[estado] || ""; },
+
+    // --- Voz -------------------------------------------------------------
+    desbloquearAudio() {
+      if (this.reproductor) return;
+      this.reproductor = new Audio("data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAIlYAAESsAAACABAAZGF0YQAAAAA=");
+      this.reproductor.play().catch(() => {});
+    },
+    reproducir(b64) {
+      if (!this.reproductor) return this.despuesDeResponder();
+      this.estado = "hablando";
+      this.reproductor.onended = () => { this.estado = "listo"; this.despuesDeResponder(); };
+      this.reproductor.src = "data:audio/wav;base64," + b64;
+      this.reproductor.play().catch(() => { this.estado = "listo"; this.despuesDeResponder(); });
+    },
+    callar() { if (this.estado === "hablando") { this.reproductor?.pause(); this.estado = "listo"; } },
+    despuesDeResponder() { if (this.manos && this.vozActiva && this.estado === "listo" && !this.pensando) setTimeout(() => this.escuchar(), 300); },
+    async microfono() {
+      if (this.estado === "escuchando") return this.parar();
+      if (this.estado === "hablando") this.callar();
+      this.desbloquearAudio();
+      await this.escuchar();
+    },
+    async escuchar() {
+      if (!this.vozActiva) return avisar("La voz no está activa en este servidor; escribe tu pregunta.", "error");
+      if (this.pensando || this.estado === "escuchando") return;
+      if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia) return avisar("El micrófono necesita abrir la página con https://", "error");
+      try {
+        if (!this.flujo) {
+          this.flujo = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true, channelCount: 1 } });
+          this.audioCtx = this.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+          this.analizador = this.audioCtx.createAnalyser();
+          this.analizador.fftSize = 1024;
+          this.audioCtx.createMediaStreamSource(this.flujo).connect(this.analizador);
+        }
+        await this.audioCtx.resume();
+      } catch { this.manos = false; return avisar("No hay permiso para usar el micrófono.", "error"); }
+      const tipo = ["audio/mp4", "audio/webm;codecs=opus", "audio/webm"].find((t) => window.MediaRecorder?.isTypeSupported?.(t)) || "";
+      this.grabador = new MediaRecorder(this.flujo, tipo ? { mimeType: tipo } : undefined);
+      this.trozos = []; this.descartar = false;
+      this.grabador.ondataavailable = (e) => e.data.size && this.trozos.push(e.data);
+      this.grabador.onstop = () => this.alTerminar();
+      this.grabador.start();
+      this.estado = "escuchando";
+      this.vigilar();
+    },
+    // Corta solo: cuando la persona deja de hablar 1,2 s. Si en 8 s no dice nada, no envía.
+    vigilar() {
+      const datos = new Float32Array(this.analizador.fftSize);
+      const inicio = performance.now();
+      let piso = 1, ultimaVoz = 0, hubo = false;
+      clearInterval(this.vigilante);
+      this.vigilante = setInterval(() => {
+        this.analizador.getFloatTimeDomainData(datos);
+        let suma = 0;
+        for (const x of datos) suma += x * x;
+        const rms = Math.sqrt(suma / datos.length), ahora = performance.now();
+        if (ahora - inicio < 400) piso = Math.min(piso, rms);
+        const umbral = Math.max(piso * 3, 0.012);
+        this.nivel = Math.min(1, rms * 14);
+        if (rms > umbral && ahora - inicio > 250) { ultimaVoz = ahora; hubo = true; }
+        if (hubo && ahora - ultimaVoz > 1200) this.parar();
+        else if (!hubo && ahora - inicio > 8000) { this.descartar = true; this.parar(); }
+        else if (ahora - inicio > 20000) this.parar();
+      }, 60);
+    },
+    parar() { clearInterval(this.vigilante); this.nivel = 0; if (this.grabador?.state === "recording") this.grabador.stop(); },
+    async alTerminar() {
+      this.estado = "listo";
+      if (!this.manos) this.soltarMicrofono();
+      if (this.descartar) {
+        if (this.manos) { this.manos = false; this.soltarMicrofono(); avisar("No escuché nada; apagué el modo manos libres.", "ok"); }
+        else avisar("No te escuché. Toca el micrófono y habla cerca del teléfono.", "error");
+        return;
+      }
+      const blob = new Blob(this.trozos, { type: this.grabador.mimeType || "audio/mp4" });
+      if (blob.size < 1500) return;
+      const fd = new FormData();
+      fd.append("audio", blob, blob.type.includes("mp4") ? "voz.m4a" : "voz.webm");
+      fd.append("hablar", this.hablar ? "1" : "0");
+      this.mensajes.push({ id: "tmp" + Date.now(), rol: "usuario", texto: "…", temporal: true });
+      this.esperar();
+      try { this.aplicar(await api("/api/asistente/voz", { method: "POST", body: fd })); }
+      catch (e) { avisar(e.message, "error"); this.mensajes = this.mensajes.filter((m) => !m.temporal); }
+      finally { this.listo(); }
+    },
+    soltarMicrofono() { this.flujo?.getTracks().forEach((t) => t.stop()); this.flujo = null; },
+  };
+}
+</script>
+{% endblock %}
+{% block contenido %}
+<div class="pantalla-asistente" x-data="asistente({ inicial: {{ inicial }}, activo: {{ 'true' if activo else 'false' }}, voz: {{ 'true' if voz else 'false' }} })">
+  <div class="asistente-cabecera">
+    <div>
+      <h1>Asistente</h1>
+      <p>{{ 'Pregunta o pide cambios con la voz. Todo corre en este computador: nada sale a internet.' if activo else 'Ejemplos de lo que se le pide en la tienda, por voz o por escrito.' }}</p>
+    </div>
+    {% if activo %}
+    <div class="acciones">
+      <label class="interruptor" title="Leer las respuestas en voz alta"><input type="checkbox" x-model="hablar" :disabled="!vozActiva"><span></span>{{ icono('parlante') }} Voz</label>
+      <label class="interruptor" title="Después de responder, vuelve a escuchar solo"><input type="checkbox" x-model="manos" :disabled="!vozActiva"><span></span>Manos libres</label>
+      <button type="button" class="btn btn-chico" @click="nueva()" title="Empezar de cero: olvida de qué venían hablando"><span class="ocultar-movil">Nueva conversación</span><span class="solo-movil">Nueva</span></button>
+    </div>
+    {% endif %}
+  </div>
+  {% if not activo and nube %}
+  <div class="aviso-caja info">{{ icono('info') }}<span>Esta es la versión de prueba en internet. El asistente funciona con el modelo de inteligencia artificial instalado en el computador de la tienda (sin internet ni costo por uso), por eso aquí está apagado.</span></div>
+  {% elif not activo %}
+  <div class="aviso-caja aviso">{{ icono('alerta') }}<span>El asistente necesita el modelo de lenguaje local. Inicia el servidor con <span class="mono">servidor_erp.py</span> (sin <span class="mono">--sin-voz</span>).</span></div>
+  {% endif %}
+
+  <div class="asistente-cuerpo">
+    <section class="chat" x-ref="chat" aria-live="polite">
+      <template x-if="!mensajes.length">
+        <div class="bienvenida">
+          <span class="bienvenida-icono">{{ icono('asistente') }}</span>
+          <b>Hola, {{ usuario.nombre.split(' ')[0] }}. ¿En qué te ayudo?</b>
+          <span class="tenue">Puedes preguntarme cosas como estas. Antes de cambiar cualquier dato te pido confirmación.</span>
+          <div class="chips">
+            {% for e in ayuda %}<button type="button" class="chip" {% if not activo %}disabled{% endif %} @click="enviar({{ e.strip('«»')|tojson|forceescape }})">{{ e.strip('«»') }}</button>{% endfor %}
+          </div>
+        </div>
+      </template>
+      <template x-for="m in mensajes" :key="m.id">
+        <div class="burbuja" :class="[m.rol, m.tipo || '']">
+          <div class="burbuja-texto" x-text="m.texto"></div>
+
+          <template x-if="m.filas && m.filas.length">
+            <div class="filas">
+              <template x-for="f in m.filas">
+                <a class="fila-chat" :href="f.url || null" :class="f.estado ? 'punto-' + f.estado : ''">
+                  <span><span x-text="f.titulo"></span><small x-show="f.detalle" x-text="f.detalle"></small></span>
+                  <b class="num" x-text="f.valor"></b>
+                </a>
+              </template>
+            </div>
+          </template>
+
+          <template x-if="m.opciones && m.opciones.length">
+            <div class="chips">
+              <template x-for="o in m.opciones">
+                <button type="button" class="chip" :disabled="!activa(m) || pensando" @click="boton(m, 'elegir', o.n)">
+                  <b x-text="o.n"></b><span x-text="o.texto"></span>
+                </button>
+              </template>
+            </div>
+          </template>
+
+          <template x-if="m.propuesta">
+            <div class="propuesta" :class="'estado-' + m.propuesta.estado">
+              <div class="fila separa" style="gap:8px">
+                <b x-text="m.propuesta.titulo"></b>
+                <span class="insignia" :class="{ bien: m.propuesta.estado === 'confirmada' }" x-show="!activa(m)" x-text="etiqueta(m.propuesta.estado)"></span>
+              </div>
+              <template x-for="l in m.propuesta.lineas || []"><div class="secundario" x-text="l"></div></template>
+              <template x-for="av in m.propuesta.avisos || []">
+                <div class="aviso-caja aviso">{{ icono('alerta') }}<span x-text="av"></span></div>
+              </template>
+              <template x-if="m.propuesta.campos && activa(m)">
+                <div class="campos-propuesta">
+                  <template x-for="c in m.propuesta.campos" :key="c.clave">
+                    <label class="campo">
+                      <span x-text="c.etiqueta"></span>
+                      <template x-if="c.tipo === 'opciones'">
+                        <select x-model="c.valor">
+                          <template x-for="o in c.opciones"><option :value="o.valor ?? ''" x-text="o.texto" :selected="String(o.valor ?? '') === String(c.valor ?? '')"></option></template>
+                        </select>
+                      </template>
+                      <template x-if="c.tipo === 'codigo'">
+                        <span class="fila" style="flex-wrap:nowrap;gap:6px">
+                          <input x-model="c.valor" inputmode="numeric" :placeholder="c.ayuda">
+                          <button type="button" class="btn btn-chico" @click="escanear(c)" aria-label="Escanear el código">{{ icono('camara') }}</button>
+                        </span>
+                      </template>
+                      <template x-if="c.tipo !== 'opciones' && c.tipo !== 'codigo'">
+                        <input x-model="c.valor" :inputmode="c.tipo === 'texto' ? 'text' : 'decimal'">
+                      </template>
+                    </label>
+                  </template>
+                </div>
+              </template>
+              <div class="acciones" x-show="activa(m)">
+                <button type="button" class="btn btn-primario" @click="boton(m, 'confirmar')" :disabled="pensando">{{ icono('check') }} Confirmar</button>
+                <button type="button" class="btn" @click="boton(m, 'cancelar')" :disabled="pensando">Cancelar</button>
+              </div>
+            </div>
+          </template>
+
+          <template x-if="m.enlaces && m.enlaces.length">
+            <div class="enlaces-chat">
+              <template x-for="e in m.enlaces"><a class="btn btn-chico" :href="e.url" x-text="e.texto"></a></template>
+            </div>
+          </template>
+        </div>
+      </template>
+      <div class="burbuja asistente pensando" x-show="pensando" x-cloak>
+        <span class="puntos"><i></i><i></i><i></i></span>
+        <span class="tenue pequeno" x-text="segundos > 1 ? 'Pensando… ' + segundos + ' s' : 'Pensando…'"></span>
+      </div>
+    </section>
+
+    <aside class="memoria">
+      <details x-init="$el.open = window.innerWidth > 900">
+        <summary><b>{{ icono('nota') }} Memoria de la ferretería</b> <span class="tenue pequeno" x-text="notas.length ? '(' + notas.length + ')' : ''"></span></summary>
+        <p class="tenue pequeno">Dile «recuerda que…» y lo tendré en cuenta para todos.</p>
+        <template x-if="!notas.length"><p class="tenue pequeno">Todavía no hay nada anotado.</p></template>
+        <ul>
+          <template x-for="n in notas" :key="n.id">
+            <li>
+              <span x-text="n.texto"></span>
+              <small class="tenue"><span x-text="n.autor"></span>
+                {% if puede(usuario, 'panel') %}<button type="button" class="btn-fantasma enlace-chico" @click="borrarNota(n)">borrar</button>
+                {% else %}<button type="button" class="btn-fantasma enlace-chico" x-show="n.mia" @click="borrarNota(n)">borrar</button>{% endif %}
+              </small>
+            </li>
+          </template>
+        </ul>
+      </details>
+    </aside>
+  </div>
+
+  <form class="compositor" @submit.prevent="enviar()">
+    <button type="button" class="mic-redondo" :class="estado" @click="microfono()" :disabled="(pensando && estado !== 'escuchando') || !activo"
+            :style="'--nivel:' + nivel" :aria-label="estado === 'escuchando' ? 'Terminar de hablar' : 'Hablar'">{{ icono('mic') }}</button>
+    <input x-model="texto" placeholder="Escribe o toca el micrófono" aria-label="Pregunta al asistente" :disabled="!activo" enterkeyhint="send" autocomplete="off">
+    <button class="btn btn-primario enviar" :disabled="!texto.trim() || pensando || !activo" aria-label="Enviar">{{ icono('enviar') }}</button>
+  </form>
+  <p class="estado-voz tenue pequeno" x-text="{ escuchando: 'Te escucho… haz una pausa al terminar o toca el micrófono.', hablando: 'Respondiendo… toca el micrófono para interrumpir.', listo: manos ? 'Manos libres: después de cada respuesta te vuelvo a escuchar.' : '' }[estado]"></p>
+</div>
+{% endblock %}

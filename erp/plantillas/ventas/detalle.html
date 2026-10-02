@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% from "macros.html" import estado %}
+{% block titulo %}Venta {{ v.numero }}{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <div>
+    <div class="migas"><a href="/ventas">Ventas</a></div>
+    <h1>Venta <span class="mono" style="font-size:22px">{{ v.numero }}</span></h1>
+    <p>{{ v.fecha|fecha }} · {{ v.sede }} · vendió {{ v.vendedor }}</p>
+  </div>
+  <div class="acciones">{{ estado(v.estado) }}</div>
+</div>
+{% if v.estado == 'anulada' %}
+<div class="aviso-caja critico">{{ icono('critico') }}<span>Anulada por {{ v.anulo or '—' }}. Motivo: {{ v.anulada_motivo }}</span></div>
+{% endif %}
+
+<div class="rejilla rejilla-panel">
+  <section class="tarjeta">
+    <div class="tarjeta-titulo"><h2>Productos</h2></div>
+    <div class="tarjeta-cuerpo tabla-contenedor">
+      <table class="tabla">
+        <thead><tr><th>Producto</th><th class="num">Cantidad</th><th class="num">Precio</th><th class="num">Descuento</th><th class="num">Total</th></tr></thead>
+        <tbody>
+        {% for i in items %}
+          <tr><td><a class="fila-enlace" href="/productos/{{ i.producto_id }}">{{ i.nombre }}</a><br><span class="mono tenue">{{ i.codigo }}</span>
+            {% if i.devuelto %}<span class="insignia aviso">devuelto {{ i.devuelto|cant }}</span>{% endif %}</td>
+            <td class="num">{{ i.cantidad|cant }} <span class="tenue pequeno">{{ i.unidad }}</span></td>
+            <td class="num">{{ i.precio_unitario|pesos }}</td><td class="num secundario">{{ i.descuento|pesos if i.descuento else '—' }}</td>
+            <td class="num"><b>{{ i.total|pesos }}</b></td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <section class="tarjeta tarjeta-cuerpo pila">
+    <dl class="lista-def">
+      <dt>Cliente</dt><dd>{{ v.cliente or 'Consumidor final' }}{% if v.documento %}<br><span class="tenue mono">{{ v.documento }}</span>{% endif %}</dd>
+      <dt>Medio de pago</dt><dd>{{ v.medio_pago|medio }}</dd>
+      <dt>Base (sin IVA)</dt><dd>{{ v.subtotal|pesos }}</dd>
+      <dt>IVA</dt><dd>{{ v.iva|pesos }}</dd>
+      {% if v.descuento %}<dt>Descuentos</dt><dd>{{ v.descuento|pesos }}</dd>{% endif %}
+      <dt>Total</dt><dd style="font-size:20px;font-weight:700">{{ v.total|pesos }}</dd>
+      {% if v.medio_pago == 'efectivo' and v.recibido %}<dt>Recibido / cambio</dt><dd>{{ v.recibido|pesos }} / {{ (v.recibido - v.total)|pesos }}</dd>{% endif %}
+      {% if v.medio_pago == 'credito' %}<dt>Saldo pendiente</dt><dd>{{ saldo|pesos }}{% if v.vence %} · vence {{ v.vence|fecha_corta }}{% endif %}</dd>{% endif %}
+      {% if usuario.rol != 'cajero' %}<dt>Utilidad bruta</dt><dd>{{ (v.subtotal - v.costo_total)|pesos }}</dd>{% endif %}
+      <dt>Factura electrónica</dt><dd><span class="insignia aviso">Pendiente</span><br><span class="tenue pequeno">Requiere conectar un proveedor tecnológico autorizado por la DIAN.</span></dd>
+    </dl>
+  </section>
+</div>
+
+{% if abonos or devoluciones %}
+<section class="tarjeta">
+  <div class="tarjeta-titulo"><h2>Abonos y devoluciones</h2></div>
+  <div class="tarjeta-cuerpo"><table class="tabla"><tbody>
+    {% for a in abonos %}<tr><td>Abono ({{ a.medio }})</td><td class="secundario">{{ a.fecha|fecha }} · {{ a.usuario }}</td><td class="num"><b>{{ a.valor|pesos }}</b></td></tr>{% endfor %}
+    {% for d in devoluciones %}<tr><td>Devolución: {{ d.motivo }}</td><td class="secundario">{{ d.fecha|fecha }} · {{ d.usuario }}</td><td class="num"><b>{{ d.total|pesos }}</b></td></tr>{% endfor %}
+  </tbody></table></div>
+</section>
+{% endif %}
+
+{% if v.estado != 'anulada' and puede(usuario, 'ventas.anular') %}
+<div class="rejilla rejilla-2">
+  <form class="tarjeta tarjeta-cuerpo pila" hx-post="/ventas/{{ v.id }}/devolver" hx-confirm="¿Registrar la devolución? La mercancía vuelve al inventario.">
+    <div><h2>Devolución parcial</h2><p class="tenue pequeno">La mercancía vuelve al inventario{{ ' y el dinero sale de tu caja' if v.medio_pago == 'efectivo' else (' y baja la deuda del cliente' if v.medio_pago == 'credito' else '; el reembolso se hace por el mismo medio') }}.</p></div>
+    <table class="tabla"><tbody>
+      {% for i in items if i.cantidad > i.devuelto %}
+      <tr><td>{{ i.nombre }}</td><td class="num tenue">máx. {{ (i.cantidad - i.devuelto)|cant }}</td>
+        <td style="width:110px"><input name="item_{{ i.id }}" inputmode="decimal" placeholder="0" aria-label="Cantidad a devolver de {{ i.nombre }}"></td></tr>
+      {% endfor %}
+    </tbody></table>
+    <label class="campo">Motivo<input name="motivo" required placeholder="Ej.: no le sirvió la medida"></label>
+    <div><button class="btn">Registrar devolución</button></div>
+  </form>
+  <form class="tarjeta tarjeta-cuerpo pila" hx-post="/ventas/{{ v.id }}/anular" hx-confirm="¿Anular la venta {{ v.numero }}? Esto no se puede deshacer.">
+    <div><h2>Anular venta</h2><p class="tenue pequeno">Para errores al registrar. Todo vuelve al inventario y queda registrado quién la anuló.</p></div>
+    <label class="campo">Motivo<input name="motivo" required placeholder="Ej.: se registró dos veces"></label>
+    <div><button class="btn btn-peligro">Anular venta</button></div>
+  </form>
+</div>
+{% endif %}
+{% endblock %}

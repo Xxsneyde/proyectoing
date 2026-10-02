@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Ingresar · {{ empresa }}</title>
+  <link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+<main class="ingreso">
+  <div class="tarjeta">
+    <form class="tarjeta-cuerpo pila" method="post" action="/ingresar">
+      <div class="marca">
+        <span class="marca-logo">{{ icono('llave') }}</span>
+        <div><b>{{ empresa }}</b><span>Sistema de gestión</span></div>
+      </div>
+      <h1>Ingresar</h1>
+      {% if error %}<div class="aviso-caja critico" role="alert">{{ icono('critico') }}<span>{{ error }}</span></div>{% endif %}
+      <input type="hidden" name="siguiente" value="{{ siguiente }}">
+      <label class="campo">Usuario
+        <input name="usuario" autocomplete="username" autocapitalize="none" required autofocus value="{{ usuario_previo }}">
+      </label>
+      <label class="campo">Contraseña
+        <input name="clave" type="password" autocomplete="current-password" required>
+      </label>
+      <button class="btn btn-primario btn-grande">Ingresar</button>
+      {% if demo %}
+      <div class="aviso-caja info">{{ icono('info') }}
+        <span>Datos de demostración. Contraseña de todos: <b class="mono">{{ clave_demo }}</b><br>
+        Usuarios: <span class="mono">dueno</span>, <span class="mono">admin.norte</span>, <span class="mono">caja.centro</span>,
+        <span class="mono">bodega.centro</span>.</span>
+      </div>
+      {% endif %}
+    </form>
+  </div>
+</main>
+</body>
+</html>

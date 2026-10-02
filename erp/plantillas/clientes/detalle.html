@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% from "macros.html" import vacio, estado %}
+{% block titulo %}{{ c.nombre }}{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <div><div class="migas"><a href="/clientes">Clientes</a></div><h1>{{ c.nombre }}</h1>
+    <p><span class="mono">{{ c.documento }}</span>{% if c.telefono %} · {{ c.telefono }}{% endif %}{% if c.email %} · {{ c.email }}{% endif %}{% if not c.activo %} · <span class="insignia critico">Inactivo</span>{% endif %}</p></div>
+  <div class="acciones"><a class="btn" href="/clientes/{{ c.id }}/editar">{{ icono('editar') }} Editar</a></div>
+</div>
+<div class="rejilla rejilla-4">
+  <div class="tarjeta stat"><span class="etiqueta">Debe</span><span class="valor">{{ saldo|pesos }}</span><span class="delta">{{ cuentas|length }} facturas pendientes</span></div>
+  <div class="tarjeta stat"><span class="etiqueta">Vencido</span><span class="valor" style="{{ 'color:var(--critico-texto)' if vencido }}">{{ vencido|pesos }}</span></div>
+  <div class="tarjeta stat"><span class="etiqueta">Cupo disponible</span><span class="valor">{{ disponible|pesos if c.cupo_credito else '—' }}</span>
+    <span class="delta">{{ ('de ' ~ (c.cupo_credito|pesos) ~ ' a ' ~ c.plazo_dias ~ ' días') if c.cupo_credito else 'solo compra de contado' }}</span></div>
+  <div class="tarjeta stat"><span class="etiqueta">Compras recientes</span><span class="valor">{{ total_comprado|pesos }}</span><span class="delta">últimas {{ compras|length }} facturas</span></div>
+</div>
+
+<section class="tarjeta">
+  <div class="tarjeta-titulo"><div><h2>Facturas por cobrar</h2><p>El abono en efectivo entra a tu caja abierta</p></div></div>
+  <div class="tarjeta-cuerpo">
+  {% if cuentas %}
+  <div class="tabla-contenedor"><table class="tabla">
+    <thead><tr><th>Factura</th><th>Vence</th><th class="num">Saldo</th><th>Abonar</th></tr></thead>
+    <tbody>{% for f in cuentas %}<tr>
+      <td><a class="mono fila-enlace" href="/ventas/{{ f.id }}">{{ f.numero }}</a><br><span class="tenue pequeno">{{ f.fecha|fecha_corta }} · {{ f.sede }} · total {{ f.total|pesos }}</span></td>
+      <td>{{ f.vence|fecha_corta }}<br>{% if f.dias_vencido > 0 %}<span class="insignia {{ 'critico' if f.dias_vencido > 60 else 'serio' }}">{{ f.dias_vencido }} días vencida</span>{% else %}<span class="insignia bien">Al día</span>{% endif %}</td>
+      <td class="num"><b>{{ f.saldo|pesos }}</b></td>
+      <td><form class="fila" style="gap:6px;flex-wrap:nowrap" hx-post="/cartera/{{ f.id }}/abono">
+        <input name="valor" inputmode="numeric" value="{{ f.saldo }}" aria-label="Valor del abono" style="width:120px">
+        <select name="medio" aria-label="Medio" style="width:auto"><option value="efectivo">Efectivo</option><option value="transferencia">Transferencia</option><option value="tarjeta">Tarjeta</option></select>
+        <button class="btn btn-chico btn-primario">Abonar</button></form></td>
+    </tr>{% endfor %}</tbody>
+  </table></div>
+  {% else %}{{ vacio('Está al día', 'No tiene facturas pendientes.', 'check') }}{% endif %}
+  </div>
+</section>
+
+<div class="rejilla rejilla-2">
+  <section class="tarjeta">
+    <div class="tarjeta-titulo"><h2>Últimas compras</h2></div>
+    <div class="tarjeta-cuerpo">{% if compras %}<table class="tabla"><tbody>
+      {% for v in compras %}<tr><td><a class="mono" href="/ventas/{{ v.id }}">{{ v.numero }}</a><br><span class="tenue pequeno">{{ v.fecha|fecha_corta }} · {{ v.sede }}</span></td>
+        <td>{{ v.medio_pago|medio }}</td><td>{{ estado(v.estado) }}</td><td class="num">{{ v.total|pesos }}</td></tr>{% endfor %}
+    </tbody></table>{% else %}{{ vacio('Sin compras registradas') }}{% endif %}</div>
+  </section>
+  <section class="tarjeta">
+    <div class="tarjeta-titulo"><h2>Abonos recibidos</h2></div>
+    <div class="tarjeta-cuerpo">{% if abonos %}<table class="tabla"><tbody>
+      {% for a in abonos %}<tr><td>{{ a.fecha|fecha_corta }}<br><span class="tenue pequeno">{{ a.numero }} · {{ a.medio }} · {{ a.usuario }}</span></td><td class="num"><b>{{ a.valor|pesos }}</b></td></tr>{% endfor %}
+    </tbody></table>{% else %}{{ vacio('Sin abonos') }}{% endif %}</div>
+  </section>
+</div>
+{% endblock %}

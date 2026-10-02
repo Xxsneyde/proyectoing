@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% block titulo %}Vender{% endblock %}
+{% block scripts %}
+<script>
+function pos(cajaAbierta) {
+  return {
+    cajaAbierta, items: [], medio: "efectivo", recibido: "", cliente: null, buscarCliente: "", clientes: [],
+    enviando: false, ultima: null,
+    agregar(p) {
+      const existente = this.items.find((i) => i.producto_id === p.id);
+      if (existente) existente.cantidad = +(Number(existente.cantidad) + 1).toFixed(3);
+      else this.items.unshift({ producto_id: p.id, nombre: p.nombre, codigo: p.codigo, unidad: p.unidad, precio: p.precio,
+                                iva: p.iva, existencia: p.existencia, cantidad: 1, descuento: 0 });
+      this.$nextTick(() => document.querySelector("#buscar-pos")?.focus());
+    },
+    cambiar(i, paso) { i.cantidad = Math.max(0, +(Number(i.cantidad) + paso).toFixed(3)); if (!i.cantidad) this.quitar(i); },
+    quitar(i) { this.items = this.items.filter((x) => x !== i); },
+    linea(i) { return Math.round(i.precio * Number(i.cantidad || 0)) - Number(i.descuento || 0); },
+    get total() { return this.items.reduce((s, i) => s + this.linea(i), 0); },
+    get base() { return this.items.reduce((s, i) => s + Math.round(this.linea(i) / (1 + i.iva / 100)), 0); },
+    get cambio() { return Math.max(0, Number(String(this.recibido).replace(/\D/g, "")) - this.total); },
+    get faltaEfectivo() { return this.medio === "efectivo" && this.recibido !== "" && Number(String(this.recibido).replace(/\D/g, "")) < this.total; },
+    async buscarClientes() {
+      if (this.buscarCliente.trim().length < 2) { this.clientes = []; return; }
+      try { this.clientes = (await api(`/api/clientes?q=${encodeURIComponent(this.buscarCliente)}`)).clientes; }
+      catch (e) { avisar(e.message, "error"); }
+    },
+    elegirCliente(c) { this.cliente = c; this.clientes = []; this.buscarCliente = ""; },
+    async cobrar() {
+      if (!this.items.length || this.enviando) return;
+      if (this.medio === "credito" && !this.cliente) return avisar("Para vender a crédito elige el cliente.", "error");
+      this.enviando = true;
+      try {
+        const r = await api("/api/ventas", { method: "POST", body: {
+          items: this.items.map((i) => ({ producto_id: i.producto_id, cantidad: Number(i.cantidad), descuento: Number(i.descuento || 0) })),
+          medio_pago: this.medio, cliente_id: this.cliente?.id, recibido: Number(String(this.recibido).replace(/\D/g, "")) || 0,
+        }});
+        this.ultima = { ...r.venta, medio: this.medio };
+        avisar(`Venta ${r.venta.numero} por ${pesos(r.venta.total)}` + (r.venta.cambio ? ` · cambio ${pesos(r.venta.cambio)}` : ""));
+        this.items = []; this.recibido = ""; this.cliente = null; this.medio = "efectivo";
+        document.querySelector("#buscar-pos")?.focus();
+      } catch (e) { avisar(e.message, "error"); }
+      finally { this.enviando = false; }
+    },
+  };
+}
+</script>
+{% endblock %}
+{% block contenido %}
+<div x-data="pos({{ 'true' if caja else 'false' }})" @keydown.ctrl.enter.window="cobrar()" class="pila">
+<div class="encabezado">
+  <div><h1>Vender</h1><p>Sede {{ usuario.sede }} · {{ 'Caja abierta desde ' ~ (caja.abierta|fecha) if caja else 'Sin caja abierta' }}</p></div>
+  <div class="acciones"><a class="btn" href="/ventas">Ventas de hoy</a><a class="btn" href="/caja">{{ icono('caja') }} Caja</a></div>
+</div>
+{% if not caja %}
+<div class="aviso-caja aviso">{{ icono('alerta') }}<span>Para vender, primero <a href="/caja"><b>abre tu caja</b></a> con la base de efectivo.</span></div>
+{% endif %}
+
+<div class="pos">
+  <section class="tarjeta">
+    <div class="tarjeta-cuerpo pila" style="gap:12px">
+      <div class="fila" style="flex-wrap:nowrap;gap:8px" x-data="buscadorProductos((p) => agregar(p))" @click.outside="abierto = false">
+        <div class="buscador-global" style="max-width:none">
+          {{ icono('codigo') }}
+          <input id="buscar-pos" type="search" placeholder="Escanea el código o escribe el producto" autofocus autocomplete="off"
+                 x-model="q" @input.debounce.150ms="buscar()" @keydown.enter.prevent="enter()"
+                 @keydown.down.prevent="mover(1)" @keydown.up.prevent="mover(-1)" aria-label="Agregar producto" enterkeyhint="done">
+          <div class="resultados" x-show="abierto" x-cloak>
+            <template x-for="(p, i) in resultados" :key="p.id">
+              <button type="button" @click="elegir(p)" :class="{ activo: i === activo }">
+                <span><span x-text="p.nombre"></span><br><span class="mono tenue" x-text="p.codigo"></span></span>
+                <span class="num"><b x-text="pesos(p.precio)"></b><br>
+                  <span class="pequeno" :class="p.existencia > 0 ? 'tenue' : ''" :style="p.existencia > 0 ? '' : 'color:var(--critico-texto)'" x-text="p.existencia > 0 ? 'hay ' + cant(p.existencia) : 'sin existencia'"></span></span>
+              </button>
+            </template>
+            <p class="tenue" style="padding:10px" x-show="!resultados.length">Sin resultados.</p>
+          </div>
+        </div>
+        <button type="button" class="btn" @click="camara()" title="Escanear con la cámara" aria-label="Escanear con la cámara">{{ icono('camara') }}</button>
+      </div>
+
+      <template x-if="!items.length">
+        <div class="estado-vacio">{{ icono('codigo') }}<b>Escanea el primer producto</b><span>Con el lector de códigos, la cámara o escribiendo el nombre.</span></div>
+      </template>
+      <div class="tabla-contenedor" x-show="items.length">
+        <table class="tabla">
+          <thead><tr><th>Producto</th><th class="num">Precio</th><th style="text-align:center">Cantidad</th><th class="num ocultar-movil">Descuento</th><th class="num">Total</th><th></th></tr></thead>
+          <tbody>
+            <template x-for="i in items" :key="i.producto_id">
+              <tr>
+                <td><b x-text="i.nombre"></b><br><span class="tenue pequeno" x-text="i.codigo + ' · ' + i.unidad"></span>
+                  <template x-if="Number(i.cantidad) > i.existencia"><span class="insignia critico" style="margin-left:4px" x-text="'solo hay ' + cant(i.existencia)"></span></template></td>
+                <td class="num" x-text="pesos(i.precio)"></td>
+                <td style="text-align:center"><span class="cantidad">
+                  <button type="button" @click="cambiar(i, -1)" aria-label="Menos">−</button>
+                  <input x-model="i.cantidad" inputmode="decimal" aria-label="Cantidad">
+                  <button type="button" @click="cambiar(i, 1)" aria-label="Más">+</button></span></td>
+                <td class="num ocultar-movil"><input x-model.number="i.descuento" inputmode="numeric" style="width:90px;text-align:right" aria-label="Descuento en pesos"></td>
+                <td class="num"><b x-text="pesos(linea(i))"></b></td>
+                <td><button type="button" class="btn btn-fantasma btn-chico" @click="quitar(i)" aria-label="Quitar">{{ icono('x') }}</button></td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <aside class="tarjeta pos-resumen">
+    <div class="tarjeta-cuerpo pila">
+      <div>
+        <span class="tenue">Total a cobrar</span>
+        <div class="pos-total" x-text="pesos(total)">$0</div>
+        <span class="tenue pequeno" x-text="'Base ' + pesos(base) + ' · IVA ' + pesos(total - base) + ' · ' + items.length + ' productos'"></span>
+      </div>
+
+      <div class="pila" style="gap:8px">
+        <span class="secundario" style="font-weight:600;font-size:13px">Cliente</span>
+        <template x-if="cliente">
+          <div class="fila separa aviso-caja info" style="padding:8px 12px">
+            <span><b x-text="cliente.nombre"></b><br><span class="pequeno" x-text="cliente.documento + (cliente.cupo_credito ? ' · cupo disponible ' + pesos(cliente.disponible) : '')"></span></span>
+            <button type="button" class="btn btn-fantasma btn-chico" @click="cliente = null" aria-label="Quitar cliente">{{ icono('x') }}</button>
+          </div>
+        </template>
+        <div x-show="!cliente" style="position:relative">
+          <input placeholder="Consumidor final · buscar cliente" x-model="buscarCliente" @input.debounce.200ms="buscarClientes()" aria-label="Buscar cliente">
+          <div class="resultados" x-show="clientes.length" x-cloak>
+            <template x-for="c in clientes" :key="c.id">
+              <button type="button" @click="elegirCliente(c)"><span><span x-text="c.nombre"></span><br><span class="tenue pequeno" x-text="c.documento"></span></span>
+                <span class="pequeno tenue" x-text="c.cupo_credito ? 'crédito ' + pesos(c.disponible) : ''"></span></button>
+            </template>
+          </div>
+        </div>
+      </div>
+
+      <div class="pila" style="gap:8px">
+        <span class="secundario" style="font-weight:600;font-size:13px">Medio de pago</span>
+        <div class="medios">
+          <button type="button" :class="{ activo: medio === 'efectivo' }" @click="medio = 'efectivo'">Efectivo</button>
+          <button type="button" :class="{ activo: medio === 'tarjeta' }" @click="medio = 'tarjeta'">Tarjeta</button>
+          <button type="button" :class="{ activo: medio === 'transferencia' }" @click="medio = 'transferencia'">Transferencia</button>
+          <button type="button" :class="{ activo: medio === 'credito' }" @click="medio = 'credito'">Crédito</button>
+        </div>
+      </div>
+
+      <template x-if="medio === 'efectivo'">
+        <div class="pila" style="gap:8px">
+          <label class="campo">Recibe en efectivo<input x-model="recibido" inputmode="numeric" placeholder="Exacto"></label>
+          <div class="fila separa"><span class="secundario">Cambio</span><b style="font-size:22px" x-text="pesos(cambio)"></b></div>
+          <span class="pequeno" style="color:var(--critico-texto)" x-show="faltaEfectivo">El efectivo no alcanza.</span>
+        </div>
+      </template>
+
+      <button type="button" class="btn btn-primario btn-grande" @click="cobrar()" :disabled="!items.length || enviando || !cajaAbierta || faltaEfectivo">
+        <span x-text="enviando ? 'Registrando…' : 'Cobrar ' + pesos(total)"></span>
+      </button>
+      <p class="tenue pequeno" style="text-align:center">Atajo: Ctrl + Enter. La factura electrónica queda pendiente de envío a la DIAN.</p>
+
+      <template x-if="ultima">
+        <div class="aviso-caja info" style="padding:10px 12px">{{ icono('check') }}
+          <span>Última: <a :href="'/ventas/' + ultima.id"><b x-text="ultima.numero"></b></a> por <span x-text="pesos(ultima.total)"></span><span x-show="ultima.cambio" x-text="' · cambio ' + pesos(ultima.cambio)"></span></span>
+        </div>
+      </template>
+    </div>
+  </aside>
+</div>
+</div>
+{% endblock %}

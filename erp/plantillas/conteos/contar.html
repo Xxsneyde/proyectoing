@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{% block titulo %}Contar · {{ c.nombre }}{% endblock %}
+{% block scripts %}
+<script>
+function contador(cfg) {
+  return {
+    ...cfg.estado, id: cfg.id, ciego: cfg.ciego, voz: cfg.voz, metodo: "manual",
+    cantidad: "", danados: "", orden: "", oi: "", respuesta: "", motor: "",
+    grabando: false, procesando: false, grabador: null, flujo: null, trozos: [], inicio: 0, reproductor: null,
+    aplicar(e) {
+      this.avance = e.avance; this.pendientes = e.pendientes;
+      if (e.producto) this.producto = e.producto;
+      if (e.respuesta !== undefined) { this.respuesta = e.respuesta; this.oi = e.oi || ""; this.motor = e.motor || ""; }
+      if (e.audio) this.reproducir(e.audio);
+    },
+    async seleccionar(p, metodo = "manual") {
+      try {
+        this.aplicar(await api(`/api/conteos/${this.id}/producto/${p.id}`));
+        this.metodo = metodo; this.cantidad = ""; this.danados = ""; this.oi = ""; this.respuesta = "";
+        navigator.vibrate?.(40);
+      } catch (e) { avisar(e.message, "error"); }
+    },
+    async enviar(ruta, cuerpo) {
+      if (!this.producto) return avisar("Primero escanea o elige un producto.", "error");
+      this.procesando = true;
+      try { this.aplicar(await api(`/api/conteos/${this.id}/${ruta}`, { method: "POST", body: { producto_id: this.producto.id, ...cuerpo } })); return true; }
+      catch (e) { avisar(e.message, "error"); return false; }
+      finally { this.procesando = false; }
+    },
+    async guardar(modo) {
+      if (String(this.cantidad).trim() === "") return;
+      if (await this.enviar("registrar", { cantidad: this.cantidad, modo, metodo: this.metodo })) {
+        this.respuesta = (modo === "sumar" ? "Total " : "Registradas ") + cant(this.producto.contado) + ".";
+        this.oi = ""; this.cantidad = "";
+      }
+    },
+    async marcarDanados() {
+      if (!this.danados) return;
+      if (await this.enviar("registrar", { danados: this.danados })) { this.respuesta = cant(this.producto.danados) + " dañados en total."; this.danados = ""; }
+    },
+    async deshacer() { await this.enviar("deshacer", {}); },
+    async ordenEscrita() {
+      if (!this.orden.trim()) return;
+      this.desbloquear();
+      if (await this.enviar("texto", { texto: this.orden })) this.orden = "";
+    },
+    desbloquear() {
+      if (this.reproductor) return;
+      this.reproductor = new Audio("data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAIlYAAESsAAACABAAZGF0YQAAAAA=");
+      this.reproductor.play().catch(() => {});
+    },
+    reproducir(b64) {
+      if (!this.reproductor) return;
+      this.reproductor.src = "data:audio/wav;base64," + b64;
+      this.reproductor.play().catch(() => {});
+    },
+    async microfono() {
+      if (this.grabando) return this.grabador?.stop();
+      if (!this.producto) return avisar("Primero escanea o elige un producto.", "error");
+      this.desbloquear();
+      if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia) return avisar("El micrófono necesita abrir la página con https://", "error");
+      try {
+        this.flujo = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true, channelCount: 1 } });
+      } catch { return avisar("No hay permiso para el micrófono.", "error"); }
+      const tipo = ["audio/mp4", "audio/webm;codecs=opus", "audio/webm"].find((t) => MediaRecorder.isTypeSupported?.(t)) || "";
+      this.grabador = new MediaRecorder(this.flujo, tipo ? { mimeType: tipo } : undefined);
+      this.trozos = [];
+      this.grabador.ondataavailable = (e) => e.data.size && this.trozos.push(e.data);
+      this.grabador.onstop = () => this.enviarAudio();
+      this.grabador.start();
+      this.inicio = performance.now();
+      this.grabando = true;
+      setTimeout(() => this.grabando && this.grabador.stop(), 12000);
+    },
+    async enviarAudio() {
+      this.grabando = false;
+      this.flujo?.getTracks().forEach((t) => t.stop());
+      const blob = new Blob(this.trozos, { type: this.grabador.mimeType || "audio/mp4" });
+      if (performance.now() - this.inicio < 500 || blob.size < 1000) return avisar("Muy corto: toca, di la cantidad y vuelve a tocar.", "error");
+      const fd = new FormData();
+      fd.append("producto_id", this.producto.id);
+      fd.append("audio", blob, blob.type.includes("mp4") ? "orden.m4a" : "orden.webm");
+      this.procesando = true;
+      try { this.aplicar(await api(`/api/conteos/${this.id}/voz`, { method: "POST", body: fd })); }
+      catch (e) { avisar(e.message, "error"); }
+      finally { this.procesando = false; }
+    },
+  };
+}
+</script>
+{% endblock %}
+{% block contenido %}
+<div class="pila" style="max-width:640px;width:100%;margin:0 auto"
+     x-data="contador({ id: {{ c.id }}, ciego: {{ 'true' if c.ciego else 'false' }}, voz: {{ 'true' if voz else 'false' }}, estado: {{ estado_inicial }} })">
+  <div class="encabezado">
+    <div><div class="migas"><a href="/conteos">Conteos</a></div><h1>{{ c.nombre }}</h1>
+      <p x-text="avance.contados + ' de ' + avance.total + ' productos contados' + (ciego ? ' · conteo ciego' : '')"></p></div>
+    <a class="btn" href="/conteos/{{ c.id }}/resultado">Ver diferencias</a>
+  </div>
+  <div class="progreso" role="progressbar" :aria-valuenow="avance.porcentaje" aria-valuemin="0" aria-valuemax="100"><span :style="'width:' + avance.porcentaje + '%'"></span></div>
+
+  <div class="fila" style="flex-wrap:nowrap;gap:8px" x-data="buscadorProductos((p) => seleccionar(p, 'escaner'))" @click.outside="abierto = false">
+    <div class="buscador-global" style="max-width:none">
+      {{ icono('codigo') }}
+      <input type="search" placeholder="Escanea o busca el producto" autocomplete="off" x-model="q" @input.debounce.150ms="buscar()"
+             @keydown.enter.prevent="enter()" @keydown.down.prevent="mover(1)" @keydown.up.prevent="mover(-1)" aria-label="Producto" enterkeyhint="search">
+      <div class="resultados" x-show="abierto" x-cloak>
+        <template x-for="(p, i) in resultados" :key="p.id">
+          <button type="button" @click="elegir(p)" :class="{ activo: i === activo }"><span x-text="p.nombre"></span><span class="mono tenue" x-text="p.codigo"></span></button>
+        </template>
+      </div>
+    </div>
+    <button type="button" class="btn btn-grande" @click="camara()" aria-label="Escanear con la cámara">{{ icono('camara') }}</button>
+  </div>
+
+  <template x-if="producto">
+    <section class="tarjeta tarjeta-cuerpo pila conteo-producto">
+      <div>
+        <div class="nombre" x-text="producto.nombre"></div>
+        <span class="tenue"><span class="mono" x-text="producto.codigo"></span> · <span x-text="producto.ubicacion || 'sin ubicación'"></span></span>
+      </div>
+      <div class="cifras-conteo">
+        <div><span>Contado</span><b x-text="producto.contado === null ? '—' : cant(producto.contado)"></b><span x-text="producto.unidad + (producto.danados ? ' · ' + cant(producto.danados) + ' dañados' : '')"></span></div>
+        <div x-show="!ciego"><span>Sistema</span><b x-text="cant(producto.sistema)"></b>
+          <span x-text="producto.contado === null ? 'sin contar' : (producto.contado - producto.sistema === 0 ? 'cuadra' : 'diferencia ' + (producto.contado > producto.sistema ? '+' : '') + cant(producto.contado - producto.sistema))"></span></div>
+        <div x-show="ciego"><span>Sistema</span><b>••</b><span>oculto en conteo ciego</span></div>
+      </div>
+
+      <template x-if="voz">
+        <button type="button" class="mic" :class="{ grabando }" @click="microfono()" :disabled="procesando">
+          {{ icono('mic') }}<span x-text="grabando ? 'Escuchando… toca para terminar' : (procesando ? 'Procesando…' : 'Toca y di la cantidad')"></span>
+        </button>
+      </template>
+      <div x-show="respuesta" class="aviso-caja info" role="status">{{ icono('check') }}
+        <div><div x-show="oi" class="pequeno" x-text="'Oí: «' + oi + '»'"></div><b x-text="respuesta"></b></div>
+      </div>
+
+      <form class="fila" style="flex-wrap:nowrap;gap:8px" @submit.prevent="guardar('reemplazar')">
+        <input x-model="cantidad" inputmode="decimal" placeholder="Cantidad" aria-label="Cantidad contada" style="height:48px;font-size:18px;flex:1;min-width:90px">
+        <button class="btn btn-primario btn-grande" :disabled="procesando">Guardar</button>
+        <button type="button" class="btn btn-grande" style="padding:0 14px" @click="guardar('sumar')" :disabled="procesando" title="Sumar a lo ya contado (mismo producto en otro sitio)" aria-label="Sumar a lo ya contado">+</button>
+      </form>
+      <form class="fila" style="flex-wrap:nowrap;gap:8px" @submit.prevent="ordenEscrita()">
+        <input x-model="orden" placeholder="O escribe la orden: «hay 24», «2 dañados», «deshacer»" aria-label="Orden escrita">
+        <button class="btn" :disabled="procesando">Enviar</button>
+      </form>
+      <div class="fila separa">
+        <form class="fila" style="flex-wrap:nowrap;gap:8px" @submit.prevent="marcarDanados()">
+          <input x-model="danados" inputmode="decimal" placeholder="Dañados" aria-label="Unidades dañadas" style="width:110px">
+          <button class="btn btn-peligro">Marcar dañados</button>
+        </form>
+        <button type="button" class="btn btn-fantasma" @click="deshacer()">Deshacer</button>
+      </div>
+    </section>
+  </template>
+  <template x-if="!producto">
+    <div class="tarjeta estado-vacio">{{ icono('codigo') }}<b>Escanea el primer producto</b><span>O elige uno de la lista de pendientes.</span></div>
+  </template>
+
+  <section class="tarjeta" x-show="pendientes.length">
+    <div class="tarjeta-titulo"><div><h2>Siguientes por contar</h2><p>Ordenados por ubicación para recorrer el pasillo</p></div></div>
+    <div class="alertas" style="margin-top:8px">
+      <template x-for="p in pendientes" :key="p.id">
+        <button type="button" class="alerta" style="border:0;border-top:1px solid var(--linea);background:none;width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer" @click="seleccionar(p)">
+          <span><b x-text="p.nombre"></b><span x-text="(p.ubicacion || 'sin ubicación') + ' · ' + p.codigo"></span></span>
+        </button>
+      </template>
+    </div>
+  </section>
+</div>
+{% endblock %}

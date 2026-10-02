@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block titulo %}Nuevo traslado{% endblock %}
+{% block scripts %}
+<script>
+function traslado(sugerencias) {
+  return {
+    sugerencias, destino: "", items: [], nota: "", enviando: false,
+    get sugeridos() { return this.sugerencias[this.destino] || []; },
+    cargarSugerido() { this.items = this.sugeridos.map((i) => ({ ...i })); },
+    agregar(p) {
+      if (this.items.some((i) => i.producto_id === p.id)) return avisar("Ese producto ya está en el traslado.", "error");
+      if (p.existencia <= 0) avisar("Ojo: no hay existencias de ese producto en esta sede.", "error");
+      this.items.push({ producto_id: p.id, nombre: p.nombre, codigo: p.codigo, unidad: p.unidad, existencia: p.existencia, cantidad: 1 });
+    },
+    quitar(i) { this.items = this.items.filter((x) => x !== i); },
+    async guardar(enviar) {
+      if (!this.destino) return avisar("Elige la sede destino.", "error");
+      if (!this.items.length) return avisar("El traslado no tiene productos.", "error");
+      this.enviando = true;
+      try {
+        const r = await api("/api/traslados", { method: "POST", body: { destino_id: Number(this.destino), nota: this.nota, enviar,
+          items: this.items.map((i) => ({ producto_id: i.producto_id, cantidad: Number(i.cantidad) })) } });
+        window.location.href = `/traslados/${r.id}`;
+      } catch (e) { avisar(e.message, "error"); this.enviando = false; }
+    },
+  };
+}
+</script>
+{% endblock %}
+{% block contenido %}
+<div class="pila" x-data="traslado({{ sugerencias }})">
+<div class="encabezado">
+  <div><div class="migas"><a href="/traslados">Traslados</a></div><h1>Nuevo traslado</h1><p>Sale de la sede {{ usuario.sede }}</p></div>
+</div>
+<section class="tarjeta tarjeta-cuerpo pila">
+  <div class="formulario">
+    <label class="campo">Sede destino
+      <select x-model="destino"><option value="">Elige la sede</option>{% for d in destinos %}<option value="{{ d.id }}">{{ d.nombre }}</option>{% endfor %}</select></label>
+    <label class="campo ancho">Nota <small>opcional</small><input x-model="nota" placeholder="Ej.: va en el camión del jueves"></label>
+  </div>
+  <div class="aviso-caja info" x-show="destino && sugeridos.length" x-cloak>{{ icono('info') }}
+    <span><span x-text="sugeridos.length"></span> productos están bajo el mínimo en esa sede y aquí sobran.
+      <button type="button" class="btn btn-chico" style="margin-left:8px" @click="cargarSugerido()">Cargar sugeridos</button></span>
+  </div>
+  <div class="fila" style="flex-wrap:nowrap;gap:8px" x-data="buscadorProductos((p) => agregar(p))" @click.outside="abierto = false">
+    <div class="buscador-global" style="max-width:none">
+      {{ icono('buscar') }}
+      <input type="search" placeholder="Agregar producto: nombre o código" autocomplete="off" x-model="q" @input.debounce.150ms="buscar()"
+             @keydown.enter.prevent="enter()" @keydown.down.prevent="mover(1)" @keydown.up.prevent="mover(-1)" aria-label="Agregar producto">
+      <div class="resultados" x-show="abierto" x-cloak>
+        <template x-for="(p, i) in resultados" :key="p.id">
+          <button type="button" @click="elegir(p)" :class="{ activo: i === activo }"><span x-text="p.nombre"></span><span class="tenue pequeno" x-text="'hay ' + cant(p.existencia)"></span></button>
+        </template>
+      </div>
+    </div>
+    <button type="button" class="btn" @click="camara()" aria-label="Escanear con la cámara">{{ icono('camara') }}</button>
+  </div>
+  <template x-if="!items.length"><div class="estado-vacio">{{ icono('traslado') }}<b>Sin productos</b><span>Elige la sede destino y carga los sugeridos, o agrega productos.</span></div></template>
+  <div class="tabla-contenedor" x-show="items.length">
+    <table class="tabla">
+      <thead><tr><th>Producto</th><th class="num">Hay aquí</th><th class="num">Enviar</th><th></th></tr></thead>
+      <tbody><template x-for="i in items" :key="i.producto_id"><tr>
+        <td><b x-text="i.nombre"></b><br><span class="mono tenue" x-text="i.codigo"></span></td>
+        <td class="num" x-text="cant(i.existencia) + ' ' + i.unidad"></td>
+        <td class="num"><input x-model="i.cantidad" inputmode="decimal" style="width:90px;text-align:right" aria-label="Cantidad a enviar">
+          <span class="insignia critico" x-show="Number(i.cantidad) > i.existencia">no alcanza</span></td>
+        <td><button type="button" class="btn btn-fantasma btn-chico" @click="quitar(i)" aria-label="Quitar">{{ icono('x') }}</button></td>
+      </tr></template></tbody>
+    </table>
+  </div>
+  <div class="acciones" style="justify-content:flex-end">
+    <button type="button" class="btn" @click="guardar(false)" :disabled="enviando">Guardar borrador</button>
+    <button type="button" class="btn btn-primario" @click="guardar(true)" :disabled="enviando">Crear y enviar</button>
+  </div>
+</section>
+</div>
+{% endblock %}

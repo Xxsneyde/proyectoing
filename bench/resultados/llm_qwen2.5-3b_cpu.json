@@ -1,0 +1,1641 @@
+{
+ "resumen": {
+  "modelo": "qwen2.5-3b",
+  "backend": "cpu",
+  "carga_s": 2.0,
+  "ram_mb": 1514,
+  "primera_llamada_s": 6.87,
+  "latencia_mediana_s": 2.62,
+  "latencia_max_s": 3.28,
+  "gen_tok_s": 16.1,
+  "aciertos_normales": "19/20",
+  "aciertos_dificiles": "6/6",
+  "aciertos_transcripciones": "42/64"
+ },
+ "normales": [
+  {
+   "id": "f01",
+   "texto": "Cuarenta y dos.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 42,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Cuarenta y dos."
+   },
+   "total_s": 2.6945246980003503,
+   "prompt_tokens": 11,
+   "prompt_ms": 221.609,
+   "gen_tokens": 39,
+   "gen_tok_s": 15.412545162813261,
+   "correcto": true
+  },
+  {
+   "id": "f02",
+   "texto": "Hay veintiocho unidades.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 28,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Hay veintiocho unidades."
+   },
+   "total_s": 2.8350273840005684,
+   "prompt_tokens": 12,
+   "prompt_ms": 217.671,
+   "gen_tokens": 39,
+   "gen_tok_s": 14.55409508190317,
+   "correcto": false
+  },
+  {
+   "id": "f03",
+   "texto": "Ciento cincuenta.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 150,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Ciento cincuenta."
+   },
+   "total_s": 2.7448062989997197,
+   "prompt_tokens": 11,
+   "prompt_ms": 263.51,
+   "gen_tokens": 40,
+   "gen_tok_s": 15.767482195884686,
+   "correcto": true
+  },
+  {
+   "id": "f04",
+   "texto": "Mil doscientos.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 1200,
+    "unidad": "paquetes",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Mil doscientos."
+   },
+   "total_s": 3.0716545810000753,
+   "prompt_tokens": 10,
+   "prompt_ms": 264.257,
+   "gen_tokens": 44,
+   "gen_tok_s": 15.358289243732836,
+   "correcto": true
+  },
+  {
+   "id": "f05",
+   "texto": "Ochocientos setenta y cinco metros.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 875,
+    "unidad": "metros",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Ochocientos setenta y cinco metros."
+   },
+   "total_s": 2.7884756350003954,
+   "prompt_tokens": 15,
+   "prompt_ms": 289.9,
+   "gen_tokens": 41,
+   "gen_tok_s": 16.058472108641986,
+   "correcto": true
+  },
+  {
+   "id": "f06",
+   "texto": "Kilo y medio.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 1.5,
+    "unidad": "kilos",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Kilo y medio."
+   },
+   "total_s": 2.799492289000227,
+   "prompt_tokens": 10,
+   "prompt_ms": 218.951,
+   "gen_tokens": 42,
+   "gen_tok_s": 15.935059579633126,
+   "correcto": true
+  },
+  {
+   "id": "f07",
+   "texto": "Doce cajas.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 12,
+    "unidad": "cajas",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Doce cajas."
+   },
+   "total_s": 2.7973002290000295,
+   "prompt_tokens": 10,
+   "prompt_ms": 243.113,
+   "gen_tokens": 41,
+   "gen_tok_s": 15.701662138699845,
+   "correcto": true
+  },
+  {
+   "id": "f08",
+   "texto": "Dos docenas.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 24,
+    "unidad": "cajas",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Dos docenas."
+   },
+   "total_s": 2.789476614000705,
+   "prompt_tokens": 9,
+   "prompt_ms": 197.918,
+   "gen_tokens": 41,
+   "gen_tok_s": 15.473989577494319,
+   "correcto": true
+  },
+  {
+   "id": "f09",
+   "texto": "Ahí hay como sesenta y tres.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 63,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Ahí hay como sesenta y tres."
+   },
+   "total_s": 2.7064126260002013,
+   "prompt_tokens": 14,
+   "prompt_ms": 279.794,
+   "gen_tokens": 39,
+   "gen_tok_s": 15.706373481028354,
+   "correcto": true
+  },
+  {
+   "id": "f10",
+   "texto": "Suma diez más.",
+   "orden": {
+    "accion": "sumar",
+    "cantidad": 10,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Suma diez más."
+   },
+   "total_s": 2.7749211670006844,
+   "prompt_tokens": 11,
+   "prompt_ms": 282.243,
+   "gen_tokens": 39,
+   "gen_tok_s": 15.300832486083289,
+   "correcto": true
+  },
+  {
+   "id": "f11",
+   "texto": "Agrégale quince.",
+   "orden": {
+    "accion": "sumar",
+    "cantidad": 15,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Agrégale quince."
+   },
+   "total_s": 2.837969933999375,
+   "prompt_tokens": 12,
+   "prompt_ms": 257.487,
+   "gen_tokens": 40,
+   "gen_tok_s": 15.164977456677741,
+   "correcto": true
+  },
+  {
+   "id": "f12",
+   "texto": "Quita cuatro.",
+   "orden": {
+    "accion": "restar",
+    "cantidad": 4,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Quita cuatro."
+   },
+   "total_s": 2.635309307999705,
+   "prompt_tokens": 9,
+   "prompt_ms": 220.189,
+   "gen_tokens": 38,
+   "gen_tok_s": 15.375268755542368,
+   "correcto": true
+  },
+  {
+   "id": "f13",
+   "texto": "Corrige el anterior a dieciséis.",
+   "orden": {
+    "accion": "corregir",
+    "cantidad": 16.0,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Corrige el anterior a dieciséis."
+   },
+   "total_s": 2.4381762160001017,
+   "prompt_tokens": 16,
+   "prompt_ms": 235.102,
+   "gen_tokens": 35,
+   "gen_tok_s": 15.491909122638509,
+   "correcto": true
+  },
+  {
+   "id": "f14",
+   "texto": "No, eran treinta y seis.",
+   "orden": {
+    "accion": "corregir",
+    "cantidad": 36,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "No, eran treinta y seis."
+   },
+   "total_s": 2.989913515999433,
+   "prompt_tokens": 14,
+   "prompt_ms": 319.572,
+   "gen_tokens": 41,
+   "gen_tok_s": 15.025703343782457,
+   "correcto": true
+  },
+  {
+   "id": "f15",
+   "texto": "Esto va en el pasillo tres, estante B.",
+   "orden": {
+    "accion": "ubicacion",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": "pasillo 3 estante b",
+    "sede": null,
+    "texto": "Esto va en el pasillo tres, estante B."
+   },
+   "total_s": 2.5624717189994044,
+   "prompt_tokens": 18,
+   "prompt_ms": 337.579,
+   "gen_tokens": 37,
+   "gen_tok_s": 16.239302359570633,
+   "correcto": true
+  },
+  {
+   "id": "f16",
+   "texto": "Hay dos dañados.",
+   "orden": {
+    "accion": "danado",
+    "cantidad": 2,
+    "unidad": "unidades",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Hay dos dañados."
+   },
+   "total_s": 2.6916048929997487,
+   "prompt_tokens": 11,
+   "prompt_ms": 248.291,
+   "gen_tokens": 40,
+   "gen_tok_s": 16.014888096996017,
+   "correcto": true
+  },
+  {
+   "id": "f17",
+   "texto": "Márcalo como dañado.",
+   "orden": {
+    "accion": "danado",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Márcalo como dañado."
+   },
+   "total_s": 2.558489324999755,
+   "prompt_tokens": 14,
+   "prompt_ms": 311.728,
+   "gen_tokens": 37,
+   "gen_tok_s": 16.082298482099063,
+   "correcto": true
+  },
+  {
+   "id": "f18",
+   "texto": "¿Cuánto hay de esto en la sede norte?",
+   "orden": {
+    "accion": "consulta",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": "norte",
+    "texto": "¿Cuánto hay de esto en la sede norte?"
+   },
+   "total_s": 2.3733778409996376,
+   "prompt_tokens": 18,
+   "prompt_ms": 336.842,
+   "gen_tokens": 33,
+   "gen_tok_s": 15.780898012001373,
+   "correcto": true
+  },
+  {
+   "id": "f19",
+   "texto": "Deshacer el último.",
+   "orden": {
+    "accion": "deshacer",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Deshacer el último."
+   },
+   "total_s": 2.1190869040001417,
+   "prompt_tokens": 11,
+   "prompt_ms": 243.024,
+   "gen_tokens": 31,
+   "gen_tok_s": 16.052480910924782,
+   "correcto": true
+  },
+  {
+   "id": "f20",
+   "texto": "Anota que la etiqueta no corresponde al producto.",
+   "orden": {
+    "accion": "nota",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Anota que la etiqueta no corresponde al producto."
+   },
+   "total_s": 1.856158081999638,
+   "prompt_tokens": 17,
+   "prompt_ms": 286.137,
+   "gen_tokens": 26,
+   "gen_tok_s": 16.01099507053484,
+   "correcto": true
+  }
+ ],
+ "dificiles": [
+  {
+   "id": "d01",
+   "texto": "Tres de esos están oxidados.",
+   "orden": {
+    "accion": "danado",
+    "cantidad": 3,
+    "unidad": "unidades",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Tres de esos están oxidados."
+   },
+   "total_s": 2.7252853649997633,
+   "prompt_tokens": 13,
+   "prompt_ms": 252.948,
+   "gen_tokens": 40,
+   "gen_tok_s": 15.826123654779488,
+   "correcto": true
+  },
+  {
+   "id": "d02",
+   "texto": "Me equivoqué, son cuarenta, no cincuenta.",
+   "orden": {
+    "accion": "corregir",
+    "cantidad": 40,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Me equivoqué, son cuarenta, no cincuenta."
+   },
+   "total_s": 3.0364884640002856,
+   "prompt_tokens": 20,
+   "prompt_ms": 392.519,
+   "gen_tokens": 41,
+   "gen_tok_s": 15.175963398611476,
+   "correcto": true
+  },
+  {
+   "id": "d03",
+   "texto": "¿Qué me falta por contar en este pasillo?",
+   "orden": {
+    "accion": "consulta",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": "pasillo 7",
+    "sede": null,
+    "texto": "¿Qué me falta por contar en este pasillo?"
+   },
+   "total_s": 2.8361815980006213,
+   "prompt_tokens": 16,
+   "prompt_ms": 266.996,
+   "gen_tokens": 42,
+   "gen_tok_s": 16.01264764832789,
+   "correcto": true
+  },
+  {
+   "id": "d04",
+   "texto": "Súmale media docena.",
+   "orden": {
+    "accion": "sumar",
+    "cantidad": 6,
+    "unidad": "unidades",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Súmale media docena."
+   },
+   "total_s": 2.8190383609999117,
+   "prompt_tokens": 12,
+   "prompt_ms": 230.189,
+   "gen_tokens": 40,
+   "gen_tok_s": 15.112770329679272,
+   "correcto": true
+  },
+  {
+   "id": "d05",
+   "texto": "Llegaron dos cajas más de las que conté.",
+   "orden": {
+    "accion": "sumar",
+    "cantidad": 2,
+    "unidad": "cajas",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Llegaron dos cajas más de las que conté."
+   },
+   "total_s": 2.805653174999861,
+   "prompt_tokens": 18,
+   "prompt_ms": 306.728,
+   "gen_tokens": 40,
+   "gen_tok_s": 15.656733740381648,
+   "correcto": true
+  },
+  {
+   "id": "d06",
+   "texto": "Bájale tres porque se vendieron.",
+   "orden": {
+    "accion": "restar",
+    "cantidad": 3,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Bájale tres porque se vendieron."
+   },
+   "total_s": 2.7642376069998136,
+   "prompt_tokens": 15,
+   "prompt_ms": 323.31,
+   "gen_tokens": 38,
+   "gen_tok_s": 15.209263016662774,
+   "correcto": true
+  }
+ ],
+ "reales": [
+  {
+   "id": "f01",
+   "texto": "Cuarenta y dos.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 42,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Cuarenta y dos."
+   },
+   "total_s": 2.630114665000292,
+   "prompt_tokens": 11,
+   "prompt_ms": 234.381,
+   "gen_tokens": 39,
+   "gen_tok_s": 15.908760745216592,
+   "correcto": true
+  },
+  {
+   "id": "f02",
+   "texto": "Hay veintiocho unidades.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 28,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Hay veintiocho unidades."
+   },
+   "total_s": 2.586029617999884,
+   "prompt_tokens": 12,
+   "prompt_ms": 217.37,
+   "gen_tokens": 39,
+   "gen_tok_s": 16.09683176226843,
+   "correcto": false
+  },
+  {
+   "id": "f03",
+   "texto": "Ciento cincuenta.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 150,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Ciento cincuenta."
+   },
+   "total_s": 2.7055795940004828,
+   "prompt_tokens": 11,
+   "prompt_ms": 241.058,
+   "gen_tokens": 40,
+   "gen_tok_s": 15.877229122257923,
+   "correcto": true
+  },
+  {
+   "id": "f04",
+   "texto": "Mil doscientos.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 1200,
+    "unidad": "paquetes",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Mil doscientos."
+   },
+   "total_s": 2.8886741309997888,
+   "prompt_tokens": 10,
+   "prompt_ms": 215.505,
+   "gen_tokens": 44,
+   "gen_tok_s": 16.128530132032648,
+   "correcto": true
+  },
+  {
+   "id": "f05",
+   "texto": "Ochocientos setenta y cinco metros.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 875,
+    "unidad": "metros",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Ochocientos setenta y cinco metros."
+   },
+   "total_s": 2.8677880810000715,
+   "prompt_tokens": 15,
+   "prompt_ms": 299.489,
+   "gen_tokens": 41,
+   "gen_tok_s": 15.621259440610512,
+   "correcto": true
+  },
+  {
+   "id": "f05",
+   "texto": "Los ochocientos setenta y cinco metros.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 875,
+    "unidad": "metros",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Los ochocientos setenta y cinco metros."
+   },
+   "total_s": 2.9458456170004865,
+   "prompt_tokens": 15,
+   "prompt_ms": 295.746,
+   "gen_tokens": 41,
+   "gen_tok_s": 15.141455260406534,
+   "correcto": true
+  },
+  {
+   "id": "f06",
+   "texto": "Quilo y medio.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 1.5,
+    "unidad": "kilos",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Quilo y medio."
+   },
+   "total_s": 2.7971649359997173,
+   "prompt_tokens": 10,
+   "prompt_ms": 222.829,
+   "gen_tokens": 42,
+   "gen_tok_s": 15.976495068718414,
+   "correcto": true
+  },
+  {
+   "id": "f07",
+   "texto": "Dos y cifras.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 200,
+    "unidad": "metros",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Dos y cifras."
+   },
+   "total_s": 2.3074253029999454,
+   "prompt_tokens": 10,
+   "prompt_ms": 215.042,
+   "gen_tokens": 34,
+   "gen_tok_s": 15.834796052625265,
+   "correcto": false
+  },
+  {
+   "id": "f07",
+   "texto": "Dos iccafas.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 2,
+    "unidad": "cajas",
+    "ubicacion": "pasillo 7 estante a",
+    "sede": "sur",
+    "texto": "Dos iccafas."
+   },
+   "total_s": 3.2821402660001695,
+   "prompt_tokens": 9,
+   "prompt_ms": 221.633,
+   "gen_tokens": 48,
+   "gen_tok_s": 15.393503810383477,
+   "correcto": false
+  },
+  {
+   "id": "f08",
+   "texto": "Dos docenas.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 24,
+    "unidad": "cajas",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Dos docenas."
+   },
+   "total_s": 2.681728796000243,
+   "prompt_tokens": 8,
+   "prompt_ms": 171.648,
+   "gen_tokens": 41,
+   "gen_tok_s": 15.989370266646734,
+   "correcto": true
+  },
+  {
+   "id": "f09",
+   "texto": "Ay, ay, como sesenta y tres.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 63,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Ay, ay, como sesenta y tres."
+   },
+   "total_s": 3.005272411999613,
+   "prompt_tokens": 15,
+   "prompt_ms": 299.785,
+   "gen_tokens": 39,
+   "gen_tok_s": 14.092174689564224,
+   "correcto": true
+  },
+  {
+   "id": "f09",
+   "texto": "¡Ey, ay, como sesenta y tres!",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 63,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "¡Ey, ay, como sesenta y tres!"
+   },
+   "total_s": 3.128229108000596,
+   "prompt_tokens": 16,
+   "prompt_ms": 284.215,
+   "gen_tokens": 39,
+   "gen_tok_s": 13.40292980991471,
+   "correcto": true
+  },
+  {
+   "id": "f10",
+   "texto": "Suma diez más.",
+   "orden": {
+    "accion": "sumar",
+    "cantidad": 10,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Suma diez más."
+   },
+   "total_s": 3.1554850289994647,
+   "prompt_tokens": 11,
+   "prompt_ms": 373.293,
+   "gen_tokens": 39,
+   "gen_tok_s": 13.70052667708868,
+   "correcto": true
+  },
+  {
+   "id": "f10",
+   "texto": "Suma diez de más.",
+   "orden": {
+    "accion": "sumar",
+    "cantidad": 10,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Suma diez de más."
+   },
+   "total_s": 2.95434681200004,
+   "prompt_tokens": 8,
+   "prompt_ms": 220.364,
+   "gen_tokens": 39,
+   "gen_tok_s": 13.948501398704332,
+   "correcto": true
+  },
+  {
+   "id": "f11",
+   "texto": "Aléala de quince.",
+   "orden": {
+    "accion": "sumar",
+    "cantidad": 15,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Aléala de quince."
+   },
+   "total_s": 2.7361675969996213,
+   "prompt_tokens": 12,
+   "prompt_ms": 273.338,
+   "gen_tokens": 39,
+   "gen_tok_s": 15.482480961641338,
+   "correcto": true
+  },
+  {
+   "id": "f11",
+   "texto": "Vaya la de quince.",
+   "orden": {
+    "accion": "sumar",
+    "cantidad": 15,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Vaya la de quince."
+   },
+   "total_s": 2.680775462999918,
+   "prompt_tokens": 12,
+   "prompt_ms": 254.068,
+   "gen_tokens": 39,
+   "gen_tok_s": 15.712250800601202,
+   "correcto": true
+  },
+  {
+   "id": "f12",
+   "texto": "Tite, guapo.",
+   "orden": {
+    "accion": "desconocido",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Tite, guapo."
+   },
+   "total_s": 2.182466155999464,
+   "prompt_tokens": 11,
+   "prompt_ms": 265.236,
+   "gen_tokens": 32,
+   "gen_tok_s": 16.23681871487151,
+   "correcto": false
+  },
+  {
+   "id": "f12",
+   "texto": "Detecuazos.",
+   "orden": {
+    "accion": "desconocido",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Detecuazos."
+   },
+   "total_s": 2.727887484000348,
+   "prompt_tokens": 11,
+   "prompt_ms": 258.33,
+   "gen_tokens": 41,
+   "gen_tok_s": 16.248795050292053,
+   "correcto": false
+  },
+  {
+   "id": "f13",
+   "texto": "Corrijel anterior a 16.",
+   "orden": {
+    "accion": "corregir",
+    "cantidad": 16,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Corrijel anterior a 16."
+   },
+   "total_s": 2.317733767000391,
+   "prompt_tokens": 14,
+   "prompt_ms": 282.608,
+   "gen_tokens": 33,
+   "gen_tok_s": 15.787017348945378,
+   "correcto": true
+  },
+  {
+   "id": "f13",
+   "texto": "Corrige el anterior a dieciséis.",
+   "orden": {
+    "accion": "corregir",
+    "cantidad": 16.0,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Corrige el anterior a dieciséis."
+   },
+   "total_s": 2.453775957000289,
+   "prompt_tokens": 15,
+   "prompt_ms": 298.427,
+   "gen_tokens": 35,
+   "gen_tok_s": 15.83720840322278,
+   "correcto": true
+  },
+  {
+   "id": "f14",
+   "texto": "No, eran treinta y seis.",
+   "orden": {
+    "accion": "corregir",
+    "cantidad": 36,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "No, eran treinta y seis."
+   },
+   "total_s": 2.788366595000298,
+   "prompt_tokens": 14,
+   "prompt_ms": 279.617,
+   "gen_tokens": 41,
+   "gen_tok_s": 15.998259389378436,
+   "correcto": true
+  },
+  {
+   "id": "f15",
+   "texto": "Esto va en el pasillo tres, estante, be.",
+   "orden": {
+    "accion": "ubicacion",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": "pasillo 3 estante be",
+    "sede": null,
+    "texto": "Esto va en el pasillo tres, estante, be."
+   },
+   "total_s": 2.58803190800063,
+   "prompt_tokens": 19,
+   "prompt_ms": 373.39,
+   "gen_tokens": 38,
+   "gen_tok_s": 16.77583047161847,
+   "correcto": true
+  },
+  {
+   "id": "f15",
+   "texto": "Esto va en el pasillo tres, estante, bebé.",
+   "orden": {
+    "accion": "ubicacion",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": "pasillo 3 estante bebé",
+    "sede": null,
+    "texto": "Esto va en el pasillo tres, estante, bebé."
+   },
+   "total_s": 2.848511064000377,
+   "prompt_tokens": 8,
+   "prompt_ms": 187.903,
+   "gen_tokens": 46,
+   "gen_tok_s": 16.96709740471278,
+   "correcto": false
+  },
+  {
+   "id": "f16",
+   "texto": "Hay dos dañados.",
+   "orden": {
+    "accion": "danado",
+    "cantidad": 2,
+    "unidad": "unidades",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Hay dos dañados."
+   },
+   "total_s": 2.6901353749999544,
+   "prompt_tokens": 11,
+   "prompt_ms": 230.824,
+   "gen_tokens": 40,
+   "gen_tok_s": 15.911294938698676,
+   "correcto": true
+  },
+  {
+   "id": "f16",
+   "texto": "Ay dos dañados.",
+   "orden": {
+    "accion": "danado",
+    "cantidad": 2,
+    "unidad": "unidades",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Ay dos dañados."
+   },
+   "total_s": 2.6856404420004765,
+   "prompt_tokens": 11,
+   "prompt_ms": 296.668,
+   "gen_tokens": 40,
+   "gen_tok_s": 16.380711250482495,
+   "correcto": true
+  },
+  {
+   "id": "f17",
+   "texto": "Márcalos como dañado.",
+   "orden": {
+    "accion": "danado",
+    "cantidad": 1,
+    "unidad": "unidades",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Márcalos como dañado."
+   },
+   "total_s": 2.435876267999447,
+   "prompt_tokens": 15,
+   "prompt_ms": 315.529,
+   "gen_tokens": 35,
+   "gen_tok_s": 16.09677761449543,
+   "correcto": false
+  },
+  {
+   "id": "f17",
+   "texto": "Marta lo como lañado.",
+   "orden": {
+    "accion": "danado",
+    "cantidad": 1,
+    "unidad": "unidades",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Marta lo como lañado."
+   },
+   "total_s": 2.2553185349997875,
+   "prompt_tokens": 12,
+   "prompt_ms": 253.69,
+   "gen_tokens": 33,
+   "gen_tok_s": 16.055584433308113,
+   "correcto": false
+  },
+  {
+   "id": "f18",
+   "texto": "¿Cuánto hay de esto en la sede norte?",
+   "orden": {
+    "accion": "consulta",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": "norte",
+    "texto": "¿Cuánto hay de esto en la sede norte?"
+   },
+   "total_s": 2.3360334039998634,
+   "prompt_tokens": 18,
+   "prompt_ms": 325.004,
+   "gen_tokens": 33,
+   "gen_tok_s": 15.966056164594074,
+   "correcto": true
+  },
+  {
+   "id": "f18",
+   "texto": "¿Cuánto ahí de estorno hacer en norte?",
+   "orden": {
+    "accion": "deshacer",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": "norte",
+    "texto": "¿Cuánto ahí de estorno hacer en norte?"
+   },
+   "total_s": 2.7598358129998815,
+   "prompt_tokens": 15,
+   "prompt_ms": 331.866,
+   "gen_tokens": 40,
+   "gen_tok_s": 16.117200979429906,
+   "correcto": false
+  },
+  {
+   "id": "f19",
+   "texto": "Deshacer el último.",
+   "orden": {
+    "accion": "deshacer",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Deshacer el último."
+   },
+   "total_s": 2.1894009830002688,
+   "prompt_tokens": 11,
+   "prompt_ms": 240.411,
+   "gen_tokens": 31,
+   "gen_tok_s": 15.455536482278681,
+   "correcto": true
+  },
+  {
+   "id": "f19",
+   "texto": "Deshacen el último.",
+   "orden": {
+    "accion": "deshacer",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Deshacen el último."
+   },
+   "total_s": 1.9512157409999418,
+   "prompt_tokens": 9,
+   "prompt_ms": 184.696,
+   "gen_tokens": 31,
+   "gen_tok_s": 17.058248231628266,
+   "correcto": true
+  },
+  {
+   "id": "f20",
+   "texto": "Anota que la etiqueta no corresponde al producto.",
+   "orden": {
+    "accion": "nota",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Anota que la etiqueta no corresponde al producto."
+   },
+   "total_s": 1.7381292289992416,
+   "prompt_tokens": 17,
+   "prompt_ms": 275.549,
+   "gen_tokens": 26,
+   "gen_tok_s": 17.185390493316945,
+   "correcto": true
+  },
+  {
+   "id": "f02",
+   "texto": "Hay 28 unidades.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 28,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Hay 28 unidades."
+   },
+   "total_s": 2.407539901999371,
+   "prompt_tokens": 11,
+   "prompt_ms": 231.635,
+   "gen_tokens": 39,
+   "gen_tok_s": 17.526891093894783,
+   "correcto": false
+  },
+  {
+   "id": "f05",
+   "texto": "Pochoscentos setenta y cinco metros.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 257.5,
+    "unidad": "metros",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Pochoscentos setenta y cinco metros."
+   },
+   "total_s": 2.7783821859993623,
+   "prompt_tokens": 16,
+   "prompt_ms": 230.148,
+   "gen_tokens": 43,
+   "gen_tok_s": 16.52730606091729,
+   "correcto": false
+  },
+  {
+   "id": "f05",
+   "texto": "Pochoscientos setenta y cinco metros.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 175.0,
+    "unidad": "metros",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Pochoscientos setenta y cinco metros."
+   },
+   "total_s": 2.8735827279997466,
+   "prompt_tokens": 13,
+   "prompt_ms": 247.682,
+   "gen_tokens": 43,
+   "gen_tok_s": 16.043779654730223,
+   "correcto": false
+  },
+  {
+   "id": "f06",
+   "texto": "Kilo y medio.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 1.5,
+    "unidad": "kilos",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Kilo y medio."
+   },
+   "total_s": 2.6991323100000955,
+   "prompt_tokens": 10,
+   "prompt_ms": 219.915,
+   "gen_tokens": 42,
+   "gen_tok_s": 16.591901937812743,
+   "correcto": true
+  },
+  {
+   "id": "f06",
+   "texto": "Chilos y medio.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 1.5,
+    "unidad": "kilos",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Chilos y medio."
+   },
+   "total_s": 2.6009894130002067,
+   "prompt_tokens": 10,
+   "prompt_ms": 211.418,
+   "gen_tokens": 42,
+   "gen_tok_s": 17.207680333342147,
+   "correcto": true
+  },
+  {
+   "id": "f07",
+   "texto": "Dos secajas.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 2,
+    "unidad": "cajas",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Dos secajas."
+   },
+   "total_s": 2.474753944999975,
+   "prompt_tokens": 10,
+   "prompt_ms": 228.093,
+   "gen_tokens": 40,
+   "gen_tok_s": 17.420349916761996,
+   "correcto": false
+  },
+  {
+   "id": "f07",
+   "texto": "Dos y cajas.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 2,
+    "unidad": "cajas",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Dos y cajas."
+   },
+   "total_s": 2.398175307999736,
+   "prompt_tokens": 9,
+   "prompt_ms": 184.056,
+   "gen_tokens": 40,
+   "gen_tok_s": 17.678696490778744,
+   "correcto": false
+  },
+  {
+   "id": "f09",
+   "texto": "Ahí, ahí, como sesenta y tres.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 63,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Ahí, ahí, como sesenta y tres."
+   },
+   "total_s": 2.420563138000034,
+   "prompt_tokens": 17,
+   "prompt_ms": 266.0,
+   "gen_tokens": 39,
+   "gen_tok_s": 17.702264678671288,
+   "correcto": true
+  },
+  {
+   "id": "f11",
+   "texto": "Abre de ale quince.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Abre de ale quince."
+   },
+   "total_s": 2.2515493930004595,
+   "prompt_tokens": 12,
+   "prompt_ms": 213.98,
+   "gen_tokens": 37,
+   "gen_tok_s": 17.735877315024652,
+   "correcto": false
+  },
+  {
+   "id": "f11",
+   "texto": "Abre dale quince.",
+   "orden": {
+    "accion": "sumar",
+    "cantidad": 15,
+    "unidad": "unidades",
+    "ubicacion": "pasillo 7 estante a",
+    "sede": "sur",
+    "texto": "Abre dale quince."
+   },
+   "total_s": 2.9531783459997314,
+   "prompt_tokens": 10,
+   "prompt_ms": 201.726,
+   "gen_tokens": 49,
+   "gen_tok_s": 17.495178802549777,
+   "correcto": true
+  },
+  {
+   "id": "f12",
+   "texto": "Quita cuatro.",
+   "orden": {
+    "accion": "restar",
+    "cantidad": 4,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Quita cuatro."
+   },
+   "total_s": 2.3487436210007218,
+   "prompt_tokens": 9,
+   "prompt_ms": 209.601,
+   "gen_tokens": 38,
+   "gen_tok_s": 17.362756792826648,
+   "correcto": true
+  },
+  {
+   "id": "f13",
+   "texto": "Corige la anterior a 16.",
+   "orden": {
+    "accion": "corregir",
+    "cantidad": 16,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Corige la anterior a 16."
+   },
+   "total_s": 2.5154597660002764,
+   "prompt_tokens": 15,
+   "prompt_ms": 311.992,
+   "gen_tokens": 40,
+   "gen_tok_s": 17.778636825300733,
+   "correcto": true
+  },
+  {
+   "id": "f13",
+   "texto": "Corige en anterior a 16.",
+   "orden": {
+    "accion": "corregir",
+    "cantidad": 16,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Corige en anterior a 16."
+   },
+   "total_s": 2.081932155000686,
+   "prompt_tokens": 12,
+   "prompt_ms": 215.947,
+   "gen_tokens": 33,
+   "gen_tok_s": 17.21094487011653,
+   "correcto": true
+  },
+  {
+   "id": "f15",
+   "texto": "Esto va en el pasillo 3, Estante B.",
+   "orden": {
+    "accion": "ubicacion",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": "pasillo 3 estante b",
+    "sede": null,
+    "texto": "Esto va en el pasillo 3, Estante B."
+   },
+   "total_s": 2.3853473040007884,
+   "prompt_tokens": 20,
+   "prompt_ms": 328.015,
+   "gen_tokens": 38,
+   "gen_tok_s": 18.043156303961837,
+   "correcto": true
+  },
+  {
+   "id": "f17",
+   "texto": "Márcalo como dañado.",
+   "orden": {
+    "accion": "danado",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Márcalo como dañado."
+   },
+   "total_s": 2.315344917999937,
+   "prompt_tokens": 14,
+   "prompt_ms": 284.941,
+   "gen_tokens": 37,
+   "gen_tok_s": 17.799964004517236,
+   "correcto": true
+  },
+  {
+   "id": "f17",
+   "texto": "Mácalo, como dañado.",
+   "orden": {
+    "accion": "danado",
+    "cantidad": 1,
+    "unidad": "unidades",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Mácalo, como dañado."
+   },
+   "total_s": 2.0935474519992567,
+   "prompt_tokens": 13,
+   "prompt_ms": 238.95,
+   "gen_tokens": 33,
+   "gen_tok_s": 17.338036998287325,
+   "correcto": false
+  },
+  {
+   "id": "f20",
+   "texto": "Anota que la etiqueta no corresponde dal producto.",
+   "orden": {
+    "accion": "nota",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Anota que la etiqueta no corresponde dal producto."
+   },
+   "total_s": 1.6889415430005101,
+   "prompt_tokens": 17,
+   "prompt_ms": 269.59,
+   "gen_tokens": 26,
+   "gen_tok_s": 17.699829302846204,
+   "correcto": true
+  },
+  {
+   "id": "f06",
+   "texto": "Quino y medio.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 2.5,
+    "unidad": "unidades",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Quino y medio."
+   },
+   "total_s": 2.545307352999771,
+   "prompt_tokens": 10,
+   "prompt_ms": 203.268,
+   "gen_tokens": 42,
+   "gen_tok_s": 17.556014390793454,
+   "correcto": false
+  },
+  {
+   "id": "f07",
+   "texto": "Doce cazas.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 12,
+    "unidad": "cajas",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Doce cazas."
+   },
+   "total_s": 2.497645406000629,
+   "prompt_tokens": 10,
+   "prompt_ms": 205.882,
+   "gen_tokens": 41,
+   "gen_tok_s": 17.51523606597289,
+   "correcto": true
+  },
+  {
+   "id": "f07",
+   "texto": "Doce cargas.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 12,
+    "unidad": "cajas",
+    "ubicacion": "pasillo 7 estante a",
+    "sede": "sur",
+    "texto": "Doce cargas."
+   },
+   "total_s": 2.91007788800016,
+   "prompt_tokens": 8,
+   "prompt_ms": 157.887,
+   "gen_tokens": 49,
+   "gen_tok_s": 17.482829493970428,
+   "correcto": true
+  },
+  {
+   "id": "f09",
+   "texto": "Ahí hay como sesenta y tres.",
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 63,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Ahí hay como sesenta y tres."
+   },
+   "total_s": 2.444548238999232,
+   "prompt_tokens": 14,
+   "prompt_ms": 260.843,
+   "gen_tokens": 39,
+   "gen_tok_s": 17.455357922114192,
+   "correcto": true
+  },
+  {
+   "id": "f10",
+   "texto": "Suma, diátomas.",
+   "orden": {
+    "accion": "sumar",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Suma, diátomas."
+   },
+   "total_s": 1.939218401999824,
+   "prompt_tokens": 12,
+   "prompt_ms": 242.4,
+   "gen_tokens": 31,
+   "gen_tok_s": 17.750807070028117,
+   "correcto": false
+  },
+  {
+   "id": "f11",
+   "texto": "Regale quince.",
+   "orden": {
+    "accion": "sumar",
+    "cantidad": 15,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Regale quince."
+   },
+   "total_s": 2.3870537450002303,
+   "prompt_tokens": 10,
+   "prompt_ms": 204.837,
+   "gen_tokens": 39,
+   "gen_tok_s": 17.476350588470115,
+   "correcto": true
+  },
+  {
+   "id": "f11",
+   "texto": "Rera, le quiza.",
+   "orden": {
+    "accion": "deshacer",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Rera, le quiza."
+   },
+   "total_s": 1.9355273990004207,
+   "prompt_tokens": 12,
+   "prompt_ms": 244.325,
+   "gen_tokens": 31,
+   "gen_tok_s": 17.809502438120887,
+   "correcto": false
+  },
+  {
+   "id": "f12",
+   "texto": "Quita cuazo.",
+   "orden": {
+    "accion": "deshacer",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Quita cuazo."
+   },
+   "total_s": 2.022721057999661,
+   "prompt_tokens": 10,
+   "prompt_ms": 230.597,
+   "gen_tokens": 33,
+   "gen_tok_s": 17.923254863083134,
+   "correcto": false
+  },
+  {
+   "id": "f12",
+   "texto": "Quita cuarta.",
+   "orden": {
+    "accion": "restar",
+    "cantidad": 4,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Quita cuarta."
+   },
+   "total_s": 2.266717761000109,
+   "prompt_tokens": 7,
+   "prompt_ms": 168.88,
+   "gen_tokens": 38,
+   "gen_tok_s": 17.70399306386261,
+   "correcto": true
+  },
+  {
+   "id": "f13",
+   "texto": "Corrige el anterior a 16.",
+   "orden": {
+    "accion": "corregir",
+    "cantidad": 16,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Corrige el anterior a 16."
+   },
+   "total_s": 2.4927865419995214,
+   "prompt_tokens": 15,
+   "prompt_ms": 281.045,
+   "gen_tokens": 40,
+   "gen_tok_s": 17.695734102991896,
+   "correcto": true
+  },
+  {
+   "id": "f15",
+   "texto": "Esto va en el pasillo tres, Estante B.",
+   "orden": {
+    "accion": "ubicacion",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": "pasillo 3 estante b",
+    "sede": null,
+    "texto": "Esto va en el pasillo tres, Estante B."
+   },
+   "total_s": 2.3503723260000697,
+   "prompt_tokens": 19,
+   "prompt_ms": 343.392,
+   "gen_tokens": 37,
+   "gen_tok_s": 18.007806384067493,
+   "correcto": true
+  },
+  {
+   "id": "f16",
+   "texto": "Eidos dañados.",
+   "orden": {
+    "accion": "danado",
+    "cantidad": 1,
+    "unidad": "unidades",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Eidos dañados."
+   },
+   "total_s": 2.472638576999998,
+   "prompt_tokens": 11,
+   "prompt_ms": 229.0,
+   "gen_tokens": 40,
+   "gen_tok_s": 17.445012426216543,
+   "correcto": false
+  },
+  {
+   "id": "f16",
+   "texto": "Ahí dos dañados.",
+   "orden": {
+    "accion": "danado",
+    "cantidad": 2,
+    "unidad": "unidades",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Ahí dos dañados."
+   },
+   "total_s": 2.43481322200023,
+   "prompt_tokens": 12,
+   "prompt_ms": 215.705,
+   "gen_tokens": 40,
+   "gen_tok_s": 17.63070455007798,
+   "correcto": true
+  },
+  {
+   "id": "f17",
+   "texto": "Márcago como dañado.",
+   "orden": {
+    "accion": "danado",
+    "cantidad": 1,
+    "unidad": "unidades",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Márcago como dañado."
+   },
+   "total_s": 2.257375401999525,
+   "prompt_tokens": 14,
+   "prompt_ms": 283.993,
+   "gen_tokens": 35,
+   "gen_tok_s": 17.30126696160238,
+   "correcto": false
+  },
+  {
+   "id": "f18",
+   "texto": "¿Cuánto ha ido esto en la sede norte?",
+   "orden": {
+    "accion": "consulta",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": "norte",
+    "texto": "¿Cuánto ha ido esto en la sede norte?"
+   },
+   "total_s": 2.191038939000464,
+   "prompt_tokens": 19,
+   "prompt_ms": 340.632,
+   "gen_tokens": 33,
+   "gen_tok_s": 17.36788601890603,
+   "correcto": true
+  }
+ ]
+}

@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% from "macros.html" import vacio, estado %}
+{% block titulo %}Caja{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <div><h1>Caja</h1><p>Sede {{ usuario.sede }} · {{ usuario.nombre }}</p></div>
+  <div class="acciones"><a class="btn" href="/caja/historial">{{ icono('auditoria') }} Cierres anteriores</a>
+    {% if caja %}<a class="btn btn-primario" href="/ventas/pos">{{ icono('venta') }} Vender</a>{% endif %}</div>
+</div>
+
+{% if not caja %}
+<form class="tarjeta tarjeta-cuerpo pila" style="max-width:480px" hx-post="/caja/abrir">
+  <div><h2>Abrir caja</h2><p class="tenue">Cuenta el efectivo con el que empiezas el turno.</p></div>
+  <label class="campo">Base en efectivo<input name="base" inputmode="numeric" value="200000" required></label>
+  <div><button class="btn btn-primario">Abrir caja</button></div>
+</form>
+{% else %}
+<div class="rejilla rejilla-4">
+  <div class="tarjeta stat"><span class="etiqueta">Efectivo esperado</span><span class="valor">{{ r.esperado|pesos }}</span><span class="delta">base + ventas + abonos + ingresos − egresos</span></div>
+  <div class="tarjeta stat"><span class="etiqueta">Ventas en efectivo</span><span class="valor">{{ r.por_medio.efectivo|pesos }}</span><span class="delta">{{ r.ventas }} ventas en el turno</span></div>
+  <div class="tarjeta stat"><span class="etiqueta">Tarjeta y transferencia</span><span class="valor">{{ (r.por_medio.tarjeta + r.por_medio.transferencia)|pesos }}</span><span class="delta">no entra a la caja física</span></div>
+  <div class="tarjeta stat"><span class="etiqueta">Vendido a crédito</span><span class="valor">{{ r.por_medio.credito|pesos }}</span></div>
+</div>
+
+<div class="rejilla rejilla-panel">
+  <section class="tarjeta">
+    <div class="tarjeta-titulo"><div><h2>Arqueo del turno</h2><p>Abierta {{ caja.abierta|fecha }}</p></div></div>
+    <div class="tarjeta-cuerpo">
+      <table class="tabla"><tbody>
+        <tr><td>Base inicial</td><td class="num">{{ caja.base|pesos }}</td></tr>
+        <tr><td>Ventas en efectivo</td><td class="num">{{ r.por_medio.efectivo|pesos }}</td></tr>
+        <tr><td>Abonos de cartera en efectivo</td><td class="num">{{ r.abonos_efectivo|pesos }}</td></tr>
+        <tr><td>Otros ingresos</td><td class="num">{{ r.ingresos|pesos }}</td></tr>
+        <tr><td>Egresos (gastos, anulaciones, devoluciones)</td><td class="num">−{{ r.egresos|pesos }}</td></tr>
+        <tr><td><b>Debe haber en la caja</b></td><td class="num"><b style="font-size:18px">{{ r.esperado|pesos }}</b></td></tr>
+      </tbody></table>
+    </div>
+    <div class="tarjeta-titulo"><h2>Movimientos de caja</h2></div>
+    <div class="tarjeta-cuerpo">
+      {% if movimientos %}<table class="tabla"><tbody>
+        {% for m in movimientos %}<tr><td>{{ m.concepto }}</td><td class="secundario">{{ m.fecha|fecha }}</td>
+          <td class="num" style="color:{{ 'var(--bien-texto)' if m.tipo == 'ingreso' else 'inherit' }}">{{ '+' if m.tipo == 'ingreso' else '−' }}{{ m.valor|pesos }}</td></tr>{% endfor %}
+      </tbody></table>{% else %}<p class="tenue">Sin ingresos ni egresos en este turno.</p>{% endif %}
+    </div>
+    <div class="tarjeta-titulo"><h2>Últimas ventas del turno</h2><a class="btn btn-chico" href="/ventas">Ver todas</a></div>
+    <div class="tarjeta-cuerpo">
+      {% if ventas %}<table class="tabla"><tbody>
+        {% for v in ventas %}<tr><td><a class="fila-enlace mono" href="/ventas/{{ v.id }}">{{ v.numero }}</a></td><td class="secundario">{{ v.fecha[11:16] }}</td>
+          <td>{{ v.medio_pago|medio }}</td><td>{{ estado(v.estado) }}</td><td class="num"><b>{{ v.total|pesos }}</b></td></tr>{% endfor %}
+      </tbody></table>{% else %}{{ vacio('Aún no hay ventas en este turno', '', 'venta') }}{% endif %}
+    </div>
+  </section>
+
+  <div class="pila">
+    <form class="tarjeta tarjeta-cuerpo pila" hx-post="/caja/movimiento" x-data="{ tipo: 'egreso' }">
+      <div><h2>Ingreso o egreso</h2><p class="tenue pequeno">Gastos menores, retiros para consignar, cambio que entra.</p></div>
+      <nav class="segmentado">
+        <button type="button" :class="{ activo: tipo === 'egreso' }" @click="tipo = 'egreso'">Egreso</button>
+        <button type="button" :class="{ activo: tipo === 'ingreso' }" @click="tipo = 'ingreso'">Ingreso</button>
+      </nav>
+      <input type="hidden" name="tipo" :value="tipo">
+      <label class="campo">Valor<input name="valor" inputmode="numeric" required></label>
+      <label class="campo">Concepto<input name="concepto" required placeholder="Ej.: transporte de mercancía"></label>
+      <div><button class="btn">Registrar</button></div>
+    </form>
+    <form class="tarjeta tarjeta-cuerpo pila" hx-post="/caja/cerrar" hx-confirm="¿Cerrar la caja? Después no podrás registrar ventas en este turno."
+          x-data="{ contado: '', esperado: {{ r.esperado }} }">
+      <div><h2>Cerrar caja</h2><p class="tenue pequeno">Cuenta el efectivo físico antes de ver la diferencia.</p></div>
+      <label class="campo">Efectivo contado<input name="efectivo" inputmode="numeric" required x-model="contado"></label>
+      <template x-if="contado !== ''">
+        <div class="fila separa">
+          <span class="secundario">Diferencia</span>
+          <b :style="Number(contado.replace(/\D/g, '')) - esperado < 0 ? 'color:var(--critico-texto)' : (Number(contado.replace(/\D/g, '')) - esperado > 0 ? 'color:var(--aviso-texto)' : 'color:var(--bien-texto)')"
+             x-text="(Number(contado.replace(/\D/g, '')) - esperado === 0 ? 'Cuadra ' : (Number(contado.replace(/\D/g, '')) - esperado > 0 ? 'Sobran ' : 'Faltan ')) + pesos(Math.abs(Number(contado.replace(/\D/g, '')) - esperado))"></b>
+        </div>
+      </template>
+      <label class="campo">Observación<input name="nota" placeholder="Opcional"></label>
+      <div><button class="btn btn-primario">Cerrar caja</button></div>
+    </form>
+  </div>
+</div>
+{% endif %}
+
+{% if abiertas is defined and abiertas %}
+<section class="tarjeta">
+  <div class="tarjeta-titulo"><div><h2>Cajas abiertas ahora</h2><p>Monitoreo de todas las cajas{{ '' if usuario.todas_las_sedes else ' de la sede' }}</p></div></div>
+  <div class="tarjeta-cuerpo"><table class="tabla">
+    <thead><tr><th>Cajero</th><th>Sede</th><th>Abierta</th><th class="num">Base</th><th class="num">Efectivo esperado</th></tr></thead>
+    <tbody>{% for a in abiertas %}<tr><td><b>{{ a.usuario }}</b></td><td>{{ a.sede }}</td><td class="secundario">{{ a.abierta|fecha }}</td>
+      <td class="num">{{ a.base|pesos }}</td><td class="num"><b>{{ a.esperado|pesos }}</b></td></tr>{% endfor %}</tbody>
+  </table></div>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block titulo %}Nuevo proveedor{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <div><div class="migas"><a href="/proveedores">Proveedores</a></div><h1>Nuevo proveedor</h1></div>
+</div>
+<form class="tarjeta tarjeta-cuerpo pila" hx-post="/proveedores/nuevo">
+  {% include "compras/_proveedor_campos.html" %}
+  <div class="acciones"><button class="btn btn-primario">Crear proveedor</button><a class="btn" href="/proveedores">Cancelar</a></div>
+</form>
+{% endblock %}

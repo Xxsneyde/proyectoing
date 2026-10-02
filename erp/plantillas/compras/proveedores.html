@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% from "macros.html" import vacio %}
+{% block titulo %}Proveedores{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <div><div class="migas"><a href="/compras">Compras</a></div><h1>Proveedores</h1><p>Lo comprado en 90 días y lo que se les debe</p></div>
+  <div class="acciones"><a class="btn btn-primario" href="/proveedores/nuevo">{{ icono('mas') }} Nuevo proveedor</a></div>
+</div>
+<section class="tarjeta">
+  {% if filas %}
+  <div class="tabla-contenedor"><table class="tabla">
+    <thead><tr><th>Proveedor</th><th class="ocultar-movil">Contacto</th><th class="num ocultar-movil">Plazo</th><th class="num ocultar-movil">Productos</th><th class="num">Comprado 90 días</th><th class="num">Por pagar</th></tr></thead>
+    <tbody>{% for p in filas %}<tr>
+      <td><a class="fila-enlace" href="/proveedores/{{ p.id }}">{{ p.nombre }}</a><br><span class="mono tenue">{{ p.nit }}</span>{% if not p.activo %} <span class="insignia critico">Inactivo</span>{% endif %}</td>
+      <td class="ocultar-movil secundario">{{ p.contacto or '—' }}{% if p.telefono %}<br>{{ p.telefono }}{% endif %}</td>
+      <td class="num ocultar-movil">{{ p.plazo_dias }} días</td>
+      <td class="num ocultar-movil">{{ p.productos }}</td>
+      <td class="num">{{ p.comprado_90|pesos }}</td>
+      <td class="num"><b>{{ p.por_pagar|pesos if p.por_pagar else '—' }}</b>{% if p.proximo %}<br><span class="tenue pequeno">próximo {{ p.proximo|fecha_corta }}</span>{% endif %}</td>
+    </tr>{% endfor %}</tbody>
+  </table></div>
+  {% else %}{{ vacio('No hay proveedores', '', 'proveedor') }}{% endif %}
+</section>
+{% endblock %}

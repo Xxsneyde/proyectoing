@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% from "macros.html" import vacio, paginacion %}
+{% block titulo %}Movimientos de inventario{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <div><div class="migas"><a href="/inventario">Existencias</a></div><h1>Movimientos de inventario</h1>
+    <p>Sede {{ nombre_sede }} · {{ total }} movimientos</p></div>
+</div>
+<section class="tarjeta">
+  <form class="filtros tarjeta-cuerpo" style="padding-bottom:12px" method="get">
+    <select name="tipo" aria-label="Tipo" onchange="this.form.submit()"><option value="">Todos los tipos</option>
+      {% for k, v in tipos.items() %}<option value="{{ k }}" {% if k == tipo %}selected{% endif %}>{{ v }}</option>{% endfor %}</select>
+    <label class="fila" style="gap:6px">Desde <input type="date" name="desde" value="{{ desde }}" onchange="this.form.submit()"></label>
+    <label class="fila" style="gap:6px">Hasta <input type="date" name="hasta" value="{{ hasta }}" onchange="this.form.submit()"></label>
+  </form>
+  {% if filas %}
+  <div class="tabla-contenedor">
+  <table class="tabla">
+    <thead><tr><th>Fecha</th><th>Producto</th><th>Tipo</th><th class="num">Cantidad</th><th class="num">Saldo</th><th class="num ocultar-movil">Valor</th><th class="ocultar-movil">Usuario</th><th class="ocultar-movil">Nota</th></tr></thead>
+    <tbody>
+    {% for m in filas %}
+    <tr>
+      <td class="secundario" style="white-space:nowrap">{{ m.fecha|fecha }}</td>
+      <td><a class="fila-enlace" href="/productos/{{ m.producto_id }}">{{ m.nombre }}</a></td>
+      <td>{{ tipos.get(m.tipo, m.tipo) }}</td>
+      <td class="num" style="color:{{ 'var(--bien-texto)' if m.cantidad > 0 else 'inherit' }}">{{ m.cantidad|cant(true) }} <span class="tenue pequeno">{{ m.unidad }}</span></td>
+      <td class="num">{{ m.saldo|cant }}</td>
+      <td class="num ocultar-movil secundario">{{ m.valor|pesos }}</td>
+      <td class="ocultar-movil secundario">{{ m.usuario or '—' }}</td>
+      <td class="ocultar-movil tenue">{{ m.nota }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {{ paginacion(pagina, paginas, '/inventario/movimientos?tipo=' ~ tipo ~ '&desde=' ~ desde ~ '&hasta=' ~ hasta) }}
+  {% else %}{{ vacio('No hay movimientos con estos filtros') }}{% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,12 @@
+<div class="formulario" x-data="{ rol: '{{ u.rol if u else 'cajero' }}' }">
+  <label class="campo">Nombre<input name="nombre" required value="{{ u.nombre if u else '' }}"></label>
+  <label class="campo">Usuario<input name="usuario" required autocapitalize="none" value="{{ u.usuario if u else '' }}" placeholder="caja.norte"><small>Sin tildes ni espacios</small></label>
+  <label class="campo">Rol
+    <select name="rol" x-model="rol">{% for k, n in ROLES.items() %}<option value="{{ k }}">{{ n }}</option>{% endfor %}</select></label>
+  <label class="campo" x-show="rol !== 'admin'">Sede
+    <select name="sede_id">{% for s in sedes_lista %}<option value="{{ s.id }}" {% if u and u.sede_id == s.id %}selected{% endif %}>{{ s.nombre }}</option>{% endfor %}</select></label>
+  <p class="tenue pequeno ancho" x-show="rol === 'admin'">El dueño trabaja en todas las sedes y puede cambiar de sede desde la barra superior.</p>
+  <p class="tenue pequeno ancho" x-show="rol === 'administrador'">Todo en su sede, menos usuarios y configuración.</p>
+  <p class="tenue pequeno ancho" x-show="rol === 'cajero'">Vender, caja, clientes y abonos. Ve sus propias ventas.</p>
+  <p class="tenue pequeno ancho" x-show="rol === 'bodeguero'">Existencias, conteos, traslados y recepción de compras.</p>
+</div>

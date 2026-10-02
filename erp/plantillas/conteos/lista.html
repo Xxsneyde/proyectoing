@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% from "macros.html" import vacio, estado %}
+{% block titulo %}Conteos{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <div><h1>Conteos de inventario</h1><p>Sede {{ usuario.sede }} · contar seguido y por partes evita cerrar la tienda</p></div>
+</div>
+<div class="rejilla rejilla-3">
+  <div class="tarjeta stat"><span class="etiqueta">Exactitud, últimos 30 días</span><span class="valor">{{ exactitud|pct(1) if exactitud is not none else '—' }}</span><span class="delta">productos contados sin diferencia</span></div>
+  <div class="tarjeta stat"><span class="etiqueta">Sin contar en 60 días</span><a class="valor" href="/inventario?filtro=sin_conteo">{{ sin_contar }}</a><span class="delta">productos de esta sede</span></div>
+  <div class="tarjeta stat"><span class="etiqueta">Sugeridos para hoy</span><span class="valor">{{ sugeridos|length }}</span><span class="delta">los que más se venden y hace más no se cuentan</span></div>
+</div>
+
+<div class="rejilla rejilla-panel">
+  <section class="tarjeta">
+    <div class="tarjeta-titulo"><h2>Conteos</h2></div>
+    <div class="tarjeta-cuerpo" style="padding-top:12px">
+    {% if filas %}
+    <div class="tabla-contenedor"><table class="tabla">
+      <thead><tr><th>Conteo</th><th>Estado</th><th class="num">Contados</th><th class="num ocultar-movil">Con diferencia</th><th class="ocultar-movil">Inició</th><th></th></tr></thead>
+      <tbody>{% for c in filas %}<tr>
+        <td><a class="fila-enlace" href="/conteos/{{ c.id }}{{ '/resultado' if c.estado != 'abierto' }}">{{ c.nombre }}</a><br>
+          <span class="tenue pequeno">{{ tipos[c.tipo] }}{{ ' · ciego' if c.ciego }}</span></td>
+        <td>{{ estado(c.estado) }}</td>
+        <td class="num">{{ c.contados }}</td>
+        <td class="num ocultar-movil">{% if c.con_diferencia %}<span class="insignia aviso">{{ c.con_diferencia }}</span>{% else %}0{% endif %}</td>
+        <td class="ocultar-movil secundario">{{ c.creado|fecha }}<br>{{ c.usuario }}</td>
+        <td class="acciones-fila">{% if c.estado == 'abierto' %}<a class="btn btn-chico btn-primario" href="/conteos/{{ c.id }}">Contar</a>{% endif %}</td>
+      </tr>{% endfor %}</tbody>
+    </table></div>
+    {% else %}{{ vacio('Todavía no hay conteos', 'Empieza con un conteo cíclico: son pocos productos y toma minutos.', 'conteo') }}{% endif %}
+    </div>
+  </section>
+
+  <form class="tarjeta tarjeta-cuerpo pila" hx-post="/conteos" x-data="{ tipo: 'ciclico' }">
+    <div><h2>Nuevo conteo</h2><p class="tenue pequeno">Se cuenta en la sede {{ usuario.sede }}.</p></div>
+    <div class="pila" style="gap:8px">
+      {% for clave, texto, ayuda in [('ciclico', 'Cíclico sugerido', sugeridos|length ~ ' productos elegidos por el sistema'), ('ubicacion', 'Una ubicación', 'un pasillo, la bodega, la vitrina'), ('categoria', 'Una categoría', 'por ejemplo, todo lo eléctrico'), ('general', 'Toda la sede', 'inventario completo')] %}
+      <label class="casilla" style="align-items:flex-start;padding:10px 12px;border:1px solid var(--linea);border-radius:10px" :style="tipo === '{{ clave }}' && 'border-color:var(--tinta)'">
+        <input type="radio" name="tipo" value="{{ clave }}" x-model="tipo" style="margin-top:2px">
+        <span><b>{{ texto }}</b><br><span class="tenue pequeno">{{ ayuda }}</span></span>
+      </label>
+      {% endfor %}
+    </div>
+    <label class="campo" x-show="tipo === 'ubicacion'" x-cloak>Ubicación
+      <select name="ubicacion">{% for u in ubicaciones %}<option>{{ u }}</option>{% endfor %}</select></label>
+    <label class="campo" x-show="tipo === 'categoria'" x-cloak>Categoría
+      <select name="categoria">{% for c in categorias %}<option value="{{ c.id }}">{{ c.nombre }}</option>{% endfor %}</select></label>
+    <label class="campo">Nombre <small>opcional</small><input name="nombre" placeholder="Ej.: pasillo 3 martes"></label>
+    <label class="casilla"><input type="checkbox" name="ciego" value="1" checked> Conteo ciego <span class="tenue pequeno">(no mostrar lo que dice el sistema)</span></label>
+    <div><button class="btn btn-primario">Empezar a contar</button></div>
+  </form>
+</div>
+{% endblock %}

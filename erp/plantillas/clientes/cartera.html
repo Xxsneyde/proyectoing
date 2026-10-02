@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% from "macros.html" import vacio %}
+{% block titulo %}Cartera{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <div><h1>Clientes y cartera</h1><p>Lo que deben los clientes a crédito, según cuánto lleva vencido</p></div>
+  <div class="acciones"><a class="btn" href="/reportes/cartera.csv">{{ icono('descarga') }} Exportar CSV</a></div>
+</div>
+<nav class="pestanas"><a href="/clientes">Clientes</a><a href="/clientes?vista=cartera" aria-current="page">Cartera por edades</a></nav>
+<div class="rejilla rejilla-3">
+  <div class="tarjeta stat"><span class="etiqueta">Total por cobrar</span><span class="valor">{{ e.total|pesos }}</span><span class="delta">{{ e.cuentas|length }} facturas de {{ clientes|length }} clientes</span></div>
+  <div class="tarjeta stat"><span class="etiqueta">Vencido</span><span class="valor" style="{{ 'color:var(--critico-texto)' if e.vencido }}">{{ e.vencido|pesos }}</span>
+    <span class="delta">{{ (100 * e.vencido / e.total)|round(1)|pct(1) if e.total else '0 %' }} de la cartera</span></div>
+  <div class="tarjeta stat"><span class="etiqueta">Al día</span><span class="valor">{{ (e.total - e.vencido)|pesos }}</span></div>
+</div>
+<section class="tarjeta">
+  <div class="tarjeta-titulo"><div><h2>Por edades</h2><p>Entre más días, más difícil de cobrar</p></div></div>
+  <div class="tarjeta-cuerpo">
+    {% set maximo = e.rangos|map(attribute='valor')|max %}
+    {% for r in e.rangos %}
+    <div class="barra-fila" tabindex="0" data-globo='{{ {"titulo": r.nombre, "renglones": [{"nombre": "Saldo", "valor": r.valor|pesos}]}|tojson }}'>
+      <span class="nombre">{{ r.nombre }}</span>
+      <span class="pista"><span class="relleno" style="width:{{ (100 * r.valor / maximo) if maximo else 0 }}%;min-width:{{ '2px' if r.valor else '0' }}"></span></span>
+      <span class="num">{{ r.valor|pesos }}</span>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+<section class="tarjeta">
+  <div class="tarjeta-titulo"><div><h2>Por cliente</h2><p>Primero quien tiene la deuda más antigua. El detalle de cada factura está en la ficha del cliente.</p></div></div>
+  <div class="tarjeta-cuerpo">
+  {% if clientes %}
+  <div class="tabla-contenedor"><table class="tabla">
+    <thead><tr><th>Cliente</th>{% for k, n in rangos %}<th class="num {{ 'ocultar-movil' if k != 'mas_90' }}">{{ n }}</th>{% endfor %}<th class="num">Total</th></tr></thead>
+    <tbody>{% for c in clientes %}<tr>
+      <td><a class="fila-enlace" href="/clientes/{{ c.id }}">{{ c.nombre }}</a><br><span class="tenue pequeno">{{ c.facturas }} factura{{ 's' if c.facturas > 1 }}{{ ' · ' ~ c.telefono if c.telefono }}</span></td>
+      {% for k, n in rangos %}<td class="num {{ 'ocultar-movil' if k != 'mas_90' }}">{% if c[k] %}{% if k in ('61_90', 'mas_90') %}<span class="insignia critico">{{ c[k]|pesos }}</span>{% elif k != 'al_dia' %}<span class="insignia serio">{{ c[k]|pesos }}</span>{% else %}{{ c[k]|pesos }}{% endif %}{% else %}<span class="tenue">—</span>{% endif %}</td>{% endfor %}
+      <td class="num"><b>{{ c.total|pesos }}</b></td>
+    </tr>{% endfor %}</tbody>
+    <tfoot><tr><td><b>Total</b></td>{% for r in e.rangos %}<td class="num {{ 'ocultar-movil' if r.clave != 'mas_90' }}"><b>{{ r.valor|pesos }}</b></td>{% endfor %}<td class="num"><b>{{ e.total|pesos }}</b></td></tr></tfoot>
+  </table></div>
+  {% else %}{{ vacio('No hay cartera pendiente', '', 'check') }}{% endif %}
+  </div>
+</section>
+{% endblock %}

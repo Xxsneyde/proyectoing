@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% from "macros.html" import vacio, paginacion, estado %}
+{% block titulo %}Ventas{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <div><h1>Ventas</h1><p>{{ 'Tus ventas' if usuario.rol == 'cajero' else ('Todas las sedes' if sede_lista is none else 'Sede ' ~ usuario.sede) }} · del {{ desde|fecha_corta }} al {{ hasta|fecha_corta }}</p></div>
+  <div class="acciones">{% if puede(usuario, 'ventas') %}<a class="btn btn-primario" href="/ventas/pos">{{ icono('venta') }} Vender</a>{% endif %}</div>
+</div>
+<div class="rejilla rejilla-4">
+  <div class="tarjeta stat"><span class="etiqueta">Total vendido</span><span class="valor">{{ totales.total|pesos }}</span><span class="delta">sin contar anuladas</span></div>
+  <div class="tarjeta stat"><span class="etiqueta">Ventas</span><span class="valor">{{ totales.n - (totales.anuladas or 0) }}</span><span class="delta">{{ totales.anuladas or 0 }} anuladas</span></div>
+  <div class="tarjeta stat"><span class="etiqueta">Ticket promedio</span><span class="valor">{{ (totales.total / (totales.n - (totales.anuladas or 0)))|pesos if totales.n - (totales.anuladas or 0) > 0 else '—' }}</span></div>
+  {% if usuario.rol != 'cajero' %}<div class="tarjeta stat"><span class="etiqueta">Utilidad bruta</span><span class="valor">{{ totales.utilidad|pesos }}</span><span class="delta">venta sin IVA menos costo</span></div>{% endif %}
+</div>
+<section class="tarjeta">
+  <form class="filtros tarjeta-cuerpo" style="padding-bottom:12px" method="get">
+    <nav class="segmentado" aria-label="Periodo">
+      <a href="/ventas?desde={{ hoy_ }}&hasta={{ hoy_ }}" {% if desde == hoy_ and hasta == hoy_ %}aria-current="page"{% endif %}>Hoy</a>
+      <a href="/ventas?desde={{ ayer }}&hasta={{ ayer }}" {% if desde == ayer and hasta == ayer %}aria-current="page"{% endif %}>Ayer</a>
+      <a href="/ventas?desde={{ semana }}&hasta={{ hoy_ }}" {% if desde == semana and hasta == hoy_ %}aria-current="page"{% endif %}>7 días</a>
+      <a href="/ventas?desde={{ mes }}&hasta={{ hoy_ }}" {% if desde == mes and hasta == hoy_ %}aria-current="page"{% endif %}>Este mes</a>
+    </nav>
+    <input type="date" name="desde" value="{{ desde }}" aria-label="Desde">
+    <input type="date" name="hasta" value="{{ hasta }}" aria-label="Hasta">
+    <select name="medio" aria-label="Medio de pago"><option value="">Todos los medios</option>
+      {% for m in medios %}<option value="{{ m }}" {% if m == medio %}selected{% endif %}>{{ m|medio }}</option>{% endfor %}</select>
+    <select name="estado" aria-label="Estado"><option value="">Todos los estados</option>
+      {% for k, t in [('pagada', 'Pagadas'), ('credito', 'Crédito pendiente'), ('anulada', 'Anuladas')] %}<option value="{{ k }}" {% if k == estado %}selected{% endif %}>{{ t }}</option>{% endfor %}</select>
+    <input type="search" name="q" value="{{ q }}" placeholder="Número o cliente" style="min-width:160px">
+    <button class="btn">Filtrar</button>
+  </form>
+  {% if filas %}
+  <div class="tabla-contenedor">
+  <table class="tabla">
+    <thead><tr><th>Número</th><th>Fecha</th><th class="ocultar-movil">Cliente</th><th class="ocultar-movil">Vendedor</th><th>Medio</th><th>Estado</th><th class="num">Total</th></tr></thead>
+    <tbody>
+    {% for v in filas %}
+    <tr>
+      <td><a class="fila-enlace mono" href="/ventas/{{ v.id }}">{{ v.numero }}</a></td>
+      <td class="secundario" style="white-space:nowrap">{{ v.fecha|fecha }}</td>
+      <td class="ocultar-movil">{{ v.cliente or 'Consumidor final' }}</td>
+      <td class="ocultar-movil secundario">{{ v.vendedor }}{% if sede_lista is none %} · {{ v.sede }}{% endif %}</td>
+      <td>{{ v.medio_pago|medio }}</td>
+      <td>{{ estado(v.estado) }}</td>
+      <td class="num {{ 'tenue' if v.estado == 'anulada' }}"><b>{{ v.total|pesos }}</b></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {{ paginacion(pagina, paginas, '/ventas?desde=' ~ desde ~ '&hasta=' ~ hasta ~ '&medio=' ~ medio ~ '&estado=' ~ estado ~ '&q=' ~ (q|urlencode)) }}
+  {% else %}{{ vacio('No hay ventas en este periodo', '', 'venta') }}{% endif %}
+</section>
+{% endblock %}

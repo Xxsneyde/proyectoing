@@ -1,0 +1,32 @@
+{% from "macros.html" import vacio, paginacion %}
+{% if productos %}
+<div class="tabla-contenedor">
+<table class="tabla">
+  <thead><tr><th>Producto</th><th class="ocultar-movil">Código</th><th class="ocultar-movil">Categoría</th><th class="num">Precio</th>
+    <th class="num">En {{ usuario.sede }}</th><th class="num ocultar-movil">Todas las sedes</th></tr></thead>
+  <tbody>
+  {% for p in productos %}
+    <tr>
+      <td><a class="fila-enlace" href="/productos/{{ p.id }}">{{ p.nombre }}</a>{% if p.ubicacion %}<br><span class="tenue pequeno">{{ p.ubicacion }}</span>{% endif %}</td>
+      <td class="mono ocultar-movil">{{ p.codigo }}</td>
+      <td class="ocultar-movil secundario">{{ p.categoria or '—' }}</td>
+      <td class="num">{{ p.precio|pesos }}</td>
+      <td class="num">
+        {% if p.existencia <= 0 and p.minimo > 0 %}<span class="insignia critico">Agotado</span>
+        {% elif p.minimo > 0 and p.existencia <= p.minimo %}<span class="insignia aviso">{{ p.existencia|cant }}</span>
+        {% else %}{{ p.existencia|cant }}{% endif %}
+        <span class="tenue pequeno">{{ p.unidad }}</span>
+      </td>
+      <td class="num ocultar-movil secundario">{{ (p.total_sedes or 0)|cant }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{{ paginacion(pagina, paginas, '/productos?q=' ~ (q|urlencode) ~ '&categoria=' ~ (categoria or '') ~ '&filtro=' ~ filtro) }}
+{% else %}
+{{ vacio('No hay productos con esa búsqueda', 'Prueba con otra palabra o con el código de barras.', 'buscar') }}
+{% if q and puede(usuario, 'productos.editar') and q.isdigit() %}
+  <p style="text-align:center;padding-bottom:24px"><a class="btn" href="/productos/nuevo?codigo={{ q }}">{{ icono('mas') }} Crear producto con el código {{ q }}</a></p>
+{% endif %}
+{% endif %}

@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% from "macros.html" import vacio %}
+{% set TIPOS = {'inicial': 'Inventario inicial', 'venta': 'Venta', 'anulacion_venta': 'Anulación de venta', 'devolucion': 'Devolución de cliente',
+  'compra': 'Compra', 'traslado_salida': 'Traslado (salida)', 'traslado_entrada': 'Traslado (entrada)', 'ajuste': 'Ajuste manual',
+  'conteo': 'Ajuste por conteo', 'danado': 'Dañado'} %}
+{% block titulo %}{{ p.nombre }}{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <div>
+    <div class="migas"><a href="/productos">Productos</a> / {{ p.categoria or 'Sin categoría' }}</div>
+    <h1>{{ p.nombre }}</h1>
+    <p><span class="mono">{{ p.codigo }}</span> · {{ p.unidad }}{% if p.marca %} · {{ p.marca }}{% endif %}{% if not p.activo %} · <span class="insignia critico">Inactivo</span>{% endif %}</p>
+  </div>
+  <div class="acciones">
+    {% if puede(usuario, 'productos.editar') %}<a class="btn" href="/productos/{{ p.id }}/editar">{{ icono('editar') }} Editar</a>{% endif %}
+  </div>
+</div>
+
+<div class="rejilla rejilla-4">
+  <div class="tarjeta stat"><span class="etiqueta">Precio de venta</span><span class="valor">{{ p.precio|pesos }}</span><span class="delta">IVA {{ p.iva }} % incluido</span></div>
+  <div class="tarjeta stat"><span class="etiqueta">Costo promedio</span><span class="valor">{{ p.costo|pesos }}</span><span class="delta">margen {{ margen|pct(1) if margen is not none else '—' }}</span></div>
+  <div class="tarjeta stat"><span class="etiqueta">Vendido en 30 días</span><span class="valor">{{ ventas_30.cantidad|cant }}</span><span class="delta">{{ p.unidad }} · todas las sedes</span></div>
+  <div class="tarjeta stat"><span class="etiqueta">Proveedor habitual</span><span class="valor" style="font-size:16px;line-height:1.3">{{ p.proveedor or '—' }}</span></div>
+</div>
+
+<section class="tarjeta">
+  <div class="tarjeta-titulo"><div><h2>Existencias por sede</h2><p>Mínimo y máximo definen las alertas y el pedido sugerido</p></div></div>
+  <div class="tarjeta-cuerpo tabla-contenedor">
+    <table class="tabla">
+      <thead><tr><th>Sede</th><th class="num">Existencia</th><th class="num">Mínimo</th><th class="num">Máximo</th><th>Ubicación</th><th class="ocultar-movil">Último conteo</th><th></th></tr></thead>
+      <tbody>
+      {% for s in stock %}
+        {% set editable = puede(usuario, 'inventario.ajustar') and (usuario.todas_las_sedes or usuario.sede_fija == s.sede_id) %}
+        <tr x-data="{ editar: false }">
+          <td><b>{{ s.sede }}</b></td>
+          <td class="num">
+            {% if s.cantidad <= 0 and s.minimo > 0 %}<span class="insignia critico">Agotado</span>
+            {% elif s.minimo > 0 and s.cantidad <= s.minimo %}<span class="insignia aviso">{{ s.cantidad|cant }}</span>
+            {% else %}<b>{{ s.cantidad|cant }}</b>{% endif %}
+          </td>
+          <template x-if="!editar"><td class="num">{{ s.minimo|cant }}</td></template>
+          <template x-if="!editar"><td class="num">{{ s.maximo|cant }}</td></template>
+          <template x-if="!editar"><td>{{ s.ubicacion or '—' }}</td></template>
+          <template x-if="editar"><td colspan="3">
+            <form class="fila" style="gap:8px;flex-wrap:nowrap" hx-post="/productos/{{ p.id }}/existencia">
+              <input type="hidden" name="sede_id" value="{{ s.sede_id }}">
+              <input name="minimo" value="{{ s.minimo|cant }}" aria-label="Mínimo" style="width:80px" inputmode="decimal">
+              <input name="maximo" value="{{ s.maximo|cant }}" aria-label="Máximo" style="width:80px" inputmode="decimal">
+              <input name="ubicacion" value="{{ s.ubicacion }}" aria-label="Ubicación" placeholder="pasillo 3 estante b">
+              <button class="btn btn-primario btn-chico">Guardar</button>
+            </form>
+          </td></template>
+          <td class="ocultar-movil secundario">{{ s.ultimo_conteo|fecha_corta if s.ultimo_conteo else 'Nunca' }}</td>
+          <td class="acciones-fila">{% if editable %}<button class="btn btn-fantasma btn-chico" @click="editar = !editar" x-text="editar ? 'Cancelar' : 'Editar'"></button>{% endif %}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+{% if puede(usuario, 'inventario.ajustar') or usuario.rol == 'bodeguero' %}
+<div class="rejilla rejilla-2">
+  {% if puede(usuario, 'inventario.ajustar') %}
+  <form class="tarjeta tarjeta-cuerpo pila" hx-post="/productos/{{ p.id }}/ajuste" hx-confirm="¿Ajustar la existencia en {{ usuario.sede }}? Queda registrado con tu usuario.">
+    <div><h2>Ajuste manual en {{ usuario.sede }}</h2><p class="tenue pequeno">Para corregir errores puntuales. Lo normal es usar un conteo.</p></div>
+    <div class="formulario">
+      <label class="campo">Existencia real<input name="cantidad" required inputmode="decimal"></label>
+      <label class="campo ancho">Motivo<input name="motivo" required placeholder="Ej.: error al recibir la compra OC-000123"></label>
+    </div>
+    <div><button class="btn">Ajustar</button></div>
+  </form>
+  {% endif %}
+  <form class="tarjeta tarjeta-cuerpo pila" hx-post="/productos/{{ p.id }}/danado">
+    <div><h2>Registrar dañados en {{ usuario.sede }}</h2><p class="tenue pequeno">Salen del inventario vendible y cuentan como merma.</p></div>
+    <div class="formulario">
+      <label class="campo">Cantidad<input name="cantidad" required inputmode="decimal"></label>
+      <label class="campo ancho">Detalle<input name="motivo" placeholder="Ej.: llegaron rotos del proveedor"></label>
+    </div>
+    <div><button class="btn btn-peligro">Registrar dañados</button></div>
+  </form>
+</div>
+{% endif %}
+
+<section class="tarjeta">
+  <div class="tarjeta-titulo">
+    <div><h2>Kárdex</h2><p>Cada entrada y salida, con quién la hizo. Últimos 60 movimientos.</p></div>
+    <nav class="segmentado" aria-label="Sede del kárdex">
+      {% for s in sedes_lista %}<a href="/productos/{{ p.id }}?sede={{ s.id }}" {% if s.id == sede_kardex %}aria-current="page"{% endif %}>{{ s.nombre }}</a>{% endfor %}
+    </nav>
+  </div>
+  <div class="tarjeta-cuerpo tabla-contenedor">
+    {% if kardex %}
+    <table class="tabla">
+      <thead><tr><th>Fecha</th><th>Movimiento</th><th class="num">Cantidad</th><th class="num">Saldo</th><th class="ocultar-movil">Usuario</th><th class="ocultar-movil">Detalle</th></tr></thead>
+      <tbody>
+      {% for m in kardex %}
+        <tr>
+          <td class="secundario" style="white-space:nowrap">{{ m.fecha|fecha }}</td>
+          <td>{{ TIPOS.get(m.tipo, m.tipo) }}</td>
+          <td class="num" style="color:{{ 'var(--bien-texto)' if m.cantidad > 0 else 'inherit' }}">{{ m.cantidad|cant(true) }}</td>
+          <td class="num"><b>{{ m.saldo|cant }}</b></td>
+          <td class="ocultar-movil secundario">{{ m.usuario or '—' }}</td>
+          <td class="ocultar-movil tenue">
+            {% set ref = m.referencia.split(':') %}
+            {% if ref[0] == 'venta' %}<a href="/ventas/{{ ref[1] }}">Ver venta</a>
+            {% elif ref[0] == 'compra' %}<a href="/compras/{{ ref[1] }}">Ver compra</a>
+            {% elif ref[0] == 'traslado' %}<a href="/traslados/{{ ref[1] }}">Ver traslado</a>
+            {% elif ref[0] == 'conteo' %}<a href="/conteos/{{ ref[1] }}/resultado">Ver conteo</a>{% endif %}
+            {{ m.nota }}
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}{{ vacio('Sin movimientos en esta sede') }}{% endif %}
+  </div>
+</section>
+{% endblock %}

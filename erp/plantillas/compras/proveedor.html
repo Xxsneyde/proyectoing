@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% from "macros.html" import vacio, estado %}
+{% block titulo %}{{ p.nombre }}{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <div><div class="migas"><a href="/proveedores">Proveedores</a></div><h1>{{ p.nombre }}</h1>
+    <p><span class="mono">{{ p.nit }}</span> · plazo {{ p.plazo_dias }} días{% if p.telefono %} · {{ p.telefono }}{% endif %}</p></div>
+  <div class="acciones"><a class="btn btn-primario" href="/compras/nueva">{{ icono('mas') }} Nueva orden</a></div>
+</div>
+<div class="rejilla rejilla-panel">
+  <section class="tarjeta">
+    <div class="tarjeta-titulo"><h2>Órdenes recientes</h2></div>
+    <div class="tarjeta-cuerpo">{% if ordenes %}<div class="tabla-contenedor"><table class="tabla"><tbody>
+      {% for c in ordenes %}<tr><td><a class="mono fila-enlace" href="/compras/{{ c.id }}">{{ c.numero }}</a><br><span class="tenue pequeno">{{ c.creada|fecha_corta }} · {{ c.sede }}</span></td>
+        <td>{{ estado(c.estado) }}{% if c.pagada %} <span class="insignia bien">Pagada</span>{% endif %}</td><td class="num"><b>{{ c.total|pesos }}</b></td></tr>{% endfor %}
+    </tbody></table></div>{% else %}{{ vacio('Sin órdenes', '', 'compra') }}{% endif %}</div>
+    <div class="tarjeta-titulo"><h2>Productos que surte ({{ productos|length }})</h2></div>
+    <div class="tarjeta-cuerpo">{% if productos %}<table class="tabla"><tbody>
+      {% for x in productos %}<tr><td><a class="fila-enlace" href="/productos/{{ x.id }}">{{ x.nombre }}</a></td><td class="mono tenue">{{ x.codigo }}</td><td class="num">{{ x.costo|pesos }}</td></tr>{% endfor %}
+    </tbody></table>{% else %}<p class="tenue">Ningún producto tiene a este proveedor como habitual.</p>{% endif %}</div>
+  </section>
+  <form class="tarjeta tarjeta-cuerpo pila" hx-post="/proveedores/{{ p.id }}/editar">
+    <h2>Datos del proveedor</h2>
+    {% include "compras/_proveedor_campos.html" %}
+    <div><button class="btn btn-primario">Guardar cambios</button></div>
+  </form>
+</div>
+{% endblock %}

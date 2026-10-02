@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block titulo %}Empresa y sistema{% endblock %}
+{% block contenido %}
+{% include "admin/_pestanas.html" %}
+<div class="rejilla rejilla-2">
+  <form class="tarjeta tarjeta-cuerpo pila" hx-post="/admin/sistema">
+    <h2>Empresa</h2>
+    <label class="campo">Nombre comercial<input name="empresa_nombre" required value="{{ empresa_nombre }}"></label>
+    <label class="campo">NIT<input name="empresa_nit" value="{{ empresa_nit }}"></label>
+    <div><button class="btn btn-primario">Guardar</button></div>
+  </form>
+  <section class="tarjeta tarjeta-cuerpo pila">
+    <h2>Respaldo de la información</h2>
+    <p class="secundario">Descarga una copia completa de la base de datos: productos, ventas, inventario, clientes y todo el historial. Guárdala fuera de este computador (USB o nube) al menos una vez por semana.</p>
+    <dl class="lista-def">
+      <dt>Último respaldo</dt><dd>{% if ultimo_respaldo %}{{ ultimo_respaldo|fecha }}{% else %}<span class="insignia aviso">Nunca</span>{% endif %}</dd>
+      <dt>Tamaño</dt><dd>{{ tamano_mb|cant }} MB</dd>
+      <dt>Ubicación</dt><dd class="mono" style="word-break:break-all">{{ ruta_db }}</dd>
+    </dl>
+    <div><a class="btn btn-primario" href="/admin/respaldo">{{ icono('descarga') }} Descargar respaldo</a></div>
+  </section>
+</div>
+<section class="tarjeta">
+  <div class="tarjeta-titulo"><div><h2>Estado de las integraciones</h2><p>Lo que está activo y lo que falta conectar</p></div></div>
+  <div class="alertas" style="margin-top:8px">
+    <div class="alerta {{ 'bien' if voz else 'aviso' }}"><span class="icono-estado">{{ icono('mic') }}</span>
+      <span><b>Asistente de voz local</b><span>{{ 'Activo: Whisper y el modelo de lenguaje corren en este computador, sin internet.' if voz else ('Apagado en esta versión de prueba web: el asistente corre con el modelo de IA instalado en el computador de la tienda.' if nube else 'Inactivo: el servidor se inició con --sin-voz. Los conteos funcionan con escáner y teclado.') }}</span></span>
+      <span class="cifra">{{ 'Activo' if voz else 'Inactivo' }}</span></div>
+    <div class="alerta aviso"><span class="icono-estado">{{ icono('cartera') }}</span>
+      <span><b>Facturación electrónica DIAN</b><span>Pendiente: requiere contratar un proveedor tecnológico autorizado. Las ventas quedan marcadas para enviarse cuando se conecte.</span></span>
+      <span class="cifra">Pendiente</span></div>
+    <div class="alerta aviso"><span class="icono-estado">{{ icono('traslado') }}</span>
+      <span><b>Sincronización entre sedes por internet</b><span>Pendiente (siguiente fase). Hoy todas las sedes deben conectarse a este servidor.</span></span>
+      <span class="cifra">Pendiente</span></div>
+    {% if demo %}
+    <div class="alerta info"><span class="icono-estado">{{ icono('info') }}</span>
+      <span><b>Datos de demostración</b><span>La información actual es inventada para probar el sistema. Antes de usarlo en la tienda se debe iniciar con una base limpia.</span></span>
+      <span class="cifra">Demo</span></div>
+    {% endif %}
+  </div>
+  <div class="tarjeta-cuerpo"><p class="tenue pequeno">Registros: {{ conteos.productos }} productos · {{ conteos.ventas }} ventas · {{ conteos.movimientos }} movimientos de inventario · {{ conteos.auditoria }} acciones auditadas.</p></div>
+</section>
+{% endblock %}

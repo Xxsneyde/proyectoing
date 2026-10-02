@@ -1,0 +1,9 @@
+# Versión completa para el PC de la tienda: voz (Whisper + Piper) y asistente local.
+# Los modelos y llama.cpp no van en el repositorio: ver README, sección «Modelos de IA».
+-r requirements.txt
+faster-whisper==1.2.1
+piper-tts==1.8.0
+numpy==2.2.6
+soundfile==0.14.0
+qrcode==8.2
+psutil==7.2.2

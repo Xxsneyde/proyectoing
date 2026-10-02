@@ -1,0 +1,31 @@
+{% from "macros.html" import vacio, paginacion %}
+{% if filas %}
+<div class="tabla-contenedor">
+<table class="tabla">
+  <thead><tr><th>Producto</th><th>Ubicación</th><th class="num">Existencia</th><th class="num ocultar-movil">Mínimo</th>
+    <th class="num ocultar-movil">Máximo</th><th class="num ocultar-movil">Valor</th><th class="ocultar-movil">Último conteo</th></tr></thead>
+  <tbody>
+  {% for f in filas %}
+  <tr>
+    <td><a class="fila-enlace" href="/productos/{{ f.id }}">{{ f.nombre }}</a><br><span class="mono tenue">{{ f.codigo }}</span></td>
+    <td class="secundario">{{ f.ubicacion or '—' }}</td>
+    <td class="num">
+      {% if f.cantidad < 0 %}<span class="insignia critico">{{ f.cantidad|cant }} negativo</span>
+      {% elif f.cantidad <= 0 and f.minimo > 0 %}<span class="insignia critico">Agotado</span>
+      {% elif f.minimo > 0 and f.cantidad <= f.minimo %}<span class="insignia aviso">{{ f.cantidad|cant }}</span>
+      {% else %}<b>{{ f.cantidad|cant }}</b>{% endif %}
+      <span class="tenue pequeno">{{ f.unidad }}</span>
+    </td>
+    <td class="num ocultar-movil secundario">{{ f.minimo|cant }}</td>
+    <td class="num ocultar-movil secundario">{{ f.maximo|cant }}</td>
+    <td class="num ocultar-movil">{{ f.valor|pesos }}</td>
+    <td class="ocultar-movil secundario">{{ f.ultimo_conteo|fecha_corta if f.ultimo_conteo else 'Nunca' }}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{{ paginacion(pagina, paginas, '/inventario?filtro=' ~ filtro ~ '&q=' ~ (q|urlencode) ~ '&categoria=' ~ (categoria or '') ~ ('&sede=' ~ sede_ver if usuario.todas_las_sedes else '')) }}
+{% else %}
+{{ vacio('Nada que mostrar con este filtro', 'Si buscabas faltantes: ¡buena noticia!', 'check') }}
+{% endif %}

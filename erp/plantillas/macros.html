@@ -1,0 +1,46 @@
+{% macro stat(etiqueta, valor, delta=None, delta_texto='', sube_es_bueno=True, url=None, nota=None) %}
+<div class="tarjeta stat">
+  <span class="etiqueta">{{ etiqueta }}</span>
+  {% if url %}<a class="valor" href="{{ url }}">{{ valor }}</a>{% else %}<span class="valor">{{ valor }}</span>{% endif %}
+  {% if delta is not none %}
+    {% set bueno = (delta >= 0) == sube_es_bueno %}
+    <span class="delta {{ 'sube' if bueno else 'baja' }}">{{ icono('sube' if delta >= 0 else 'baja') }}{{ delta|abs|pct }} {{ delta_texto }}</span>
+  {% elif nota %}
+    <span class="delta">{{ nota }}</span>
+  {% endif %}
+</div>
+{% endmacro %}
+
+{% macro vacio(titulo, texto='', ic='info') %}
+<div class="estado-vacio">{{ icono(ic) }}<b>{{ titulo }}</b>{% if texto %}<span>{{ texto }}</span>{% endif %}</div>
+{% endmacro %}
+
+{% set ESTADOS = {
+  'pagada': ('bien', 'Pagada'), 'credito': ('aviso', 'Crédito'), 'anulada': ('critico', 'Anulada'),
+  'borrador': ('', 'Borrador'), 'enviada': ('info', 'Enviada'), 'parcial': ('aviso', 'Recibida parcial'),
+  'recibida': ('bien', 'Recibida'), 'en_transito': ('info', 'En tránsito'), 'recibido': ('bien', 'Recibido'),
+  'anulado': ('critico', 'Anulado'), 'abierto': ('info', 'Abierto'), 'aprobado': ('bien', 'Aprobado'),
+  'abierta': ('info', 'Abierta'), 'cerrada': ('', 'Cerrada'),
+} %}
+{% macro estado(clave) %}{% set e = ESTADOS.get(clave, ('', clave)) %}<span class="insignia {{ e[0] }}">{{ e[1] }}</span>{% endmacro %}
+
+{% macro paginacion(pagina, total, base) %}
+{% if total > 1 %}
+<div class="fila separa" style="padding:12px 20px;border-top:1px solid var(--linea)">
+  <span class="tenue pequeno">Página {{ pagina }} de {{ total }}</span>
+  <div class="fila">
+    {% if pagina > 1 %}<a class="btn btn-chico" href="{{ base }}{{ '&' if '?' in base else '?' }}pagina={{ pagina - 1 }}">Anterior</a>{% endif %}
+    {% if pagina < total %}<a class="btn btn-chico" href="{{ base }}{{ '&' if '?' in base else '?' }}pagina={{ pagina + 1 }}">Siguiente</a>{% endif %}
+  </div>
+</div>
+{% endif %}
+{% endmacro %}
+
+{% macro filtro_sedes(ctx, sedes, actual, ruta) %}
+{% if ctx.usuario.todas_las_sedes %}
+<nav class="segmentado" aria-label="Sede">
+  <a href="{{ ruta }}?sede=todas" {% if actual is none %}aria-current="page"{% endif %}>Todas</a>
+  {% for s in sedes %}<a href="{{ ruta }}?sede={{ s.id }}" {% if actual == s.id %}aria-current="page"{% endif %}>{{ s.nombre }}</a>{% endfor %}
+</nav>
+{% endif %}
+{% endmacro %}

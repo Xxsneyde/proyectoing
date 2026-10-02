@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% from "macros.html" import vacio, estado %}
+{% set c = r.conteo %}
+{% block titulo %}{{ c.nombre }}{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <div><div class="migas"><a href="/conteos">Conteos</a></div><h1>{{ c.nombre }}</h1>
+    <p>Sede {{ c.sede }} · inició {{ c.usuario }} el {{ c.creado|fecha }}{{ ' · ciego' if c.ciego }}</p></div>
+  <div class="acciones">{{ estado(c.estado) }}
+    {% if c.estado == 'abierto' %}<a class="btn btn-primario" href="/conteos/{{ c.id }}">{{ icono('conteo') }} Seguir contando</a>{% endif %}</div>
+</div>
+<div class="rejilla rejilla-4">
+  <div class="tarjeta stat"><span class="etiqueta">Avance</span><span class="valor">{{ r.contados }} / {{ r.total_alcance }}</span>
+    <div class="progreso" style="margin-top:6px"><span style="width:{{ r.avance }}%"></span></div></div>
+  <div class="tarjeta stat"><span class="etiqueta">Exactitud</span><span class="valor">{{ r.exactitud|pct(1) if r.exactitud is not none else '—' }}</span><span class="delta">{{ r.con_diferencia }} productos con diferencia</span></div>
+  <div class="tarjeta stat"><span class="etiqueta">Faltante</span><span class="valor" style="{{ 'color:var(--critico-texto)' if r.faltante }}">{{ r.faltante|pesos }}</span><span class="delta">al costo; {{ r.danados|cant }} unidades dañadas</span></div>
+  <div class="tarjeta stat"><span class="etiqueta">Sobrante</span><span class="valor">{{ r.sobrante|pesos }}</span><span class="delta">mercancía que el sistema no tenía</span></div>
+</div>
+
+{% if c.estado == 'abierto' and puede(usuario, 'conteos.aprobar') %}
+<div class="aviso-caja info">{{ icono('info') }}<span>Al aprobar, el inventario se ajusta solo en los productos contados, por la diferencia. Los no contados no cambian. Las ventas hechas durante el conteo no se pierden.</span></div>
+<div class="acciones">
+  <form hx-post="/conteos/{{ c.id }}/aprobar" hx-confirm="¿Aprobar el conteo y ajustar el inventario de {{ r.contados }} productos?"><button class="btn btn-primario" {{ 'disabled' if not r['items'] }}>{{ icono('check') }} Aprobar y ajustar inventario</button></form>
+  <form hx-post="/conteos/{{ c.id }}/anular" hx-confirm="¿Anular el conteo? No se ajusta nada."><button class="btn btn-peligro">Anular conteo</button></form>
+</div>
+{% elif c.estado == 'aprobado' %}
+<div class="aviso-caja info">{{ icono('check') }}<span>Aprobado el {{ c.aprobado|fecha }}. Las diferencias ya están en el kárdex de cada producto.</span></div>
+{% endif %}
+
+<section class="tarjeta">
+  <div class="tarjeta-titulo"><div><h2>Productos contados</h2><p>Primero las diferencias de mayor valor</p></div></div>
+  <div class="tarjeta-cuerpo">
+  {% if r['items'] %}
+  <div class="tabla-contenedor"><table class="tabla">
+    <thead><tr><th>Producto</th><th class="num">Sistema</th><th class="num">Contado</th><th class="num">Diferencia</th><th class="num ocultar-movil">Valor</th><th class="ocultar-movil">Cómo</th><th class="ocultar-movil">Quién</th></tr></thead>
+    <tbody>{% for i in r['items'] %}<tr>
+      <td><a class="fila-enlace" href="/productos/{{ i.producto_id }}">{{ i.nombre }}</a>{% if i.danados %} <span class="insignia serio">{{ i.danados|cant }} dañados</span>{% endif %}
+        {% if i.nota %}<br><span class="tenue pequeno">{{ i.nota }}</span>{% endif %}</td>
+      <td class="num secundario">{{ i.sistema|cant }}</td><td class="num"><b>{{ i.contado|cant }}</b></td>
+      <td class="num">{% if i.diferencia|abs < 0.000001 %}<span class="insignia bien">Cuadra</span>{% else %}<span class="insignia {{ 'critico' if i.diferencia < 0 else 'aviso' }}">{{ i.diferencia|cant(true) }}</span>{% endif %}</td>
+      <td class="num ocultar-movil">{{ i.valor_diferencia|pesos if i.valor_diferencia else '—' }}</td>
+      <td class="ocultar-movil secundario">{{ {'voz': 'Voz', 'escaner': 'Escáner', 'manual': 'Manual'}[i.metodo] }}</td>
+      <td class="ocultar-movil secundario">{{ i.usuario }}</td>
+    </tr>{% endfor %}</tbody>
+  </table></div>
+  {% else %}{{ vacio('Aún no se ha contado ningún producto', '', 'conteo') }}{% endif %}
+  </div>
+</section>
+
+{% if r.pendientes and c.estado == 'abierto' %}
+<section class="tarjeta">
+  <details class="tarjeta-cuerpo"><summary style="cursor:pointer"><b>Faltan por contar: {{ r.pendientes|length }}</b> <span class="tenue">— no se ajustan si se aprueba ahora</span></summary>
+    <table class="tabla" style="margin-top:12px"><tbody>{% for p in r.pendientes %}<tr><td>{{ p.nombre }}</td><td class="secundario">{{ p.ubicacion or '—' }}</td><td class="mono tenue">{{ p.codigo }}</td></tr>{% endfor %}</tbody></table>
+  </details>
+</section>
+{% endif %}
+{% endblock %}

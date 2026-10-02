@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% from "macros.html" import filtro_sedes %}
+{% block titulo %}Panel{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <div>
+    <h1>Panel de monitoreo</h1>
+    <p>{{ 'Todas las sedes' if sede_panel is none else 'Sede ' ~ nombre_sede }} · se actualiza cada minuto</p>
+  </div>
+  {{ filtro_sedes(ctx, sedes, sede_panel, '/panel') }}
+</div>
+<div id="panel" hx-get="/panel/contenido{{ '?sede=' ~ ('todas' if sede_panel is none else sede_panel) if usuario.todas_las_sedes else '' }}"
+     hx-trigger="every 60s" hx-swap="innerHTML" class="pila" style="gap:16px">
+  {% include "panel_contenido.html" %}
+</div>
+{% endblock %}

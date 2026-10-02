@@ -1,0 +1,103 @@
+{% from "macros.html" import stat, vacio %}
+{% set h = k.hoy %}
+<div class="rejilla rejilla-panel">
+  <section class="tarjeta" aria-labelledby="t-ventas">
+    <div class="heroe" style="padding-bottom:4px">
+      <span class="etiqueta" id="t-ventas">Ventas de hoy</span>
+      <span class="valor">{{ h.total|pesos }}</span>
+      <div class="fila" style="gap:16px">
+        {% if delta_hoy is not none %}
+        <span class="delta {{ 'sube' if delta_hoy >= 0 else 'baja' }}">{{ icono('sube' if delta_hoy >= 0 else 'baja') }}{{ delta_hoy|abs|pct }} frente al {{ dia_semana_pasada }} pasado a esta hora ({{ k.semana_pasada.total|pesos }})</span>
+        {% endif %}
+        <span class="delta">{{ h.n }} ventas · ticket {{ h.ticket|pesos }}</span>
+        <span class="delta">actualizado {{ hora }}</span>
+      </div>
+    </div>
+    <div class="tarjeta-titulo" style="padding-top:12px">
+      <div><h2>Ventas de los últimos 30 días</h2><p>{{ 'Por sede, con IVA. Pasa el cursor sobre un día para ver el detalle.' if series|length > 1 else 'Con IVA. Pasa el cursor sobre un día para ver el detalle.' }}</p></div>
+      {% if series|length > 1 %}
+      <div class="leyenda" aria-label="Leyenda">{% for s in series %}<span><i class="muestra-{{ loop.index }}"></i>{{ s }}</span>{% endfor %}</div>
+      {% endif %}
+    </div>
+    <div class="tarjeta-cuerpo" style="padding-top:8px">
+      <div class="grafico">{{ grafico }}</div>
+      <details style="margin-top:8px"><summary class="tenue pequeno" style="cursor:pointer">Ver como tabla</summary>
+        <div class="tabla-contenedor" style="max-height:260px;margin-top:8px">
+          <table class="tabla"><thead><tr><th>Día</th>{% for s in series %}<th class="num">{{ s }}</th>{% endfor %}<th class="num">Total</th><th class="num">Utilidad</th></tr></thead>
+          <tbody>{% for d in dias|reverse %}<tr><td>{{ d.dia|fecha_corta }}</td>{% for s in series %}<td class="num">{{ d.sedes.get(s, 0)|pesos }}</td>{% endfor %}<td class="num"><b>{{ d.total|pesos }}</b></td><td class="num">{{ d.utilidad|pesos }}</td></tr>{% endfor %}</tbody></table>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="tarjeta" aria-labelledby="t-atencion">
+    <div class="tarjeta-titulo" style="padding-bottom:12px"><div><h2 id="t-atencion">Requiere atención</h2><p>Lo que conviene revisar hoy</p></div></div>
+    <div class="alertas">
+      {% for a in alertas %}
+      <a class="alerta {{ a.nivel }}" href="{{ a.url }}">
+        <span class="icono-estado">{{ icono(a.icono) }}</span>
+        <span><b>{{ a.titulo }}</b><span>{{ a.texto }}</span></span>
+        <span class="cifra">{{ a.cifra }}</span>
+      </a>
+      {% else %}
+      <div class="alerta bien"><span class="icono-estado">{{ icono('check') }}</span><span><b>Todo en orden</b><span>No hay alertas pendientes.</span></span></div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+
+<div class="rejilla rejilla-4">
+  {{ stat('Utilidad bruta de hoy', h.utilidad|pesos, nota=('margen ' ~ (h.margen|pct(1)) ~ ' sobre la venta sin IVA') if h.margen is not none else 'sin ventas todavía') }}
+  {{ stat('Ventas del mes', k.mes.total|pesos, delta=delta_mes, delta_texto='frente al mes anterior a la misma fecha') }}
+  {{ stat('Valor del inventario', k.inventario_valor|pesos, url='/inventario', nota=(k.bajo_minimo ~ ' productos bajo el mínimo')) }}
+  {{ stat('Utilidad del mes', k.mes.utilidad|pesos, nota=('margen ' ~ (k.mes.margen|pct(1))) if k.mes.margen is not none else '') }}
+</div>
+
+<div class="rejilla rejilla-3">
+  <section class="tarjeta">
+    <div class="tarjeta-titulo"><div><h2>Cajas abiertas</h2><p>Efectivo que debería haber ahora</p></div><a class="btn btn-chico" href="/caja">Ir a caja</a></div>
+    <div class="tarjeta-cuerpo" style="padding-top:12px">
+      {% if k.cajas %}
+      <table class="tabla"><tbody>
+        {% for c in k.cajas %}<tr><td><b>{{ c.usuario }}</b><br><span class="tenue pequeno">{{ c.sede }} · desde {{ c.abierta|fecha }}</span></td><td class="num"><b>{{ c.esperado|pesos }}</b></td></tr>{% endfor %}
+      </tbody></table>
+      {% else %}{{ vacio('No hay cajas abiertas', '', 'caja') }}{% endif %}
+    </div>
+  </section>
+  <section class="tarjeta">
+    <div class="tarjeta-titulo"><div><h2>Más vendidos</h2><p>Últimos 30 días, por valor</p></div></div>
+    <div class="tarjeta-cuerpo" style="padding-top:12px">{{ top or vacio('Sin ventas en el periodo') }}</div>
+  </section>
+  <section class="tarjeta">
+    <div class="tarjeta-titulo"><div><h2>Ventas por categoría</h2><p>Últimos 30 días</p></div></div>
+    <div class="tarjeta-cuerpo" style="padding-top:12px">{{ categorias or vacio('Sin ventas en el periodo') }}</div>
+  </section>
+</div>
+
+<div class="rejilla rejilla-2">
+  <section class="tarjeta">
+    <div class="tarjeta-titulo"><div><h2>Salud del inventario</h2><p>Últimos 30 días</p></div><a class="btn btn-chico" href="/reportes?vista=merma">Ver merma</a></div>
+    <div class="tarjeta-cuerpo pila">
+      <div>
+        <div class="fila separa"><span class="secundario">Exactitud de los conteos</span><b>{{ (k.exactitud|pct(1)) if k.exactitud is not none else 'sin conteos' }}</b></div>
+        <div class="medidor" style="margin-top:8px" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ k.exactitud or 0 }}" aria-label="Exactitud de los conteos"><span style="width:{{ k.exactitud or 0 }}%"></span></div>
+      </div>
+      <dl class="lista-def">
+        <dt>Merma (faltantes y dañados)</dt><dd>{{ k.merma_30d|pesos }}</dd>
+        <dt>Productos agotados</dt><dd>{{ k.agotados }}</dd>
+        <dt>Bajo el mínimo</dt><dd>{{ k.bajo_minimo }}</dd>
+        <dt>Conteos abiertos</dt><dd>{{ k.conteos_abiertos }}</dd>
+        <dt>Cartera total</dt><dd>{{ k.cartera_total|pesos }}</dd>
+        <dt>Cuentas por pagar</dt><dd>{{ k.cxp_total|pesos }}</dd>
+      </dl>
+    </div>
+  </section>
+  <section class="tarjeta">
+    <div class="tarjeta-titulo"><div><h2>Actividad reciente</h2><p>Quién hizo qué</p></div><a class="btn btn-chico" href="/auditoria">Ver todo</a></div>
+    <ul class="actividad" style="margin-top:8px">
+      {% for a in actividad %}
+      <li><span><b>{{ a.accion_texto }}</b> · {{ a.detalle }}</span><time>{{ a.fecha|fecha }}</time><span class="quien">{{ a.usuario or 'Sistema' }}{{ ' · ' ~ a.sede if a.sede }}</span></li>
+      {% else %}<li>{{ vacio('Sin actividad') }}</li>{% endfor %}
+    </ul>
+  </section>
+</div>

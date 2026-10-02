@@ -1,0 +1,10 @@
+.git
+.venv
+models
+tools
+datos
+certs
+bench/real
+bench/audios
+tests/capturas
+**/__pycache__

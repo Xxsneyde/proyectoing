@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block titulo %}{{ u.nombre }}{% endblock %}
+{% block contenido %}
+{% include "admin/_pestanas.html" %}
+<div class="rejilla rejilla-panel">
+  <div class="pila">
+    <form class="tarjeta tarjeta-cuerpo pila" hx-post="/admin/usuarios/{{ u.id }}">
+      <div><div class="migas"><a href="/admin/usuarios">Usuarios</a></div><h2>{{ u.nombre }}</h2></div>
+      {% include "admin/_campos_usuario.html" %}
+      <label class="casilla"><input type="checkbox" name="activo" value="1" {% if u.activo %}checked{% endif %}> Puede ingresar al sistema</label>
+      <div><button class="btn btn-primario">Guardar cambios</button></div>
+    </form>
+    <section class="tarjeta">
+      <div class="tarjeta-titulo"><h2>Lo último que hizo</h2></div>
+      <ul class="actividad" style="margin-top:8px">{% for a in actividad %}
+        <li><span><b>{{ a.accion_texto }}</b> · {{ a.detalle }}</span><time>{{ a.fecha|fecha }}</time><span class="quien">{{ a.sede or '' }}</span></li>
+      {% else %}<li class="tenue">Sin actividad registrada.</li>{% endfor %}</ul>
+    </section>
+  </div>
+  <form class="tarjeta tarjeta-cuerpo pila" hx-post="/admin/usuarios/{{ u.id }}/clave" hx-confirm="¿Cambiar la contraseña de {{ u.nombre }}?">
+    <div><h2>Restablecer contraseña</h2><p class="tenue pequeno">Para cuando la olvide. Se cierran sus sesiones abiertas.</p></div>
+    <label class="campo">Nueva contraseña<input name="clave" type="password" required minlength="8" autocomplete="new-password"></label>
+    <div><button class="btn">Cambiar contraseña</button></div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% from "macros.html" import vacio, stat %}
+{% set qs = 'desde=' ~ desde ~ '&hasta=' ~ hasta ~ ('&sede=' ~ ('todas' if sede_rep is none else sede_rep) if usuario.todas_las_sedes else '') %}
+{% macro tabla_dim(filas, titulo, campo_n=True) %}
+<section class="tarjeta">
+  <div class="tarjeta-titulo"><h2>{{ titulo }}</h2></div>
+  <div class="tarjeta-cuerpo">{% if filas %}<table class="tabla">
+    <thead><tr><th></th>{% if campo_n %}<th class="num">Ventas</th>{% endif %}<th class="num">Total</th><th class="num">Utilidad</th></tr></thead>
+    <tbody>{% for f in filas %}<tr><td>{{ f.nombre|medio }}</td>{% if campo_n %}<td class="num">{{ f.n }}</td>{% endif %}
+      <td class="num"><b>{{ f.total|pesos }}</b></td><td class="num secundario">{{ f.utilidad|pesos }}</td></tr>{% endfor %}</tbody>
+  </table>{% else %}{{ vacio('Sin datos en el periodo') }}{% endif %}</div>
+</section>
+{% endmacro %}
+{% block titulo %}Reportes{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <div><h1>Reportes</h1><p>{{ 'Todas las sedes' if sede_rep is none else 'Sede ' ~ (sedes_lista|selectattr('id', 'equalto', sede_rep)|map(attribute='nombre')|first) }} ·
+    {% if vista == 'inventario' %}a hoy{% else %}del {{ desde|fecha_corta }} al {{ hasta|fecha_corta }}{% endif %}</p></div>
+  <div class="acciones"><a class="btn" href="/reportes/{{ vista }}.csv?{{ qs }}">{{ icono('descarga') }} Exportar CSV</a></div>
+</div>
+
+<div class="filtros">
+  {% if vista != 'inventario' %}
+  <nav class="segmentado" aria-label="Periodo">
+    {% for nombre, d0, d1 in presets %}<a href="/reportes?vista={{ vista }}&desde={{ d0 }}&hasta={{ d1 }}{{ '&sede=' ~ ('todas' if sede_rep is none else sede_rep) if usuario.todas_las_sedes }}" {% if d0 == desde and d1 == hasta %}aria-current="page"{% endif %}>{{ nombre }}</a>{% endfor %}
+  </nav>
+  <form class="fila" style="gap:8px" method="get">
+    <input type="hidden" name="vista" value="{{ vista }}">{% if usuario.todas_las_sedes %}<input type="hidden" name="sede" value="{{ 'todas' if sede_rep is none else sede_rep }}">{% endif %}
+    <input type="date" name="desde" value="{{ desde }}" aria-label="Desde"><input type="date" name="hasta" value="{{ hasta }}" aria-label="Hasta">
+    <button class="btn">Ver</button>
+  </form>
+  {% endif %}
+  {% if usuario.todas_las_sedes %}
+  <nav class="segmentado" aria-label="Sede">
+    <a href="/reportes?vista={{ vista }}&desde={{ desde }}&hasta={{ hasta }}&sede=todas" {% if sede_rep is none %}aria-current="page"{% endif %}>Todas</a>
+    {% for s in sedes_lista %}<a href="/reportes?vista={{ vista }}&desde={{ desde }}&hasta={{ hasta }}&sede={{ s.id }}" {% if sede_rep == s.id %}aria-current="page"{% endif %}>{{ s.nombre }}</a>{% endfor %}
+  </nav>
+  {% endif %}
+</div>
+
+<nav class="pestanas">{% for k, n in vistas.items() %}<a href="/reportes?vista={{ k }}&{{ qs }}" {% if k == vista %}aria-current="page"{% endif %}>{{ n }}</a>{% endfor %}
+  <a href="/clientes?vista=cartera">Cartera</a></nav>
+
+{% if vista == 'ventas' %}
+<div class="rejilla rejilla-4">
+  {{ stat('Ventas', resumen.total|pesos, nota=resumen.n ~ ' ventas · ticket ' ~ (resumen.ticket|pesos)) }}
+  {{ stat('Utilidad bruta', resumen.utilidad|pesos, nota='margen ' ~ (resumen.margen|pct(1) if resumen.margen is not none else '—')) }}
+  {{ stat('Base sin IVA', resumen.base|pesos, nota='IVA ' ~ ((resumen.total - resumen.base)|pesos)) }}
+  {{ stat('Devoluciones', resumen.devoluciones|pesos, nota='dinero devuelto a clientes') }}
+</div>
+{% if grafico %}
+<section class="tarjeta">
+  <div class="tarjeta-titulo"><div><h2>Ventas por día</h2><p>Con IVA{{ ', por sede' if series|length > 1 }}</p></div>
+    {% if series|length > 1 %}<div class="leyenda">{% for s in series %}<span><i class="muestra-{{ loop.index }}"></i>{{ s }}</span>{% endfor %}</div>{% endif %}</div>
+  <div class="tarjeta-cuerpo"><div class="grafico">{{ grafico }}</div></div>
+</section>
+{% endif %}
+<div class="rejilla rejilla-2">
+  {{ tabla_dim(categoria, 'Por categoría', False) }}
+  {{ tabla_dim(vendedor, 'Por vendedor') }}
+  {{ tabla_dim(medio, 'Por medio de pago') }}
+  {% if sede_rep is none %}{{ tabla_dim(sede, 'Por sede') }}{% endif %}
+</div>
+
+{% elif vista == 'productos' %}
+<section class="tarjeta">
+  <div class="tarjeta-titulo"><div><h2>Productos más vendidos</h2><p>Los 100 primeros por valor vendido</p></div></div>
+  <div class="tarjeta-cuerpo">{% if filas %}<div class="tabla-contenedor"><table class="tabla">
+    <thead><tr><th>#</th><th>Producto</th><th class="ocultar-movil">Categoría</th><th class="num">Cantidad</th><th class="num">Vendido</th><th class="num">Utilidad</th></tr></thead>
+    <tbody>{% for f in filas %}<tr><td class="tenue">{{ loop.index }}</td><td><a class="fila-enlace" href="/productos/{{ f.id }}">{{ f.nombre }}</a></td>
+      <td class="ocultar-movil secundario">{{ f.categoria }}</td><td class="num">{{ f.cantidad|cant }} <span class="tenue pequeno">{{ f.unidad }}</span></td>
+      <td class="num"><b>{{ f.total|pesos }}</b></td><td class="num secundario">{{ f.utilidad|pesos }}</td></tr>{% endfor %}</tbody>
+  </table></div>{% else %}{{ vacio('Sin ventas en el periodo') }}{% endif %}</div>
+</section>
+
+{% elif vista == 'inventario' %}
+<div class="rejilla rejilla-2">
+  <section class="tarjeta">
+    <div class="tarjeta-titulo"><div><h2>Valor por categoría</h2><p>Total {{ total|pesos }} al costo promedio</p></div></div>
+    <div class="tarjeta-cuerpo">{% if categorias %}{% set maximo = categorias|map(attribute='valor')|max %}
+      {% for c in categorias %}<div class="barra-fila"><span class="nombre">{{ c.nombre }}</span>
+        <span class="pista"><span class="relleno" style="width:{{ (100 * (c.valor or 0) / maximo) if maximo else 0 }}%"></span></span>
+        <span class="num">{{ c.valor|pesos }}</span></div>{% endfor %}{% else %}{{ vacio('Sin inventario') }}{% endif %}</div>
+  </section>
+  <section class="tarjeta">
+    <div class="tarjeta-titulo"><div><h2>Capital quieto</h2><p>Con existencia y sin ventas en 60 días: candidatos a promoción o traslado</p></div></div>
+    <div class="tarjeta-cuerpo">{% if quietos %}<div class="tabla-contenedor" style="max-height:520px"><table class="tabla">
+      <thead><tr><th>Producto</th><th class="num">Hay</th><th class="num">Valor</th></tr></thead>
+      <tbody>{% for q in quietos %}<tr><td><a class="fila-enlace" href="/productos/{{ q.id }}">{{ q.nombre }}</a><br><span class="tenue pequeno">{{ q.sede }} · última venta {{ q.ultima_venta|fecha_corta if q.ultima_venta else 'nunca' }}</span></td>
+        <td class="num">{{ q.cantidad|cant }}</td><td class="num"><b>{{ q.valor|pesos }}</b></td></tr>{% endfor %}</tbody>
+    </table></div>{% else %}{{ vacio('Todo el inventario se mueve', '', 'check') }}{% endif %}</div>
+  </section>
+</div>
+
+{% elif vista == 'merma' %}
+<div class="rejilla rejilla-4">
+  {{ stat('Merma total', total|abs|pesos, nota='al costo, en el periodo') }}
+  {% for t, n in tipos_merma.items() %}{{ stat(n, por_tipo[t]|abs|pesos) }}{% endfor %}
+</div>
+<section class="tarjeta">
+  <div class="tarjeta-titulo"><div><h2>Detalle</h2><p>Salidas de inventario que no fueron ventas, de mayor a menor valor</p></div></div>
+  <div class="tarjeta-cuerpo">{% if filas %}<div class="tabla-contenedor"><table class="tabla">
+    <thead><tr><th>Fecha</th><th>Producto</th><th>Tipo</th><th class="num">Cantidad</th><th class="num">Valor</th><th class="ocultar-movil">Quién</th><th class="ocultar-movil">Nota</th></tr></thead>
+    <tbody>{% for f in filas %}<tr><td class="secundario" style="white-space:nowrap">{{ f.fecha|fecha_corta }}</td><td>{{ f.nombre }}{% if sede_rep is none %}<br><span class="tenue pequeno">{{ f.sede }}</span>{% endif %}</td>
+      <td>{{ tipos_merma.get(f.tipo, f.tipo) }}</td><td class="num">{{ f.cantidad|cant }} <span class="tenue pequeno">{{ f.unidad }}</span></td>
+      <td class="num"><b>{{ f.valor|abs|pesos }}</b></td><td class="ocultar-movil secundario">{{ f.usuario or '—' }}</td><td class="ocultar-movil tenue">{{ f.nota }}</td></tr>{% endfor %}</tbody>
+  </table></div>{% else %}{{ vacio('Sin merma en el periodo', '', 'check') }}{% endif %}</div>
+</section>
+
+{% elif vista == 'compras' %}
+<section class="tarjeta">
+  <div class="tarjeta-titulo"><div><h2>Compras por proveedor</h2><p>Mercancía recibida en el periodo</p></div></div>
+  <div class="tarjeta-cuerpo">{% if filas %}<table class="tabla">
+    <thead><tr><th>Proveedor</th><th class="num">Órdenes</th><th class="num">Comprado</th><th class="num">Pendiente de pago</th></tr></thead>
+    <tbody>{% for f in filas %}<tr><td>{{ f.nombre }}</td><td class="num">{{ f.ordenes }}</td><td class="num"><b>{{ f.total|pesos }}</b></td>
+      <td class="num">{{ f.pendiente|pesos if f.pendiente else '—' }}</td></tr>{% endfor %}</tbody>
+  </table>{% else %}{{ vacio('Sin compras recibidas en el periodo') }}{% endif %}</div>
+</section>
+{% endif %}
+{% endblock %}

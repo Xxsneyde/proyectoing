@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block titulo %}{{ 'Editar cliente' if c else 'Nuevo cliente' }}{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <div><div class="migas"><a href="/clientes">Clientes</a>{% if c %} / <a href="/clientes/{{ c.id }}">{{ c.nombre }}</a>{% endif %}</div>
+    <h1>{{ 'Editar cliente' if c else 'Nuevo cliente' }}</h1></div>
+</div>
+<form class="tarjeta tarjeta-cuerpo pila" hx-post="{{ '/clientes/' ~ c.id ~ '/editar' if c else '/clientes/nuevo' }}">
+  <div class="formulario">
+    <label class="campo">NIT o cédula<input name="documento" required value="{{ c.documento if c else '' }}" inputmode="numeric"></label>
+    <label class="campo ancho">Nombre o razón social<input name="nombre" required value="{{ c.nombre if c else '' }}"></label>
+    <label class="campo">Teléfono<input name="telefono" type="tel" value="{{ c.telefono if c else '' }}"></label>
+    <label class="campo">Correo<input name="email" type="email" value="{{ c.email if c else '' }}"></label>
+    <label class="campo ancho">Dirección<input name="direccion" value="{{ c.direccion if c else '' }}"></label>
+    {% if puede(usuario, 'panel') %}
+    <label class="campo">Cupo de crédito<input name="cupo_credito" inputmode="numeric" value="{{ c.cupo_credito if c else 0 }}"><small>0 = solo compra de contado</small></label>
+    <label class="campo">Plazo en días<input name="plazo_dias" inputmode="numeric" value="{{ c.plazo_dias if c else 30 }}"></label>
+    {% if c %}<label class="casilla ancho"><input type="checkbox" name="activo" value="1" {% if c.activo %}checked{% endif %}> Cliente activo</label>{% endif %}
+    {% else %}
+    <p class="tenue pequeno ancho">El cupo de crédito lo asigna la administración.</p>
+    {% endif %}
+  </div>
+  <div class="acciones"><button class="btn btn-primario">{{ 'Guardar cambios' if c else 'Crear cliente' }}</button>
+    <a class="btn" href="{{ '/clientes/' ~ c.id if c else '/clientes' }}">Cancelar</a></div>
+</form>
+{% endblock %}

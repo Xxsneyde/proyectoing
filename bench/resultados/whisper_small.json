@@ -1,0 +1,2423 @@
+{
+ "resumen": {
+  "modelo": "small",
+  "carga_s": 0.8,
+  "ram_mb": 1216,
+  "limpio": {
+   "latencia_mediana_s": 1.18,
+   "latencia_max_s": 1.3,
+   "aciertos": 45,
+   "total": 60,
+   "duracion_audio_mediana_s": 2.4450000000000003
+  },
+  "ruido": {
+   "latencia_mediana_s": 1.19,
+   "latencia_max_s": 3.04,
+   "aciertos": 43,
+   "total": 60,
+   "duracion_audio_mediana_s": 2.4450000000000003
+  }
+ },
+ "filas": [
+  {
+   "archivo": "es_MX-ald-medium_f01_limpio.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "limpio",
+   "id": "f01",
+   "texto": "Cuarenta y dos.",
+   "duracion": 2.15,
+   "transcripcion": "Cuarenta y dos.",
+   "latencia_s": 1.168,
+   "reglas_ms": 0.063,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 42,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Cuarenta y dos."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-ald-medium_f01_ruido.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "ruido",
+   "id": "f01",
+   "texto": "Cuarenta y dos.",
+   "duracion": 2.15,
+   "transcripcion": "Cuarenta y dos.",
+   "latencia_s": 1.183,
+   "reglas_ms": 0.083,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 42,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Cuarenta y dos."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-ald-medium_f02_limpio.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "limpio",
+   "id": "f02",
+   "texto": "Hay veintiocho unidades.",
+   "duracion": 3.02,
+   "transcripcion": "Hay veintiocho unidades.",
+   "latencia_s": 1.184,
+   "reglas_ms": 0.099,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 28,
+    "unidad": "unidades",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Hay veintiocho unidades."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-ald-medium_f02_ruido.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "ruido",
+   "id": "f02",
+   "texto": "Hay veintiocho unidades.",
+   "duracion": 3.02,
+   "transcripcion": "Hay veintiocho unidades.",
+   "latencia_s": 1.243,
+   "reglas_ms": 0.073,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 28,
+    "unidad": "unidades",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Hay veintiocho unidades."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-ald-medium_f03_limpio.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "limpio",
+   "id": "f03",
+   "texto": "Ciento cincuenta.",
+   "duracion": 2.63,
+   "transcripcion": "Ciento cincuenta.",
+   "latencia_s": 1.179,
+   "reglas_ms": 0.088,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 150,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Ciento cincuenta."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-ald-medium_f03_ruido.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "ruido",
+   "id": "f03",
+   "texto": "Ciento cincuenta.",
+   "duracion": 2.63,
+   "transcripcion": "Ciento cincuenta.",
+   "latencia_s": 1.151,
+   "reglas_ms": 0.083,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 150,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Ciento cincuenta."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-ald-medium_f04_limpio.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "limpio",
+   "id": "f04",
+   "texto": "Mil doscientos.",
+   "duracion": 2.36,
+   "transcripcion": "Mil doscientos.",
+   "latencia_s": 1.174,
+   "reglas_ms": 0.083,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 1200,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Mil doscientos."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-ald-medium_f04_ruido.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "ruido",
+   "id": "f04",
+   "texto": "Mil doscientos.",
+   "duracion": 2.36,
+   "transcripcion": "Mil doscientos.",
+   "latencia_s": 1.192,
+   "reglas_ms": 0.064,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 1200,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Mil doscientos."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-ald-medium_f05_limpio.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "limpio",
+   "id": "f05",
+   "texto": "Ochocientos setenta y cinco metros.",
+   "duracion": 3.62,
+   "transcripcion": "Ochocientos setenta y cinco metros.",
+   "latencia_s": 1.214,
+   "reglas_ms": 0.102,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 875,
+    "unidad": "metros",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Ochocientos setenta y cinco metros."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-ald-medium_f05_ruido.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "ruido",
+   "id": "f05",
+   "texto": "Ochocientos setenta y cinco metros.",
+   "duracion": 3.62,
+   "transcripcion": "Los ochocientos setenta y cinco metros.",
+   "latencia_s": 1.185,
+   "reglas_ms": 0.08,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 875,
+    "unidad": "metros",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Los ochocientos setenta y cinco metros."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-ald-medium_f06_limpio.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "limpio",
+   "id": "f06",
+   "texto": "Kilo y medio.",
+   "duracion": 2.2,
+   "transcripcion": "Quilo y medio.",
+   "latencia_s": 1.118,
+   "reglas_ms": 0.084,
+   "orden": {
+    "accion": "desconocido",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Quilo y medio."
+   },
+   "correcto_reglas": false
+  },
+  {
+   "archivo": "es_MX-ald-medium_f06_ruido.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "ruido",
+   "id": "f06",
+   "texto": "Kilo y medio.",
+   "duracion": 2.2,
+   "transcripcion": "Quilo y medio.",
+   "latencia_s": 1.164,
+   "reglas_ms": 0.084,
+   "orden": {
+    "accion": "desconocido",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Quilo y medio."
+   },
+   "correcto_reglas": false
+  },
+  {
+   "archivo": "es_MX-ald-medium_f07_limpio.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "limpio",
+   "id": "f07",
+   "texto": "Doce cajas.",
+   "duracion": 2.17,
+   "transcripcion": "Dos y cifras.",
+   "latencia_s": 1.155,
+   "reglas_ms": 0.092,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 2,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Dos y cifras."
+   },
+   "correcto_reglas": false
+  },
+  {
+   "archivo": "es_MX-ald-medium_f07_ruido.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "ruido",
+   "id": "f07",
+   "texto": "Doce cajas.",
+   "duracion": 2.17,
+   "transcripcion": "Dos iccafas.",
+   "latencia_s": 1.188,
+   "reglas_ms": 0.087,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 2,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Dos iccafas."
+   },
+   "correcto_reglas": false
+  },
+  {
+   "archivo": "es_MX-ald-medium_f08_limpio.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "limpio",
+   "id": "f08",
+   "texto": "Dos docenas.",
+   "duracion": 1.96,
+   "transcripcion": "Dos docenas.",
+   "latencia_s": 1.123,
+   "reglas_ms": 0.086,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 24,
+    "unidad": "unidades",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Dos docenas."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-ald-medium_f08_ruido.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "ruido",
+   "id": "f08",
+   "texto": "Dos docenas.",
+   "duracion": 1.96,
+   "transcripcion": "Dos docenas.",
+   "latencia_s": 1.17,
+   "reglas_ms": 0.093,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 24,
+    "unidad": "unidades",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Dos docenas."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-ald-medium_f09_limpio.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "limpio",
+   "id": "f09",
+   "texto": "Ahí hay como sesenta y tres.",
+   "duracion": 3.19,
+   "transcripcion": "Ay, ay, como sesenta y tres.",
+   "latencia_s": 1.183,
+   "reglas_ms": 0.104,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 63,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Ay, ay, como sesenta y tres."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-ald-medium_f09_ruido.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "ruido",
+   "id": "f09",
+   "texto": "Ahí hay como sesenta y tres.",
+   "duracion": 3.19,
+   "transcripcion": "¡Ey, ay, como sesenta y tres!",
+   "latencia_s": 1.235,
+   "reglas_ms": 0.082,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 63,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "¡Ey, ay, como sesenta y tres!"
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-ald-medium_f10_limpio.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "limpio",
+   "id": "f10",
+   "texto": "Suma diez más.",
+   "duracion": 2.34,
+   "transcripcion": "Suma diez más.",
+   "latencia_s": 1.151,
+   "reglas_ms": 0.095,
+   "orden": {
+    "accion": "sumar",
+    "cantidad": 10,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Suma diez más."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-ald-medium_f10_ruido.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "ruido",
+   "id": "f10",
+   "texto": "Suma diez más.",
+   "duracion": 2.34,
+   "transcripcion": "Suma diez de más.",
+   "latencia_s": 1.19,
+   "reglas_ms": 0.102,
+   "orden": {
+    "accion": "sumar",
+    "cantidad": 10,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Suma diez de más."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-ald-medium_f11_limpio.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "limpio",
+   "id": "f11",
+   "texto": "Agrégale quince.",
+   "duracion": 2.38,
+   "transcripcion": "Aléala de quince.",
+   "latencia_s": 1.204,
+   "reglas_ms": 0.096,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 15,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Aléala de quince."
+   },
+   "correcto_reglas": false
+  },
+  {
+   "archivo": "es_MX-ald-medium_f11_ruido.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "ruido",
+   "id": "f11",
+   "texto": "Agrégale quince.",
+   "duracion": 2.38,
+   "transcripcion": "Vaya la de quince.",
+   "latencia_s": 1.185,
+   "reglas_ms": 0.098,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 15,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Vaya la de quince."
+   },
+   "correcto_reglas": false
+  },
+  {
+   "archivo": "es_MX-ald-medium_f12_limpio.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "limpio",
+   "id": "f12",
+   "texto": "Quita cuatro.",
+   "duracion": 2.6,
+   "transcripcion": "Tite, guapo.",
+   "latencia_s": 1.18,
+   "reglas_ms": 0.08,
+   "orden": {
+    "accion": "desconocido",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Tite, guapo."
+   },
+   "correcto_reglas": false
+  },
+  {
+   "archivo": "es_MX-ald-medium_f12_ruido.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "ruido",
+   "id": "f12",
+   "texto": "Quita cuatro.",
+   "duracion": 2.6,
+   "transcripcion": "Detecuazos.",
+   "latencia_s": 3.04,
+   "reglas_ms": 0.071,
+   "orden": {
+    "accion": "desconocido",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Detecuazos."
+   },
+   "correcto_reglas": false
+  },
+  {
+   "archivo": "es_MX-ald-medium_f13_limpio.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "limpio",
+   "id": "f13",
+   "texto": "Corrige el anterior a dieciséis.",
+   "duracion": 3.5,
+   "transcripcion": "Corrijel anterior a 16.",
+   "latencia_s": 1.16,
+   "reglas_ms": 0.101,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 16,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Corrijel anterior a 16."
+   },
+   "correcto_reglas": false
+  },
+  {
+   "archivo": "es_MX-ald-medium_f13_ruido.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "ruido",
+   "id": "f13",
+   "texto": "Corrige el anterior a dieciséis.",
+   "duracion": 3.5,
+   "transcripcion": "Corrige el anterior a dieciséis.",
+   "latencia_s": 1.196,
+   "reglas_ms": 0.105,
+   "orden": {
+    "accion": "corregir",
+    "cantidad": 16,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Corrige el anterior a dieciséis."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-ald-medium_f14_limpio.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "limpio",
+   "id": "f14",
+   "texto": "No, eran treinta y seis.",
+   "duracion": 2.8,
+   "transcripcion": "No, eran treinta y seis.",
+   "latencia_s": 1.153,
+   "reglas_ms": 0.096,
+   "orden": {
+    "accion": "corregir",
+    "cantidad": 36,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "No, eran treinta y seis."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-ald-medium_f14_ruido.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "ruido",
+   "id": "f14",
+   "texto": "No, eran treinta y seis.",
+   "duracion": 2.8,
+   "transcripcion": "No, eran treinta y seis.",
+   "latencia_s": 1.196,
+   "reglas_ms": 0.093,
+   "orden": {
+    "accion": "corregir",
+    "cantidad": 36,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "No, eran treinta y seis."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-ald-medium_f15_limpio.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "limpio",
+   "id": "f15",
+   "texto": "Esto va en el pasillo tres, estante B.",
+   "duracion": 4.32,
+   "transcripcion": "Esto va en el pasillo tres, estante, be.",
+   "latencia_s": 1.204,
+   "reglas_ms": 0.102,
+   "orden": {
+    "accion": "ubicacion",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": "pasillo 3 estante be",
+    "sede": null,
+    "texto": "Esto va en el pasillo tres, estante, be."
+   },
+   "correcto_reglas": false
+  },
+  {
+   "archivo": "es_MX-ald-medium_f15_ruido.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "ruido",
+   "id": "f15",
+   "texto": "Esto va en el pasillo tres, estante B.",
+   "duracion": 4.32,
+   "transcripcion": "Esto va en el pasillo tres, estante, bebé.",
+   "latencia_s": 1.286,
+   "reglas_ms": 0.182,
+   "orden": {
+    "accion": "ubicacion",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": "pasillo 3 estante bebe",
+    "sede": null,
+    "texto": "Esto va en el pasillo tres, estante, bebé."
+   },
+   "correcto_reglas": false
+  },
+  {
+   "archivo": "es_MX-ald-medium_f16_limpio.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "limpio",
+   "id": "f16",
+   "texto": "Hay dos dañados.",
+   "duracion": 2.42,
+   "transcripcion": "Hay dos dañados.",
+   "latencia_s": 1.171,
+   "reglas_ms": 0.098,
+   "orden": {
+    "accion": "danado",
+    "cantidad": 2,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Hay dos dañados."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-ald-medium_f16_ruido.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "ruido",
+   "id": "f16",
+   "texto": "Hay dos dañados.",
+   "duracion": 2.42,
+   "transcripcion": "Ay dos dañados.",
+   "latencia_s": 1.263,
+   "reglas_ms": 0.088,
+   "orden": {
+    "accion": "danado",
+    "cantidad": 2,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Ay dos dañados."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-ald-medium_f17_limpio.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "limpio",
+   "id": "f17",
+   "texto": "Márcalo como dañado.",
+   "duracion": 2.9,
+   "transcripcion": "Márcalos como dañado.",
+   "latencia_s": 1.256,
+   "reglas_ms": 0.083,
+   "orden": {
+    "accion": "danado",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Márcalos como dañado."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-ald-medium_f17_ruido.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "ruido",
+   "id": "f17",
+   "texto": "Márcalo como dañado.",
+   "duracion": 2.9,
+   "transcripcion": "Marta lo como lañado.",
+   "latencia_s": 1.252,
+   "reglas_ms": 0.104,
+   "orden": {
+    "accion": "desconocido",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Marta lo como lañado."
+   },
+   "correcto_reglas": false
+  },
+  {
+   "archivo": "es_MX-ald-medium_f18_limpio.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "limpio",
+   "id": "f18",
+   "texto": "¿Cuánto hay de esto en la sede norte?",
+   "duracion": 2.97,
+   "transcripcion": "¿Cuánto hay de esto en la sede norte?",
+   "latencia_s": 1.256,
+   "reglas_ms": 0.107,
+   "orden": {
+    "accion": "consulta",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": "norte",
+    "texto": "¿Cuánto hay de esto en la sede norte?"
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-ald-medium_f18_ruido.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "ruido",
+   "id": "f18",
+   "texto": "¿Cuánto hay de esto en la sede norte?",
+   "duracion": 2.97,
+   "transcripcion": "¿Cuánto ahí de estorno hacer en norte?",
+   "latencia_s": 1.262,
+   "reglas_ms": 0.1,
+   "orden": {
+    "accion": "consulta",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "¿Cuánto ahí de estorno hacer en norte?"
+   },
+   "correcto_reglas": false
+  },
+  {
+   "archivo": "es_MX-ald-medium_f19_limpio.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "limpio",
+   "id": "f19",
+   "texto": "Deshacer el último.",
+   "duracion": 2.65,
+   "transcripcion": "Deshacer el último.",
+   "latencia_s": 1.15,
+   "reglas_ms": 0.086,
+   "orden": {
+    "accion": "deshacer",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Deshacer el último."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-ald-medium_f19_ruido.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "ruido",
+   "id": "f19",
+   "texto": "Deshacer el último.",
+   "duracion": 2.65,
+   "transcripcion": "Deshacen el último.",
+   "latencia_s": 1.25,
+   "reglas_ms": 0.062,
+   "orden": {
+    "accion": "deshacer",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Deshacen el último."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-ald-medium_f20_limpio.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "limpio",
+   "id": "f20",
+   "texto": "Anota que la etiqueta no corresponde al producto.",
+   "duracion": 4.55,
+   "transcripcion": "Anota que la etiqueta no corresponde al producto.",
+   "latencia_s": 1.231,
+   "reglas_ms": 0.082,
+   "orden": {
+    "accion": "nota",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Anota que la etiqueta no corresponde al producto."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-ald-medium_f20_ruido.wav",
+   "voz": "es_MX-ald-medium",
+   "condicion": "ruido",
+   "id": "f20",
+   "texto": "Anota que la etiqueta no corresponde al producto.",
+   "duracion": 4.55,
+   "transcripcion": "Anota que la etiqueta no corresponde al producto.",
+   "latencia_s": 1.202,
+   "reglas_ms": 0.085,
+   "orden": {
+    "accion": "nota",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Anota que la etiqueta no corresponde al producto."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-claude-high_f01_limpio.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "limpio",
+   "id": "f01",
+   "texto": "Cuarenta y dos.",
+   "duracion": 2.02,
+   "transcripcion": "Cuarenta y dos.",
+   "latencia_s": 1.137,
+   "reglas_ms": 0.087,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 42,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Cuarenta y dos."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-claude-high_f01_ruido.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "ruido",
+   "id": "f01",
+   "texto": "Cuarenta y dos.",
+   "duracion": 2.02,
+   "transcripcion": "Cuarenta y dos.",
+   "latencia_s": 1.173,
+   "reglas_ms": 0.084,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 42,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Cuarenta y dos."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-claude-high_f02_limpio.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "limpio",
+   "id": "f02",
+   "texto": "Hay veintiocho unidades.",
+   "duracion": 2.6,
+   "transcripcion": "Hay 28 unidades.",
+   "latencia_s": 1.141,
+   "reglas_ms": 0.071,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 28,
+    "unidad": "unidades",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Hay 28 unidades."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-claude-high_f02_ruido.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "ruido",
+   "id": "f02",
+   "texto": "Hay veintiocho unidades.",
+   "duracion": 2.6,
+   "transcripcion": "Hay 28 unidades.",
+   "latencia_s": 1.17,
+   "reglas_ms": 0.094,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 28,
+    "unidad": "unidades",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Hay 28 unidades."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-claude-high_f03_limpio.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "limpio",
+   "id": "f03",
+   "texto": "Ciento cincuenta.",
+   "duracion": 2.22,
+   "transcripcion": "Ciento cincuenta.",
+   "latencia_s": 1.226,
+   "reglas_ms": 0.083,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 150,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Ciento cincuenta."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-claude-high_f03_ruido.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "ruido",
+   "id": "f03",
+   "texto": "Ciento cincuenta.",
+   "duracion": 2.22,
+   "transcripcion": "Ciento cincuenta.",
+   "latencia_s": 1.179,
+   "reglas_ms": 0.096,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 150,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Ciento cincuenta."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-claude-high_f04_limpio.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "limpio",
+   "id": "f04",
+   "texto": "Mil doscientos.",
+   "duracion": 2.1,
+   "transcripcion": "Mil doscientos.",
+   "latencia_s": 1.194,
+   "reglas_ms": 0.083,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 1200,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Mil doscientos."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-claude-high_f04_ruido.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "ruido",
+   "id": "f04",
+   "texto": "Mil doscientos.",
+   "duracion": 2.1,
+   "transcripcion": "Mil doscientos.",
+   "latencia_s": 1.165,
+   "reglas_ms": 0.088,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 1200,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Mil doscientos."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-claude-high_f05_limpio.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "limpio",
+   "id": "f05",
+   "texto": "Ochocientos setenta y cinco metros.",
+   "duracion": 3.26,
+   "transcripcion": "Pochoscentos setenta y cinco metros.",
+   "latencia_s": 1.18,
+   "reglas_ms": 0.107,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 75,
+    "unidad": "metros",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Pochoscentos setenta y cinco metros."
+   },
+   "correcto_reglas": false
+  },
+  {
+   "archivo": "es_MX-claude-high_f05_ruido.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "ruido",
+   "id": "f05",
+   "texto": "Ochocientos setenta y cinco metros.",
+   "duracion": 3.26,
+   "transcripcion": "Pochoscientos setenta y cinco metros.",
+   "latencia_s": 1.206,
+   "reglas_ms": 0.105,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 75,
+    "unidad": "metros",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Pochoscientos setenta y cinco metros."
+   },
+   "correcto_reglas": false
+  },
+  {
+   "archivo": "es_MX-claude-high_f06_limpio.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "limpio",
+   "id": "f06",
+   "texto": "Kilo y medio.",
+   "duracion": 2.47,
+   "transcripcion": "Kilo y medio.",
+   "latencia_s": 1.169,
+   "reglas_ms": 0.099,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 1.5,
+    "unidad": "kilos",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Kilo y medio."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-claude-high_f06_ruido.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "ruido",
+   "id": "f06",
+   "texto": "Kilo y medio.",
+   "duracion": 2.47,
+   "transcripcion": "Chilos y medio.",
+   "latencia_s": 1.12,
+   "reglas_ms": 0.089,
+   "orden": {
+    "accion": "desconocido",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Chilos y medio."
+   },
+   "correcto_reglas": false
+  },
+  {
+   "archivo": "es_MX-claude-high_f07_limpio.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "limpio",
+   "id": "f07",
+   "texto": "Doce cajas.",
+   "duracion": 2.02,
+   "transcripcion": "Dos secajas.",
+   "latencia_s": 1.208,
+   "reglas_ms": 0.062,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 2,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Dos secajas."
+   },
+   "correcto_reglas": false
+  },
+  {
+   "archivo": "es_MX-claude-high_f07_ruido.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "ruido",
+   "id": "f07",
+   "texto": "Doce cajas.",
+   "duracion": 2.02,
+   "transcripcion": "Dos y cajas.",
+   "latencia_s": 1.157,
+   "reglas_ms": 0.093,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 2,
+    "unidad": "cajas",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Dos y cajas."
+   },
+   "correcto_reglas": false
+  },
+  {
+   "archivo": "es_MX-claude-high_f08_limpio.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "limpio",
+   "id": "f08",
+   "texto": "Dos docenas.",
+   "duracion": 2.06,
+   "transcripcion": "Dos docenas.",
+   "latencia_s": 1.127,
+   "reglas_ms": 0.085,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 24,
+    "unidad": "unidades",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Dos docenas."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-claude-high_f08_ruido.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "ruido",
+   "id": "f08",
+   "texto": "Dos docenas.",
+   "duracion": 2.06,
+   "transcripcion": "Dos docenas.",
+   "latencia_s": 1.174,
+   "reglas_ms": 0.067,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 24,
+    "unidad": "unidades",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Dos docenas."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-claude-high_f09_limpio.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "limpio",
+   "id": "f09",
+   "texto": "Ahí hay como sesenta y tres.",
+   "duracion": 3.0,
+   "transcripcion": "Ahí, ahí, como sesenta y tres.",
+   "latencia_s": 1.21,
+   "reglas_ms": 0.118,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 63,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Ahí, ahí, como sesenta y tres."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-claude-high_f09_ruido.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "ruido",
+   "id": "f09",
+   "texto": "Ahí hay como sesenta y tres.",
+   "duracion": 3.0,
+   "transcripcion": "Ahí, ahí, como sesenta y tres.",
+   "latencia_s": 1.162,
+   "reglas_ms": 0.123,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 63,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Ahí, ahí, como sesenta y tres."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-claude-high_f10_limpio.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "limpio",
+   "id": "f10",
+   "texto": "Suma diez más.",
+   "duracion": 2.16,
+   "transcripcion": "Suma diez más.",
+   "latencia_s": 1.172,
+   "reglas_ms": 0.094,
+   "orden": {
+    "accion": "sumar",
+    "cantidad": 10,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Suma diez más."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-claude-high_f10_ruido.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "ruido",
+   "id": "f10",
+   "texto": "Suma diez más.",
+   "duracion": 2.16,
+   "transcripcion": "Suma diez más.",
+   "latencia_s": 1.174,
+   "reglas_ms": 0.07,
+   "orden": {
+    "accion": "sumar",
+    "cantidad": 10,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Suma diez más."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-claude-high_f11_limpio.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "limpio",
+   "id": "f11",
+   "texto": "Agrégale quince.",
+   "duracion": 2.23,
+   "transcripcion": "Abre de ale quince.",
+   "latencia_s": 1.203,
+   "reglas_ms": 0.072,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 15,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Abre de ale quince."
+   },
+   "correcto_reglas": false
+  },
+  {
+   "archivo": "es_MX-claude-high_f11_ruido.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "ruido",
+   "id": "f11",
+   "texto": "Agrégale quince.",
+   "duracion": 2.23,
+   "transcripcion": "Abre dale quince.",
+   "latencia_s": 1.151,
+   "reglas_ms": 0.091,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 15,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Abre dale quince."
+   },
+   "correcto_reglas": false
+  },
+  {
+   "archivo": "es_MX-claude-high_f12_limpio.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "limpio",
+   "id": "f12",
+   "texto": "Quita cuatro.",
+   "duracion": 1.95,
+   "transcripcion": "Quita cuatro.",
+   "latencia_s": 1.228,
+   "reglas_ms": 0.081,
+   "orden": {
+    "accion": "restar",
+    "cantidad": 4,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Quita cuatro."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-claude-high_f12_ruido.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "ruido",
+   "id": "f12",
+   "texto": "Quita cuatro.",
+   "duracion": 1.95,
+   "transcripcion": "Quita cuatro.",
+   "latencia_s": 1.279,
+   "reglas_ms": 0.07,
+   "orden": {
+    "accion": "restar",
+    "cantidad": 4,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Quita cuatro."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-claude-high_f13_limpio.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "limpio",
+   "id": "f13",
+   "texto": "Corrige el anterior a dieciséis.",
+   "duracion": 2.92,
+   "transcripcion": "Corige la anterior a 16.",
+   "latencia_s": 1.281,
+   "reglas_ms": 0.106,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 16,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Corige la anterior a 16."
+   },
+   "correcto_reglas": false
+  },
+  {
+   "archivo": "es_MX-claude-high_f13_ruido.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "ruido",
+   "id": "f13",
+   "texto": "Corrige el anterior a dieciséis.",
+   "duracion": 2.92,
+   "transcripcion": "Corige en anterior a 16.",
+   "latencia_s": 1.323,
+   "reglas_ms": 0.109,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 16,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Corige en anterior a 16."
+   },
+   "correcto_reglas": false
+  },
+  {
+   "archivo": "es_MX-claude-high_f14_limpio.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "limpio",
+   "id": "f14",
+   "texto": "No, eran treinta y seis.",
+   "duracion": 2.79,
+   "transcripcion": "No, eran treinta y seis.",
+   "latencia_s": 1.196,
+   "reglas_ms": 0.096,
+   "orden": {
+    "accion": "corregir",
+    "cantidad": 36,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "No, eran treinta y seis."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-claude-high_f14_ruido.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "ruido",
+   "id": "f14",
+   "texto": "No, eran treinta y seis.",
+   "duracion": 2.79,
+   "transcripcion": "No, eran treinta y seis.",
+   "latencia_s": 1.176,
+   "reglas_ms": 0.092,
+   "orden": {
+    "accion": "corregir",
+    "cantidad": 36,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "No, eran treinta y seis."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-claude-high_f15_limpio.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "limpio",
+   "id": "f15",
+   "texto": "Esto va en el pasillo tres, estante B.",
+   "duracion": 3.72,
+   "transcripcion": "Esto va en el pasillo 3, Estante B.",
+   "latencia_s": 1.239,
+   "reglas_ms": 0.147,
+   "orden": {
+    "accion": "ubicacion",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": "pasillo 3 estante b",
+    "sede": null,
+    "texto": "Esto va en el pasillo 3, Estante B."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-claude-high_f15_ruido.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "ruido",
+   "id": "f15",
+   "texto": "Esto va en el pasillo tres, estante B.",
+   "duracion": 3.72,
+   "transcripcion": "Esto va en el pasillo 3, Estante B.",
+   "latencia_s": 1.266,
+   "reglas_ms": 0.103,
+   "orden": {
+    "accion": "ubicacion",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": "pasillo 3 estante b",
+    "sede": null,
+    "texto": "Esto va en el pasillo 3, Estante B."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-claude-high_f16_limpio.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "limpio",
+   "id": "f16",
+   "texto": "Hay dos dañados.",
+   "duracion": 2.21,
+   "transcripcion": "Hay dos dañados.",
+   "latencia_s": 1.158,
+   "reglas_ms": 0.067,
+   "orden": {
+    "accion": "danado",
+    "cantidad": 2,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Hay dos dañados."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-claude-high_f16_ruido.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "ruido",
+   "id": "f16",
+   "texto": "Hay dos dañados.",
+   "duracion": 2.21,
+   "transcripcion": "Hay dos dañados.",
+   "latencia_s": 1.225,
+   "reglas_ms": 0.087,
+   "orden": {
+    "accion": "danado",
+    "cantidad": 2,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Hay dos dañados."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-claude-high_f17_limpio.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "limpio",
+   "id": "f17",
+   "texto": "Márcalo como dañado.",
+   "duracion": 2.71,
+   "transcripcion": "Márcalo como dañado.",
+   "latencia_s": 1.215,
+   "reglas_ms": 0.097,
+   "orden": {
+    "accion": "danado",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Márcalo como dañado."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-claude-high_f17_ruido.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "ruido",
+   "id": "f17",
+   "texto": "Márcalo como dañado.",
+   "duracion": 2.71,
+   "transcripcion": "Mácalo, como dañado.",
+   "latencia_s": 1.145,
+   "reglas_ms": 0.066,
+   "orden": {
+    "accion": "danado",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Mácalo, como dañado."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-claude-high_f18_limpio.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "limpio",
+   "id": "f18",
+   "texto": "¿Cuánto hay de esto en la sede norte?",
+   "duracion": 3.04,
+   "transcripcion": "¿Cuánto hay de esto en la sede norte?",
+   "latencia_s": 1.205,
+   "reglas_ms": 0.113,
+   "orden": {
+    "accion": "consulta",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": "norte",
+    "texto": "¿Cuánto hay de esto en la sede norte?"
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-claude-high_f18_ruido.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "ruido",
+   "id": "f18",
+   "texto": "¿Cuánto hay de esto en la sede norte?",
+   "duracion": 3.04,
+   "transcripcion": "¿Cuánto hay de esto en la sede norte?",
+   "latencia_s": 1.214,
+   "reglas_ms": 0.106,
+   "orden": {
+    "accion": "consulta",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": "norte",
+    "texto": "¿Cuánto hay de esto en la sede norte?"
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-claude-high_f19_limpio.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "limpio",
+   "id": "f19",
+   "texto": "Deshacer el último.",
+   "duracion": 2.32,
+   "transcripcion": "Deshacer el último.",
+   "latencia_s": 1.186,
+   "reglas_ms": 0.096,
+   "orden": {
+    "accion": "deshacer",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Deshacer el último."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-claude-high_f19_ruido.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "ruido",
+   "id": "f19",
+   "texto": "Deshacer el último.",
+   "duracion": 2.32,
+   "transcripcion": "Deshacer el último.",
+   "latencia_s": 1.137,
+   "reglas_ms": 0.08,
+   "orden": {
+    "accion": "deshacer",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Deshacer el último."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-claude-high_f20_limpio.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "limpio",
+   "id": "f20",
+   "texto": "Anota que la etiqueta no corresponde al producto.",
+   "duracion": 4.08,
+   "transcripcion": "Anota que la etiqueta no corresponde dal producto.",
+   "latencia_s": 1.22,
+   "reglas_ms": 0.112,
+   "orden": {
+    "accion": "nota",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Anota que la etiqueta no corresponde dal producto."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_MX-claude-high_f20_ruido.wav",
+   "voz": "es_MX-claude-high",
+   "condicion": "ruido",
+   "id": "f20",
+   "texto": "Anota que la etiqueta no corresponde al producto.",
+   "duracion": 4.08,
+   "transcripcion": "Anota que la etiqueta no corresponde dal producto.",
+   "latencia_s": 1.233,
+   "reglas_ms": 0.079,
+   "orden": {
+    "accion": "nota",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Anota que la etiqueta no corresponde dal producto."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f01_limpio.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "limpio",
+   "id": "f01",
+   "texto": "Cuarenta y dos.",
+   "duracion": 2.1,
+   "transcripcion": "Cuarenta y dos.",
+   "latencia_s": 1.179,
+   "reglas_ms": 0.083,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 42,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Cuarenta y dos."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f01_ruido.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "ruido",
+   "id": "f01",
+   "texto": "Cuarenta y dos.",
+   "duracion": 2.1,
+   "transcripcion": "Cuarenta y dos.",
+   "latencia_s": 1.17,
+   "reglas_ms": 0.085,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 42,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Cuarenta y dos."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f02_limpio.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "limpio",
+   "id": "f02",
+   "texto": "Hay veintiocho unidades.",
+   "duracion": 2.56,
+   "transcripcion": "Hay 28 unidades.",
+   "latencia_s": 1.165,
+   "reglas_ms": 0.072,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 28,
+    "unidad": "unidades",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Hay 28 unidades."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f02_ruido.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "ruido",
+   "id": "f02",
+   "texto": "Hay veintiocho unidades.",
+   "duracion": 2.56,
+   "transcripcion": "Hay 28 unidades.",
+   "latencia_s": 1.244,
+   "reglas_ms": 0.07,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 28,
+    "unidad": "unidades",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Hay 28 unidades."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f03_limpio.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "limpio",
+   "id": "f03",
+   "texto": "Ciento cincuenta.",
+   "duracion": 2.11,
+   "transcripcion": "Ciento cincuenta.",
+   "latencia_s": 1.209,
+   "reglas_ms": 0.08,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 150,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Ciento cincuenta."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f03_ruido.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "ruido",
+   "id": "f03",
+   "texto": "Ciento cincuenta.",
+   "duracion": 2.11,
+   "transcripcion": "Ciento cincuenta.",
+   "latencia_s": 1.226,
+   "reglas_ms": 0.083,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 150,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Ciento cincuenta."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f04_limpio.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "limpio",
+   "id": "f04",
+   "texto": "Mil doscientos.",
+   "duracion": 2.15,
+   "transcripcion": "Mil doscientos.",
+   "latencia_s": 1.125,
+   "reglas_ms": 0.063,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 1200,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Mil doscientos."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f04_ruido.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "ruido",
+   "id": "f04",
+   "texto": "Mil doscientos.",
+   "duracion": 2.15,
+   "transcripcion": "Mil doscientos.",
+   "latencia_s": 1.166,
+   "reglas_ms": 0.064,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 1200,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Mil doscientos."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f05_limpio.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "limpio",
+   "id": "f05",
+   "texto": "Ochocientos setenta y cinco metros.",
+   "duracion": 3.17,
+   "transcripcion": "Ochocientos setenta y cinco metros.",
+   "latencia_s": 1.209,
+   "reglas_ms": 0.102,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 875,
+    "unidad": "metros",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Ochocientos setenta y cinco metros."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f05_ruido.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "ruido",
+   "id": "f05",
+   "texto": "Ochocientos setenta y cinco metros.",
+   "duracion": 3.17,
+   "transcripcion": "Ochocientos setenta y cinco metros.",
+   "latencia_s": 1.216,
+   "reglas_ms": 0.104,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 875,
+    "unidad": "metros",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Ochocientos setenta y cinco metros."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f06_limpio.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "limpio",
+   "id": "f06",
+   "texto": "Kilo y medio.",
+   "duracion": 1.91,
+   "transcripcion": "Quilo y medio.",
+   "latencia_s": 1.181,
+   "reglas_ms": 0.094,
+   "orden": {
+    "accion": "desconocido",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Quilo y medio."
+   },
+   "correcto_reglas": false
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f06_ruido.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "ruido",
+   "id": "f06",
+   "texto": "Kilo y medio.",
+   "duracion": 1.91,
+   "transcripcion": "Quino y medio.",
+   "latencia_s": 1.193,
+   "reglas_ms": 0.092,
+   "orden": {
+    "accion": "desconocido",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Quino y medio."
+   },
+   "correcto_reglas": false
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f07_limpio.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "limpio",
+   "id": "f07",
+   "texto": "Doce cajas.",
+   "duracion": 1.98,
+   "transcripcion": "Doce cazas.",
+   "latencia_s": 1.179,
+   "reglas_ms": 0.086,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 12,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Doce cazas."
+   },
+   "correcto_reglas": false
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f07_ruido.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "ruido",
+   "id": "f07",
+   "texto": "Doce cajas.",
+   "duracion": 1.98,
+   "transcripcion": "Doce cargas.",
+   "latencia_s": 1.165,
+   "reglas_ms": 0.084,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 12,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Doce cargas."
+   },
+   "correcto_reglas": false
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f08_limpio.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "limpio",
+   "id": "f08",
+   "texto": "Dos docenas.",
+   "duracion": 1.92,
+   "transcripcion": "Dos docenas.",
+   "latencia_s": 1.2,
+   "reglas_ms": 0.101,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 24,
+    "unidad": "unidades",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Dos docenas."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f08_ruido.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "ruido",
+   "id": "f08",
+   "texto": "Dos docenas.",
+   "duracion": 1.92,
+   "transcripcion": "Dos docenas.",
+   "latencia_s": 1.154,
+   "reglas_ms": 0.086,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 24,
+    "unidad": "unidades",
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Dos docenas."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f09_limpio.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "limpio",
+   "id": "f09",
+   "texto": "Ahí hay como sesenta y tres.",
+   "duracion": 2.8,
+   "transcripcion": "Ahí hay como sesenta y tres.",
+   "latencia_s": 1.227,
+   "reglas_ms": 0.103,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 63,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Ahí hay como sesenta y tres."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f09_ruido.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "ruido",
+   "id": "f09",
+   "texto": "Ahí hay como sesenta y tres.",
+   "duracion": 2.8,
+   "transcripcion": "Ahí hay como sesenta y tres.",
+   "latencia_s": 1.207,
+   "reglas_ms": 0.112,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 63,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Ahí hay como sesenta y tres."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f10_limpio.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "limpio",
+   "id": "f10",
+   "texto": "Suma diez más.",
+   "duracion": 2.07,
+   "transcripcion": "Suma diez más.",
+   "latencia_s": 1.169,
+   "reglas_ms": 0.093,
+   "orden": {
+    "accion": "sumar",
+    "cantidad": 10,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Suma diez más."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f10_ruido.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "ruido",
+   "id": "f10",
+   "texto": "Suma diez más.",
+   "duracion": 2.07,
+   "transcripcion": "Suma, diátomas.",
+   "latencia_s": 1.212,
+   "reglas_ms": 0.063,
+   "orden": {
+    "accion": "desconocido",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Suma, diátomas."
+   },
+   "correcto_reglas": false
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f11_limpio.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "limpio",
+   "id": "f11",
+   "texto": "Agrégale quince.",
+   "duracion": 2.03,
+   "transcripcion": "Regale quince.",
+   "latencia_s": 1.197,
+   "reglas_ms": 0.085,
+   "orden": {
+    "accion": "conteo",
+    "cantidad": 15,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Regale quince."
+   },
+   "correcto_reglas": false
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f11_ruido.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "ruido",
+   "id": "f11",
+   "texto": "Agrégale quince.",
+   "duracion": 2.03,
+   "transcripcion": "Rera, le quiza.",
+   "latencia_s": 1.164,
+   "reglas_ms": 0.065,
+   "orden": {
+    "accion": "desconocido",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Rera, le quiza."
+   },
+   "correcto_reglas": false
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f12_limpio.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "limpio",
+   "id": "f12",
+   "texto": "Quita cuatro.",
+   "duracion": 1.8,
+   "transcripcion": "Quita cuazo.",
+   "latencia_s": 1.143,
+   "reglas_ms": 0.078,
+   "orden": {
+    "accion": "desconocido",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Quita cuazo."
+   },
+   "correcto_reglas": false
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f12_ruido.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "ruido",
+   "id": "f12",
+   "texto": "Quita cuatro.",
+   "duracion": 1.8,
+   "transcripcion": "Quita cuarta.",
+   "latencia_s": 1.134,
+   "reglas_ms": 0.083,
+   "orden": {
+    "accion": "desconocido",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Quita cuarta."
+   },
+   "correcto_reglas": false
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f13_limpio.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "limpio",
+   "id": "f13",
+   "texto": "Corrige el anterior a dieciséis.",
+   "duracion": 3.09,
+   "transcripcion": "Corrige el anterior a 16.",
+   "latencia_s": 1.174,
+   "reglas_ms": 0.104,
+   "orden": {
+    "accion": "corregir",
+    "cantidad": 16,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Corrige el anterior a 16."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f13_ruido.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "ruido",
+   "id": "f13",
+   "texto": "Corrige el anterior a dieciséis.",
+   "duracion": 3.09,
+   "transcripcion": "Corrige el anterior a dieciséis.",
+   "latencia_s": 1.293,
+   "reglas_ms": 0.109,
+   "orden": {
+    "accion": "corregir",
+    "cantidad": 16,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Corrige el anterior a dieciséis."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f14_limpio.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "limpio",
+   "id": "f14",
+   "texto": "No, eran treinta y seis.",
+   "duracion": 2.79,
+   "transcripcion": "No, eran treinta y seis.",
+   "latencia_s": 1.264,
+   "reglas_ms": 0.092,
+   "orden": {
+    "accion": "corregir",
+    "cantidad": 36,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "No, eran treinta y seis."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f14_ruido.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "ruido",
+   "id": "f14",
+   "texto": "No, eran treinta y seis.",
+   "duracion": 2.79,
+   "transcripcion": "No, eran treinta y seis.",
+   "latencia_s": 1.2,
+   "reglas_ms": 0.075,
+   "orden": {
+    "accion": "corregir",
+    "cantidad": 36,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "No, eran treinta y seis."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f15_limpio.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "limpio",
+   "id": "f15",
+   "texto": "Esto va en el pasillo tres, estante B.",
+   "duracion": 3.39,
+   "transcripcion": "Esto va en el pasillo tres, Estante B.",
+   "latencia_s": 1.299,
+   "reglas_ms": 0.102,
+   "orden": {
+    "accion": "ubicacion",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": "pasillo 3 estante b",
+    "sede": null,
+    "texto": "Esto va en el pasillo tres, Estante B."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f15_ruido.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "ruido",
+   "id": "f15",
+   "texto": "Esto va en el pasillo tres, estante B.",
+   "duracion": 3.39,
+   "transcripcion": "Esto va en el pasillo tres, Estante B.",
+   "latencia_s": 1.223,
+   "reglas_ms": 0.104,
+   "orden": {
+    "accion": "ubicacion",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": "pasillo 3 estante b",
+    "sede": null,
+    "texto": "Esto va en el pasillo tres, Estante B."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f16_limpio.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "limpio",
+   "id": "f16",
+   "texto": "Hay dos dañados.",
+   "duracion": 2.09,
+   "transcripcion": "Eidos dañados.",
+   "latencia_s": 1.177,
+   "reglas_ms": 0.078,
+   "orden": {
+    "accion": "danado",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Eidos dañados."
+   },
+   "correcto_reglas": false
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f16_ruido.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "ruido",
+   "id": "f16",
+   "texto": "Hay dos dañados.",
+   "duracion": 2.09,
+   "transcripcion": "Ahí dos dañados.",
+   "latencia_s": 1.148,
+   "reglas_ms": 0.069,
+   "orden": {
+    "accion": "danado",
+    "cantidad": 2,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Ahí dos dañados."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f17_limpio.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "limpio",
+   "id": "f17",
+   "texto": "Márcalo como dañado.",
+   "duracion": 2.38,
+   "transcripcion": "Márcago como dañado.",
+   "latencia_s": 1.214,
+   "reglas_ms": 0.086,
+   "orden": {
+    "accion": "danado",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Márcago como dañado."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f17_ruido.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "ruido",
+   "id": "f17",
+   "texto": "Márcalo como dañado.",
+   "duracion": 2.38,
+   "transcripcion": "Márcago como dañado.",
+   "latencia_s": 1.147,
+   "reglas_ms": 0.087,
+   "orden": {
+    "accion": "danado",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Márcago como dañado."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f18_limpio.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "limpio",
+   "id": "f18",
+   "texto": "¿Cuánto hay de esto en la sede norte?",
+   "duracion": 2.71,
+   "transcripcion": "¿Cuánto ha ido esto en la sede norte?",
+   "latencia_s": 1.215,
+   "reglas_ms": 0.074,
+   "orden": {
+    "accion": "consulta",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": "norte",
+    "texto": "¿Cuánto ha ido esto en la sede norte?"
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f18_ruido.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "ruido",
+   "id": "f18",
+   "texto": "¿Cuánto hay de esto en la sede norte?",
+   "duracion": 2.71,
+   "transcripcion": "¿Cuánto hay de esto en la sede norte?",
+   "latencia_s": 1.211,
+   "reglas_ms": 0.106,
+   "orden": {
+    "accion": "consulta",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": "norte",
+    "texto": "¿Cuánto hay de esto en la sede norte?"
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f19_limpio.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "limpio",
+   "id": "f19",
+   "texto": "Deshacer el último.",
+   "duracion": 2.16,
+   "transcripcion": "Deshacer el último.",
+   "latencia_s": 1.139,
+   "reglas_ms": 0.086,
+   "orden": {
+    "accion": "deshacer",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Deshacer el último."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f19_ruido.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "ruido",
+   "id": "f19",
+   "texto": "Deshacer el último.",
+   "duracion": 2.16,
+   "transcripcion": "Deshacer el último.",
+   "latencia_s": 1.174,
+   "reglas_ms": 0.08,
+   "orden": {
+    "accion": "deshacer",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Deshacer el último."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f20_limpio.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "limpio",
+   "id": "f20",
+   "texto": "Anota que la etiqueta no corresponde al producto.",
+   "duracion": 3.44,
+   "transcripcion": "Anota que la etiqueta no corresponde al producto.",
+   "latencia_s": 1.158,
+   "reglas_ms": 0.111,
+   "orden": {
+    "accion": "nota",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Anota que la etiqueta no corresponde al producto."
+   },
+   "correcto_reglas": true
+  },
+  {
+   "archivo": "es_ES-davefx-medium_f20_ruido.wav",
+   "voz": "es_ES-davefx-medium",
+   "condicion": "ruido",
+   "id": "f20",
+   "texto": "Anota que la etiqueta no corresponde al producto.",
+   "duracion": 3.44,
+   "transcripcion": "Anota que la etiqueta no corresponde al producto.",
+   "latencia_s": 1.233,
+   "reglas_ms": 0.112,
+   "orden": {
+    "accion": "nota",
+    "cantidad": null,
+    "unidad": null,
+    "ubicacion": null,
+    "sede": null,
+    "texto": "Anota que la etiqueta no corresponde al producto."
+   },
+   "correcto_reglas": true
+  }
+ ]
+}

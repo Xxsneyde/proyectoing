@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% from "macros.html" import estado %}
+{% block titulo %}Caja #{{ c.id }}{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <div><div class="migas"><a href="/caja/historial">Cierres de caja</a></div><h1>Caja #{{ c.id }} · {{ c.usuario }}</h1>
+    <p>{{ c.sede }} · {{ c.abierta|fecha }} → {{ c.cerrada|fecha if c.cerrada else 'abierta' }}</p></div>
+  {{ estado(c.estado) }}
+</div>
+<div class="rejilla rejilla-2">
+  <section class="tarjeta tarjeta-cuerpo">
+    <table class="tabla"><tbody>
+      <tr><td>Base inicial</td><td class="num">{{ c.base|pesos }}</td></tr>
+      <tr><td>Ventas en efectivo</td><td class="num">{{ r.por_medio.efectivo|pesos }}</td></tr>
+      <tr><td>Abonos en efectivo</td><td class="num">{{ r.abonos_efectivo|pesos }}</td></tr>
+      <tr><td>Ingresos</td><td class="num">{{ r.ingresos|pesos }}</td></tr>
+      <tr><td>Egresos</td><td class="num">−{{ r.egresos|pesos }}</td></tr>
+      <tr><td><b>Esperado</b></td><td class="num"><b>{{ r.esperado|pesos }}</b></td></tr>
+      {% if c.estado == 'cerrada' %}
+      <tr><td><b>Contado</b></td><td class="num"><b>{{ c.efectivo_contado|pesos }}</b></td></tr>
+      <tr><td><b>Diferencia</b></td><td class="num">{% if c.diferencia == 0 %}<span class="insignia bien">Cuadró</span>{% else %}<span class="insignia {{ 'critico' if c.diferencia < 0 else 'aviso' }}">{{ c.diferencia|pesos }}</span>{% endif %}</td></tr>
+      {% endif %}
+    </tbody></table>
+    {% if c.nota %}<p class="tenue" style="margin-top:12px">Observación: {{ c.nota }}</p>{% endif %}
+  </section>
+  <section class="tarjeta tarjeta-cuerpo pila">
+    <h2>Ventas por medio de pago</h2>
+    <dl class="lista-def">
+      <dt>Efectivo</dt><dd>{{ r.por_medio.efectivo|pesos }}</dd><dt>Tarjeta</dt><dd>{{ r.por_medio.tarjeta|pesos }}</dd>
+      <dt>Transferencia</dt><dd>{{ r.por_medio.transferencia|pesos }}</dd><dt>Crédito</dt><dd>{{ r.por_medio.credito|pesos }}</dd>
+      <dt>Número de ventas</dt><dd>{{ r.ventas }} ({{ r.anuladas }} anuladas)</dd>
+    </dl>
+    {% if movimientos %}<h2>Movimientos</h2><table class="tabla"><tbody>
+      {% for m in movimientos %}<tr><td>{{ m.concepto }}</td><td class="num">{{ '+' if m.tipo == 'ingreso' else '−' }}{{ m.valor|pesos }}</td></tr>{% endfor %}
+    </tbody></table>{% endif %}
+  </section>
+</div>
+{% endblock %}

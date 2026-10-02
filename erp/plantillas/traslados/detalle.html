@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% from "macros.html" import estado %}
+{% block titulo %}Traslado {{ t.numero }}{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <div><div class="migas"><a href="/traslados">Traslados</a></div>
+    <h1>Traslado <span class="mono" style="font-size:22px">{{ t.numero }}</span></h1>
+    <p>{{ t.origen }} → {{ t.destino }} · valor al costo {{ valor|pesos }}</p></div>
+  <div class="acciones">{{ estado(t.estado) }}</div>
+</div>
+{% if t.nota %}<div class="aviso-caja info">{{ icono('info') }}<span>{{ t.nota }}</span></div>{% endif %}
+
+<div class="rejilla rejilla-panel">
+  <section class="tarjeta">
+    <div class="tarjeta-titulo"><div><h2>{{ 'Recibir mercancía' if t.estado == 'en_transito' and en_destino else 'Productos' }}</h2>
+      {% if t.estado == 'en_transito' and en_destino %}<p>Cuenta lo que llegó. Lo que falte queda registrado como faltante del traslado.</p>{% endif %}</div></div>
+    <div class="tarjeta-cuerpo">
+    {% if t.estado == 'en_transito' and en_destino %}
+    <form class="pila" hx-post="/traslados/{{ t.id }}/recibir" hx-confirm="¿Registrar lo recibido? Entra al inventario de {{ t.destino }}.">
+      <table class="tabla"><thead><tr><th>Producto</th><th class="num">Enviado</th><th class="num">Llegó</th></tr></thead>
+        <tbody>{% for i in items %}<tr><td><b>{{ i.nombre }}</b><br><span class="mono tenue">{{ i.codigo }}</span></td>
+          <td class="num">{{ i.cantidad|cant }} <span class="tenue pequeno">{{ i.unidad }}</span></td>
+          <td class="num"><input name="recibido_{{ i.id }}" inputmode="decimal" value="{{ i.cantidad|cant }}" style="width:90px;text-align:right" aria-label="Llegó de {{ i.nombre }}"></td></tr>{% endfor %}</tbody></table>
+      <div><button class="btn btn-primario">{{ icono('check') }} Registrar recepción</button></div>
+    </form>
+    {% else %}
+    <table class="tabla"><thead><tr><th>Producto</th><th class="num">Enviado</th><th class="num">Recibido</th></tr></thead>
+      <tbody>{% for i in items %}<tr><td><a class="fila-enlace" href="/productos/{{ i.producto_id }}">{{ i.nombre }}</a></td>
+        <td class="num">{{ i.cantidad|cant }} <span class="tenue pequeno">{{ i.unidad }}</span></td>
+        <td class="num">{% if i.recibido is none %}<span class="tenue">—</span>{% elif i.recibido < i.cantidad %}<span class="insignia critico">{{ i.recibido|cant }} (faltan {{ (i.cantidad - i.recibido)|cant }})</span>{% else %}{{ i.recibido|cant }}{% endif %}</td></tr>{% endfor %}</tbody></table>
+    {% endif %}
+    </div>
+  </section>
+  <div class="pila">
+    <section class="tarjeta tarjeta-cuerpo">
+      <dl class="lista-def">
+        <dt>Creado</dt><dd>{{ t.creado|fecha }}</dd>
+        <dt>Enviado</dt><dd>{{ (t.enviado|fecha ~ ' · ' ~ t.envia) if t.enviado else '—' }}</dd>
+        <dt>Recibido</dt><dd>{{ (t.recibido|fecha ~ ' · ' ~ t.recibe) if t.recibido else '—' }}</dd>
+      </dl>
+    </section>
+    {% if t.estado == 'borrador' and en_origen %}
+    <form class="tarjeta tarjeta-cuerpo pila" hx-post="/traslados/{{ t.id }}/enviar" hx-confirm="¿Enviar? La mercancía sale del inventario de {{ t.origen }}.">
+      <div><h2>Enviar</h2><p class="tenue pequeno">Al enviar, sale del inventario de {{ t.origen }} y queda en camino.</p></div>
+      <div><button class="btn btn-primario">Enviar ahora</button></div>
+    </form>
+    {% endif %}
+    {% if t.estado in ('borrador', 'en_transito') and (en_origen or puede(usuario, 'panel')) %}
+    <form class="tarjeta tarjeta-cuerpo pila" hx-post="/traslados/{{ t.id }}/anular" hx-confirm="¿Anular el traslado?">
+      <div><h2>Anular</h2><p class="tenue pequeno">{{ 'La mercancía vuelve al inventario de ' ~ t.origen ~ '.' if t.estado == 'en_transito' else 'No se ha movido nada todavía.' }}</p></div>
+      <label class="campo">Motivo<input name="motivo" required></label>
+      <div><button class="btn btn-peligro">Anular traslado</button></div>
+    </form>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

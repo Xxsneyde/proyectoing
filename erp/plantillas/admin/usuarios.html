@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block titulo %}Usuarios{% endblock %}
+{% block contenido %}
+{% include "admin/_pestanas.html" %}
+<div class="rejilla rejilla-panel">
+  <section class="tarjeta">
+    <div class="tabla-contenedor"><table class="tabla">
+      <thead><tr><th>Usuario</th><th>Rol</th><th>Sede</th><th class="ocultar-movil">Último ingreso</th></tr></thead>
+      <tbody>{% for u in filas %}<tr>
+        <td><a class="fila-enlace" href="/admin/usuarios/{{ u.id }}">{{ u.nombre }}</a><br><span class="mono tenue">{{ u.usuario }}</span>{% if not u.activo %} <span class="insignia critico">Inactivo</span>{% endif %}</td>
+        <td>{{ ROLES[u.rol] }}</td><td class="secundario">{{ u.sede or 'Todas' }}</td>
+        <td class="ocultar-movil secundario">{{ u.ultima_sesion|fecha if u.ultima_sesion else 'Nunca' }}</td>
+      </tr>{% endfor %}</tbody>
+    </table></div>
+  </section>
+  <form class="tarjeta tarjeta-cuerpo pila" hx-post="/admin/usuarios">
+    <h2>Nuevo usuario</h2>
+    {% set u = none %}{% include "admin/_campos_usuario.html" %}
+    <label class="campo">Contraseña inicial<input name="clave" type="password" required minlength="8" autocomplete="new-password"><small>Mínimo 8 caracteres. Pídele que la cambie en «Mi cuenta».</small></label>
+    <div><button class="btn btn-primario">Crear usuario</button></div>
+  </form>
+</div>
+{% endblock %}

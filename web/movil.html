@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4f1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#141413" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Inventario por voz</title>
+<style>
+  :root {
+    --bg: #f5f4f1; --panel: #ffffff; --ink: #1c1b19; --muted: #6d6a64; --line: #e3e0da;
+    --chip: #ece9e3; --accent: #c2410c; --accent-soft: #fff0e6; --accent-ink: #ffffff;
+    --ok: #2b8a3e; --ok-soft: #e9f7ec; --bad: #c92a2a; --bad-soft: #fdecec; --rec: #e03131;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141413; --panel: #1e1d1b; --ink: #f2f0ec; --muted: #a39f98; --line: #2f2d2a;
+      --chip: #2a2826; --accent: #ff7b33; --accent-soft: #3a2010; --accent-ink: #1a0b02;
+      --ok: #69db7c; --ok-soft: #13301a; --bad: #ff8787; --bad-soft: #3a1717; --rec: #ff6b6b;
+    }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); }
+  body {
+    font: 16px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    padding: calc(env(safe-area-inset-top) + 12px) 16px calc(env(safe-area-inset-bottom) + 132px);
+    touch-action: manipulation; max-width: 560px; margin: 0 auto;
+  }
+  button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; }
+  .barra { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .barra h1 { font-size: 17px; margin: 0; font-weight: 650; letter-spacing: -0.01em; }
+  .barra small { display: block; color: var(--muted); font-size: 13px; font-weight: 400; }
+  .pastilla { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--muted);
+    background: var(--panel); border: 1px solid var(--line); padding: 5px 10px; border-radius: 999px; }
+  .punto { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); }
+  .punto.off { background: var(--bad); }
+
+  .tarjeta { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 16px; }
+  .etiqueta { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; }
+  .nombre { font-size: 21px; font-weight: 650; letter-spacing: -0.015em; margin: 4px 0 2px; line-height: 1.2; }
+  .codigo { font: 13px ui-monospace, "SF Mono", Menlo, monospace; color: var(--muted); }
+  .cifras { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0 12px; }
+  .cifra { background: var(--bg); border-radius: 12px; padding: 10px 12px; }
+  .cifra b { display: block; font-size: 30px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; line-height: 1.1; }
+  .cifra span { font-size: 13px; color: var(--muted); }
+  .dif { display: inline-block; font-size: 13.5px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: var(--chip); color: var(--muted); }
+  .dif.ok { background: var(--ok-soft); color: var(--ok); }
+  .dif.mal { background: var(--bad-soft); color: var(--bad); }
+  .detalles { display: flex; gap: 16px; margin-top: 12px; font-size: 14px; color: var(--muted); flex-wrap: wrap; }
+  .detalles strong { color: var(--ink); font-weight: 600; }
+
+  .escaneo { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 10px 0 18px; }
+  .escaneo button { flex: 1; padding: 11px 0; border-radius: 12px; background: var(--panel); border: 1px solid var(--line); font-size: 15px; font-weight: 550; }
+  .escaneo button:active { background: var(--chip); }
+  .escaneo .pos { font-size: 13px; color: var(--muted); min-width: 64px; text-align: center; }
+
+  .resultado { display: none; margin-bottom: 18px; }
+  .resultado.visible { display: block; }
+  .oi { color: var(--muted); font-size: 15px; margin: 0 0 6px; }
+  .oi q { color: var(--ink); font-style: italic; }
+  .respuesta { font-size: 19px; font-weight: 600; letter-spacing: -0.01em; margin: 0 0 10px; }
+  .meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 12.5px; color: var(--muted); }
+  .insignia { font-weight: 650; padding: 3px 8px; border-radius: 6px; background: var(--chip); color: var(--ink); }
+  .insignia.llm { background: var(--accent-soft); color: var(--accent); }
+
+  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 0 0 8px; font-weight: 600; }
+  .ejemplos { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+  .ejemplos button { background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 7px 12px; font-size: 14px; }
+  .ejemplos button:active { background: var(--chip); }
+  .historial { list-style: none; margin: 0; padding: 0; }
+  .historial li { padding: 10px 0; border-top: 1px solid var(--line); font-size: 14px; }
+  .historial li:first-child { border-top: 0; }
+  .historial .h-oi { color: var(--muted); }
+  .historial .h-hora { float: right; color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+
+  .aviso { display: none; background: var(--bad-soft); color: var(--bad); border-radius: 12px; padding: 10px 12px; font-size: 14px; margin-bottom: 12px; }
+  .aviso.visible { display: block; }
+
+  .dock { position: fixed; left: 0; right: 0; bottom: 0; padding: 10px 16px calc(env(safe-area-inset-bottom) + 10px);
+    background: color-mix(in srgb, var(--bg) 88%, transparent); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+    border-top: 1px solid var(--line); }
+  .dock-in { max-width: 560px; margin: 0 auto; display: flex; align-items: center; gap: 12px; }
+  .lado { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; background: var(--panel); border: 1px solid var(--line); flex: none; }
+  .lado svg { width: 22px; height: 22px; }
+  .mic { flex: 1; height: 64px; border-radius: 18px; background: var(--accent); color: var(--accent-ink);
+    display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 17px; font-weight: 650;
+    -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; transition: transform .08s ease, background .15s ease; }
+  .mic:active { transform: scale(0.98); }
+  .mic svg { width: 24px; height: 24px; flex: none; }
+  .mic.grabando { background: var(--rec); animation: latido 1.2s ease-in-out infinite; }
+  .mic.ocupado { opacity: .7; pointer-events: none; }
+  @keyframes latido { 0%,100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--rec) 45%, transparent); } 50% { box-shadow: 0 0 0 10px transparent; } }
+  @media (prefers-reduced-motion: reduce) { .mic.grabando { animation: none; } }
+
+  .escribir { display: none; gap: 8px; margin-bottom: 18px; }
+  .escribir.visible { display: flex; }
+  .escribir input { flex: 1; min-width: 0; font-size: 16px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); }
+  .escribir button { padding: 0 16px; border-radius: 12px; background: var(--ink); color: var(--bg); font-weight: 600; }
+</style>
+</head>
+<body>
+  <header class="barra">
+    <h1>Inventario por voz<small>Sede principal · prueba</small></h1>
+    <span class="pastilla"><span class="punto" id="punto"></span><span id="modo">Conectando…</span></span>
+  </header>
+
+  <div class="aviso" id="aviso"></div>
+
+  <section class="tarjeta" aria-live="polite">
+    <div class="etiqueta">Producto escaneado</div>
+    <div class="nombre" id="nombre">—</div>
+    <div class="codigo" id="codigo"></div>
+    <div class="cifras">
+      <div class="cifra"><span>Sistema</span><b id="sistema">—</b><span id="unidad"></span></div>
+      <div class="cifra"><span>Contado</span><b id="contado">—</b><span id="unidad2"></span></div>
+    </div>
+    <span class="dif" id="dif">Sin contar</span>
+    <div class="detalles">
+      <span>Ubicación <strong id="ubicacion">—</strong></span>
+      <span>Dañados <strong id="danados">0</strong></span>
+    </div>
+  </section>
+
+  <nav class="escaneo" aria-label="Simular escaneo">
+    <button id="anterior">‹ Anterior</button>
+    <span class="pos" id="posicion"></span>
+    <button id="siguiente">Siguiente ›</button>
+  </nav>
+
+  <form class="escribir" id="formEscribir">
+    <input id="entrada" type="text" placeholder="Escribe una orden…" autocomplete="off" enterkeyhint="send">
+    <button type="submit">Enviar</button>
+  </form>
+
+  <section class="resultado" id="resultado" aria-live="polite">
+    <p class="oi">Oí: <q id="oi"></q></p>
+    <p class="respuesta" id="respuesta"></p>
+    <div class="meta" id="meta"></div>
+  </section>
+
+  <h2>Prueba diciendo o tocando</h2>
+  <div class="ejemplos" id="ejemplos"></div>
+
+  <h2>Historial</h2>
+  <ul class="historial" id="historial"><li class="h-oi">Todavía no hay órdenes.</li></ul>
+
+  <div class="dock">
+    <div class="dock-in">
+      <button class="lado" id="teclado" aria-label="Escribir una orden">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2.5" y="6" width="19" height="12" rx="2.5"/><path d="M6.5 10h1M10.5 10h1M14.5 10h1M8 14h8"/></svg>
+      </button>
+      <button class="mic" id="mic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>
+        <span id="micTexto">Toca para hablar</span>
+      </button>
+    </div>
+  </div>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const EJEMPLOS = ["Hay veintiocho", "Están todos", "Suma diez más", "Corrige a quince", "Pasillo tres, estante B",
+  "Dos dañados", "¿Cuánto hay en la sede norte?", "Deshacer", "Bájale tres porque se vendieron"];
+const fmt = (n) => (n == null ? "—" : Number.isInteger(n) ? String(n) : String(n).replace(".", ","));
+
+let historial = [];
+let ctx = null;
+let reproductor = null;
+let grabador = null, flujo = null, trozos = [], inicioGrab = 0, reloj = null, limite = null;
+
+function aviso(texto) {
+  const el = $("#aviso");
+  el.textContent = texto || "";
+  el.classList.toggle("visible", !!texto);
+}
+
+function pintar(e) {
+  const p = e.producto;
+  $("#nombre").textContent = p.nombre;
+  $("#codigo").textContent = p.codigo;
+  $("#sistema").textContent = fmt(p.sistema);
+  $("#unidad").textContent = $("#unidad2").textContent = p.unidad;
+  $("#contado").textContent = fmt(p.contado);
+  const dif = p.contado == null ? null : Math.round((p.contado - p.sistema) * 100) / 100;
+  const chip = $("#dif");
+  chip.className = "dif" + (dif == null ? "" : dif === 0 ? " ok" : " mal");
+  chip.textContent = dif == null ? "Sin contar" : dif === 0 ? "Cuadra con el sistema"
+    : `Diferencia ${dif > 0 ? "+" : "−"}${fmt(Math.abs(dif))}`;
+  $("#ubicacion").textContent = p.ubicacion || "—";
+  $("#danados").textContent = fmt(p.danados);
+  $("#posicion").textContent = `${e.indice + 1} de ${e.total}`;
+  $("#modo").textContent = e.llm ? "IA local activa" : "Solo reglas";
+  $("#punto").classList.remove("off");
+}
+
+// Safari solo deja sonar audio si se "desbloquea" durante un toque del usuario
+function desbloquearAudio() {
+  try {
+    if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+    if (ctx.state !== "running") ctx.resume();
+    const b = ctx.createBuffer(1, 1, 22050), s = ctx.createBufferSource();
+    s.buffer = b; s.connect(ctx.destination); s.start(0);
+  } catch (_) {}
+  if (!reproductor) {
+    reproductor = new Audio();
+    reproductor.src = "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAIlYAAESsAAACABAAZGF0YQAAAAA=";
+    reproductor.play().catch(() => {});
+  }
+}
+
+async function reproducir(b64) {
+  if (!b64) return;
+  // En iPhone, <audio> suena aunque el interruptor de silencio esté activado; Web Audio no
+  if (reproductor) {
+    try {
+      reproductor.src = "data:audio/wav;base64," + b64;
+      await reproductor.play();
+      return;
+    } catch (_) {}
+  }
+  try {
+    if (ctx && ctx.state !== "running") await ctx.resume();
+    if (ctx && ctx.state === "running") {
+      const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+      const buf = await new Promise((ok, mal) => ctx.decodeAudioData(bytes.buffer, ok, mal));
+      const src = ctx.createBufferSource();
+      src.buffer = buf; src.connect(ctx.destination); src.start();
+    }
+  } catch (_) {}
+}
+
+function mostrar(d, msCliente) {
+  pintar(d);
+  $("#resultado").classList.add("visible");
+  $("#oi").textContent = d.oi || "(no se escuchó nada)";
+  $("#respuesta").textContent = d.respuesta;
+  const t = d.tiempos;
+  const servidor = t.voz_texto_ms + t.interpretar_ms + t.respuesta_ms;
+  const red = Math.max(0, Math.round(msCliente - servidor));
+  const llm = d.motor === "LLM";
+  const partes = [];
+  if (t.voz_texto_ms) partes.push(`Voz→texto ${(t.voz_texto_ms / 1000).toFixed(1).replace(".", ",")} s`);
+  partes.push(`Interpretar ${t.interpretar_ms >= 1000 ? (t.interpretar_ms / 1000).toFixed(1).replace(".", ",") + " s" : t.interpretar_ms + " ms"}`);
+  partes.push(`Red ${red} ms`);
+  partes.push(`Total ${(msCliente / 1000).toFixed(1).replace(".", ",")} s`);
+  $("#meta").innerHTML = "";
+  const ins = document.createElement("span");
+  ins.className = "insignia" + (llm ? " llm" : "");
+  ins.textContent = llm ? "IA local" : d.motor === "reglas" ? "Reglas" : d.motor;
+  $("#meta").append(ins, document.createTextNode(partes.join(" · ")));
+  reproducir(d.audio);
+
+  historial.unshift({ hora: new Date().toLocaleTimeString("es-CO", { hour: "2-digit", minute: "2-digit" }),
+    oi: d.oi, respuesta: d.respuesta, producto: d.producto.nombre });
+  const ul = $("#historial");
+  ul.innerHTML = "";
+  for (const h of historial.slice(0, 12)) {
+    const li = document.createElement("li");
+    li.innerHTML = `<span class="h-hora"></span><div class="h-oi"></div><div></div>`;
+    li.children[0].textContent = h.hora;
+    li.children[1].textContent = `«${h.oi || "…"}» · ${h.producto}`;
+    li.children[2].textContent = h.respuesta;
+    ul.append(li);
+  }
+}
+
+async function api(ruta, opciones) {
+  const r = await fetch(ruta, opciones);
+  if (!r.ok) throw new Error(`El PC respondió ${r.status}`);
+  return r.json();
+}
+
+async function enviarTexto(texto) {
+  if (!texto.trim()) return;
+  desbloquearAudio();
+  estadoMic("procesando");
+  const t0 = performance.now();
+  try {
+    const d = await api("/api/texto", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ texto }) });
+    aviso("");
+    mostrar(d, performance.now() - t0);
+  } catch (e) {
+    aviso("No hay conexión con el PC. ¿Sigue corriendo el servidor y estás en la misma WiFi?");
+  }
+  estadoMic("listo");
+}
+
+function estadoMic(estado) {
+  const mic = $("#mic");
+  mic.classList.toggle("grabando", estado === "grabando");
+  mic.classList.toggle("ocupado", estado === "procesando" || estado === "preparando");
+  clearInterval(reloj);
+  if (estado === "grabando") {
+    const pinta = () => { $("#micTexto").textContent = `Escuchando ${((performance.now() - inicioGrab) / 1000).toFixed(1).replace(".", ",")} s · toca para terminar`; };
+    pinta(); reloj = setInterval(pinta, 100);
+  } else {
+    $("#micTexto").textContent = { listo: "Toca para hablar", preparando: "Abriendo micrófono…", procesando: "Procesando…" }[estado];
+  }
+}
+
+async function empezar() {
+  desbloquearAudio();
+  if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia) {
+    aviso("El micrófono solo funciona si abres la página con https://");
+    return;
+  }
+  estadoMic("preparando");
+  try {
+    flujo = await navigator.mediaDevices.getUserMedia({
+      audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true, channelCount: 1 },
+    });
+  } catch (e) {
+    aviso("No hay permiso para el micrófono. En el iPhone: Ajustes → Apps → Safari → Micrófono → Preguntar o Permitir, y recarga la página.");
+    estadoMic("listo");
+    return;
+  }
+  const tipo = ["audio/mp4", "audio/webm;codecs=opus", "audio/webm"].find((t) => MediaRecorder.isTypeSupported?.(t)) || "";
+  grabador = new MediaRecorder(flujo, tipo ? { mimeType: tipo } : undefined);
+  trozos = [];
+  grabador.ondataavailable = (e) => { if (e.data.size) trozos.push(e.data); };
+  grabador.onstop = enviarAudio;
+  grabador.start();
+  inicioGrab = performance.now();
+  aviso("");
+  estadoMic("grabando");
+  limite = setTimeout(terminar, 12000);  // nadie dicta una orden de más de 12 s
+}
+
+function terminar() {
+  clearTimeout(limite);
+  if (grabador && grabador.state === "recording") grabador.stop();
+}
+
+async function enviarAudio() {
+  flujo.getTracks().forEach((t) => t.stop());  // suelta el micrófono entre órdenes
+  const dur = (performance.now() - inicioGrab) / 1000;
+  const blob = new Blob(trozos, { type: grabador.mimeType || "audio/mp4" });
+  if (dur < 0.5 || blob.size < 1000) {
+    aviso("Muy corto: toca, di la orden y vuelve a tocar.");
+    estadoMic("listo");
+    return;
+  }
+  estadoMic("procesando");
+  const fd = new FormData();
+  fd.append("audio", blob, blob.type.includes("mp4") ? "orden.m4a" : "orden.webm");
+  const t0 = performance.now();
+  try {
+    const d = await api("/api/voz", { method: "POST", body: fd });
+    mostrar(d, performance.now() - t0);
+  } catch (e) {
+    aviso("No pude enviar el audio al PC. ¿Sigue corriendo el servidor y estás en la misma WiFi?");
+  }
+  estadoMic("listo");
+}
+
+$("#mic").addEventListener("click", () => {
+  if (grabador && grabador.state === "recording") terminar();
+  else empezar();
+});
+$("#mic").addEventListener("contextmenu", (e) => e.preventDefault());
+
+async function mover(paso) {
+  try { pintar(await api("/api/producto", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ paso }) })); }
+  catch (e) { aviso("No hay conexión con el PC."); }
+}
+$("#anterior").addEventListener("click", () => mover(-1));
+$("#siguiente").addEventListener("click", () => mover(1));
+
+$("#teclado").addEventListener("click", () => {
+  const f = $("#formEscribir");
+  f.classList.toggle("visible");
+  if (f.classList.contains("visible")) $("#entrada").focus();
+});
+$("#formEscribir").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const t = $("#entrada").value;
+  $("#entrada").value = "";
+  enviarTexto(t);
+});
+
+for (const ej of EJEMPLOS) {
+  const b = document.createElement("button");
+  b.textContent = ej;
+  b.addEventListener("click", () => enviarTexto(ej));
+  $("#ejemplos").append(b);
+}
+
+api("/api/estado").then(pintar).catch(() => {
+  $("#modo").textContent = "Sin conexión";
+  $("#punto").classList.add("off");
+});
+</script>
+</body>
+</html>

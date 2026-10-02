@@ -1,0 +1,8 @@
+<div class="encabezado">
+  <div><h1>Configuración</h1><p>Usuarios, sedes y datos del sistema</p></div>
+</div>
+<nav class="pestanas">
+  <a href="/admin/usuarios" {% if pestana == 'usuarios' %}aria-current="page"{% endif %}>Usuarios</a>
+  <a href="/admin/sedes" {% if pestana == 'sedes' %}aria-current="page"{% endif %}>Sedes</a>
+  <a href="/admin/sistema" {% if pestana == 'sistema' %}aria-current="page"{% endif %}>Empresa y sistema</a>
+</nav>

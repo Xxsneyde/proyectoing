@@ -1,0 +1,9 @@
+<div class="formulario">
+  <label class="campo">NIT<input name="nit" required value="{{ p.nit if p else '' }}"></label>
+  <label class="campo ancho">Razón social<input name="nombre" required value="{{ p.nombre if p else '' }}"></label>
+  <label class="campo">Contacto<input name="contacto" value="{{ p.contacto if p else '' }}"></label>
+  <label class="campo">Teléfono<input name="telefono" type="tel" value="{{ p.telefono if p else '' }}"></label>
+  <label class="campo">Correo<input name="email" type="email" value="{{ p.email if p else '' }}"></label>
+  <label class="campo">Plazo de pago (días)<input name="plazo_dias" inputmode="numeric" value="{{ p.plazo_dias if p else 30 }}"></label>
+  {% if p %}<label class="casilla ancho"><input type="checkbox" name="activo" value="1" {% if p.activo %}checked{% endif %}> Proveedor activo</label>{% endif %}
+</div>

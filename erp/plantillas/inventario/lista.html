@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block titulo %}Existencias{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <div><h1>Existencias</h1><p>Sede {{ nombre_sede }} · lo que hay, dónde está y qué falta</p></div>
+  <div class="acciones">
+    <a class="btn" href="/inventario/movimientos">{{ icono('auditoria') }} Movimientos</a>
+    {% if puede(usuario, 'compras.gestionar') %}<a class="btn btn-primario" href="/compras/nueva">{{ icono('compra') }} Pedido sugerido</a>{% endif %}
+  </div>
+</div>
+<div class="rejilla rejilla-4">
+  <div class="tarjeta stat"><span class="etiqueta">Valor del inventario</span><span class="valor">{{ resumen.valor|pesos }}</span><span class="delta">al costo promedio</span></div>
+  <div class="tarjeta stat"><span class="etiqueta">Productos con existencia</span><span class="valor">{{ resumen.productos }}</span></div>
+  <div class="tarjeta stat"><span class="etiqueta">Bajo el mínimo</span><a class="valor" href="/inventario?filtro=bajo{{ '&sede=' ~ sede_ver if usuario.todas_las_sedes }}">{{ resumen.bajo }}</a><span class="delta">incluye agotados</span></div>
+  <div class="tarjeta stat"><span class="etiqueta">Agotados</span><a class="valor" href="/inventario?filtro=agotados{{ '&sede=' ~ sede_ver if usuario.todas_las_sedes }}" style="{{ 'color:var(--critico-texto)' if resumen.agotados }}">{{ resumen.agotados }}</a></div>
+</div>
+<section class="tarjeta">
+  <form class="filtros tarjeta-cuerpo" style="padding-bottom:12px" hx-get="/inventario" hx-target="#tabla" hx-push-url="true"
+        hx-trigger="input changed delay:200ms from:input, change from:select">
+    {% if usuario.todas_las_sedes %}<input type="hidden" name="sede" value="{{ sede_ver }}">{% endif %}
+    <input type="search" name="q" value="{{ q }}" placeholder="Producto, código o ubicación" style="flex:1;min-width:200px" aria-label="Buscar">
+    <select name="filtro" aria-label="Filtro">{% for k, v in filtros.items() %}<option value="{{ k }}" {% if k == filtro %}selected{% endif %}>{{ v }}</option>{% endfor %}</select>
+    <select name="categoria" aria-label="Categoría"><option value="">Todas las categorías</option>
+      {% for c in categorias %}<option value="{{ c.id }}" {% if c.id == categoria %}selected{% endif %}>{{ c.nombre }}</option>{% endfor %}</select>
+  </form>
+  <div id="tabla">{% include "inventario/_tabla.html" %}</div>
+</section>
+{% endblock %}

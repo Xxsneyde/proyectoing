@@ -1,0 +1,799 @@
+{
+ "modelo": "qwen3-4b",
+ "gpu": false,
+ "aciertos": 52,
+ "total": 55,
+ "media_s": 2.85,
+ "p90_s": 5.43,
+ "max_s": 8.48,
+ "frio_s": 17.19,
+ "filas": [
+  {
+   "texto": "¿Cuánto cemento gris hay?",
+   "obtenido": {
+    "accion": "existencia",
+    "producto": "cemento gris",
+    "sede": "norte"
+   },
+   "fallas": [],
+   "total_s": 2.05,
+   "prompt_tokens": 14,
+   "prompt_ms": 501,
+   "gen_tokens": 19,
+   "gen_ms": 1533
+  },
+  {
+   "texto": "oiga cuántos bultos de cemento nos quedan",
+   "obtenido": {
+    "accion": "existencia",
+    "producto": "bultos de cemento",
+    "sede": "norte"
+   },
+   "fallas": [],
+   "total_s": 2.44,
+   "prompt_tokens": 19,
+   "prompt_ms": 626,
+   "gen_tokens": 22,
+   "gen_ms": 1799
+  },
+  {
+   "texto": "¿Hay tubo de media pulgada en Norte?",
+   "obtenido": {
+    "accion": "existencia",
+    "producto": "tubo de media pulgada",
+    "sede": "norte"
+   },
+   "fallas": [],
+   "total_s": 2.44,
+   "prompt_tokens": 17,
+   "prompt_ms": 554,
+   "gen_tokens": 23,
+   "gen_ms": 1877
+  },
+  {
+   "texto": "¿Dónde está el thinner?",
+   "obtenido": {
+    "accion": "existencia",
+    "producto": "thinner",
+    "sede": "norte"
+   },
+   "fallas": [],
+   "total_s": 1.89,
+   "prompt_tokens": 12,
+   "prompt_ms": 427,
+   "gen_tokens": 18,
+   "gen_ms": 1445
+  },
+  {
+   "texto": "cuántas brochas de dos pulgadas tenemos en todas las sedes",
+   "obtenido": {
+    "accion": "existencia",
+    "producto": "brochas de dos pulgadas",
+    "sede": "todas"
+   },
+   "fallas": [],
+   "total_s": 2.61,
+   "prompt_tokens": 21,
+   "prompt_ms": 679,
+   "gen_tokens": 23,
+   "gen_ms": 1918
+  },
+  {
+   "texto": "revisa cuánto cable doce hay en el sur",
+   "obtenido": {
+    "accion": "existencia",
+    "producto": "cable doce",
+    "sede": "sur"
+   },
+   "fallas": [],
+   "total_s": 2.12,
+   "prompt_tokens": 17,
+   "prompt_ms": 566,
+   "gen_tokens": 19,
+   "gen_ms": 1541
+  },
+  {
+   "texto": "eh este cuánto tubo pvc de tres cuartos queda",
+   "obtenido": {
+    "accion": "existencia",
+    "producto": "tubo pvc de tres cuartos",
+    "sede": "norte"
+   },
+   "fallas": [],
+   "total_s": 2.73,
+   "prompt_tokens": 20,
+   "prompt_ms": 648,
+   "gen_tokens": 25,
+   "gen_ms": 2070
+  },
+  {
+   "texto": "¿A cómo está el taladro percutor?",
+   "obtenido": {
+    "accion": "info_producto",
+    "producto": "taladro percutor"
+   },
+   "fallas": [],
+   "total_s": 1.74,
+   "prompt_tokens": 15,
+   "prompt_ms": 567,
+   "gen_tokens": 14,
+   "gen_ms": 1156
+  },
+  {
+   "texto": "¿Cuál es el código de barras del candado de 50?",
+   "obtenido": {
+    "accion": "info_producto",
+    "producto": "candado de 50"
+   },
+   "fallas": [],
+   "total_s": 2.15,
+   "prompt_tokens": 21,
+   "prompt_ms": 696,
+   "gen_tokens": 17,
+   "gen_ms": 1436
+  },
+  {
+   "texto": "¿Quién nos vende la pintura tipo uno?",
+   "obtenido": {
+    "accion": "info_producto",
+    "producto": "pintura tipo uno"
+   },
+   "fallas": [],
+   "total_s": 1.82,
+   "prompt_tokens": 16,
+   "prompt_ms": 536,
+   "gen_tokens": 15,
+   "gen_ms": 1271
+  },
+  {
+   "texto": "¿Qué hay que pedir?",
+   "obtenido": {
+    "accion": "bajo_minimo",
+    "sede": "todas"
+   },
+   "fallas": [],
+   "total_s": 1.74,
+   "prompt_tokens": 11,
+   "prompt_ms": 463,
+   "gen_tokens": 15,
+   "gen_ms": 1258
+  },
+  {
+   "texto": "qué productos se están acabando en norte",
+   "obtenido": {
+    "accion": "bajo_minimo",
+    "sede": "norte"
+   },
+   "fallas": [],
+   "total_s": 1.84,
+   "prompt_tokens": 14,
+   "prompt_ms": 570,
+   "gen_tokens": 15,
+   "gen_ms": 1257
+  },
+  {
+   "texto": "ayúdame con el inventario del sur, qué falta allá",
+   "obtenido": {
+    "accion": "bajo_minimo",
+    "sede": "sur"
+   },
+   "fallas": [],
+   "total_s": 1.87,
+   "prompt_tokens": 20,
+   "prompt_ms": 715,
+   "gen_tokens": 14,
+   "gen_ms": 1146
+  },
+  {
+   "texto": "¿Qué está agotado?",
+   "obtenido": {
+    "accion": "agotados",
+    "sede": "todas"
+   },
+   "fallas": [],
+   "total_s": 1.65,
+   "prompt_tokens": 12,
+   "prompt_ms": 471,
+   "gen_tokens": 14,
+   "gen_ms": 1169
+  },
+  {
+   "texto": "Arma el pedido para Eléctricos del Valle",
+   "obtenido": {
+    "accion": "pedido",
+    "proveedor": "Eléctricos del Valle"
+   },
+   "fallas": [],
+   "total_s": 2.04,
+   "prompt_tokens": 17,
+   "prompt_ms": 602,
+   "gen_tokens": 17,
+   "gen_ms": 1422
+  },
+  {
+   "texto": "¿Qué le pedimos al proveedor de pinturas?",
+   "obtenido": {
+    "accion": "pedido",
+    "proveedor": "pinturas"
+   },
+   "fallas": [],
+   "total_s": 1.69,
+   "prompt_tokens": 17,
+   "prompt_ms": 610,
+   "gen_tokens": 13,
+   "gen_ms": 1070
+  },
+  {
+   "texto": "¿Cuánto hemos vendido hoy?",
+   "obtenido": {
+    "accion": "ventas",
+    "periodo": "hoy",
+    "sede": "norte"
+   },
+   "fallas": [],
+   "total_s": 2.06,
+   "prompt_tokens": 13,
+   "prompt_ms": 513,
+   "gen_tokens": 18,
+   "gen_ms": 1529
+  },
+  {
+   "texto": "cuánto se vendió ayer en el centro",
+   "obtenido": {
+    "accion": "ventas",
+    "periodo": "ayer",
+    "sede": "centro"
+   },
+   "fallas": [],
+   "total_s": 1.98,
+   "prompt_tokens": 16,
+   "prompt_ms": 535,
+   "gen_tokens": 17,
+   "gen_ms": 1427
+  },
+  {
+   "texto": "¿Cómo nos fue este mes en ventas?",
+   "obtenido": {
+    "accion": "ventas",
+    "periodo": "mes",
+    "sede": "todas"
+   },
+   "fallas": [],
+   "total_s": 1.99,
+   "prompt_tokens": 14,
+   "prompt_ms": 555,
+   "gen_tokens": 17,
+   "gen_ms": 1417
+  },
+  {
+   "texto": "ventas del mes pasado en todas las sedes",
+   "obtenido": {
+    "accion": "ventas",
+    "periodo": "mes_pasado",
+    "sede": "todas"
+   },
+   "fallas": [],
+   "total_s": 2.17,
+   "prompt_tokens": 14,
+   "prompt_ms": 557,
+   "gen_tokens": 19,
+   "gen_ms": 1601
+  },
+  {
+   "texto": "¿Qué es lo que más se vende esta semana?",
+   "obtenido": {
+    "accion": "mas_vendidos",
+    "periodo": "semana",
+    "sede": "todas"
+   },
+   "fallas": [],
+   "total_s": 2.58,
+   "prompt_tokens": 17,
+   "prompt_ms": 617,
+   "gen_tokens": 23,
+   "gen_ms": 1951
+  },
+  {
+   "texto": "¿Qué mercancía no se está moviendo?",
+   "obtenido": {
+    "accion": "quietos"
+   },
+   "fallas": [],
+   "total_s": 1.1,
+   "prompt_tokens": 14,
+   "prompt_ms": 557,
+   "gen_tokens": 7,
+   "gen_ms": 526
+  },
+  {
+   "texto": "¿Quién nos debe plata?",
+   "obtenido": {
+    "accion": "cartera",
+    "cliente": null
+   },
+   "fallas": [],
+   "total_s": 1.46,
+   "prompt_tokens": 11,
+   "prompt_ms": 471,
+   "gen_tokens": 12,
+   "gen_ms": 977
+  },
+  {
+   "texto": "¿Cuánto debe Carlos Ruiz?",
+   "obtenido": {
+    "accion": "cartera",
+    "cliente": "Carlos Ruiz"
+   },
+   "fallas": [],
+   "total_s": 1.54,
+   "prompt_tokens": 12,
+   "prompt_ms": 462,
+   "gen_tokens": 13,
+   "gen_ms": 1060
+  },
+  {
+   "texto": "¿Qué facturas de proveedores hay que pagar esta semana?",
+   "obtenido": {
+    "accion": "pagos"
+   },
+   "fallas": [],
+   "total_s": 1.15,
+   "prompt_tokens": 17,
+   "prompt_ms": 610,
+   "gen_tokens": 7,
+   "gen_ms": 528
+  },
+  {
+   "texto": "¿Qué movimientos ha tenido la pulidora?",
+   "obtenido": {
+    "accion": "movimientos",
+    "producto": "pulidora"
+   },
+   "fallas": [],
+   "total_s": 1.77,
+   "prompt_tokens": 15,
+   "prompt_ms": 613,
+   "gen_tokens": 14,
+   "gen_ms": 1138
+  },
+  {
+   "texto": "¿Cómo vamos hoy?",
+   "obtenido": {
+    "accion": "pendientes"
+   },
+   "fallas": [],
+   "total_s": 0.93,
+   "prompt_tokens": 9,
+   "prompt_ms": 384,
+   "gen_tokens": 7,
+   "gen_ms": 535
+  },
+  {
+   "texto": "qué tengo pendiente",
+   "obtenido": {
+    "accion": "pendientes"
+   },
+   "fallas": [],
+   "total_s": 0.92,
+   "prompt_tokens": 9,
+   "prompt_ms": 380,
+   "gen_tokens": 7,
+   "gen_ms": 524
+  },
+  {
+   "texto": "¿Cuánta plata hay en la caja?",
+   "obtenido": {
+    "accion": "caja"
+   },
+   "fallas": [],
+   "total_s": 1.08,
+   "prompt_tokens": 16,
+   "prompt_ms": 540,
+   "gen_tokens": 7,
+   "gen_ms": 522
+  },
+  {
+   "texto": "Registra un producto nuevo: cemento blanco de 25 kilos, lo vendemos a 38 mil y nos cuesta 30 mil",
+   "obtenido": {
+    "accion": "crear_producto",
+    "nombre": "cemento blanco de 25 kilos",
+    "precio": 38000,
+    "costo": 30000,
+    "unidad": "kilos",
+    "categoria": "construcción",
+    "codigo": null,
+    "cantidad": 0,
+    "minimo": 10,
+    "maximo": 50,
+    "iva": 19
+   },
+   "fallas": [],
+   "total_s": 7.54,
+   "prompt_tokens": 37,
+   "prompt_ms": 1241,
+   "gen_tokens": 72,
+   "gen_ms": 6279
+  },
+  {
+   "texto": "crea el producto silicona negra 280 mililitros, precio 15500, código 7701234567890",
+   "obtenido": {
+    "accion": "crear_producto",
+    "nombre": "silicona negra 280 mililitros",
+    "precio": 15500,
+    "costo": null,
+    "unidad": "unidades",
+    "categoria": null,
+    "codigo": "7701234567890",
+    "cantidad": 0,
+    "minimo": 0,
+    "maximo": 0,
+    "iva": 0
+   },
+   "fallas": [],
+   "total_s": 8.48,
+   "prompt_tokens": 44,
+   "prompt_ms": 1470,
+   "gen_tokens": 80,
+   "gen_ms": 6997
+  },
+  {
+   "texto": "agrega un producto nuevo que se llama guantes de látex, se vende a 4500 y llegaron 50",
+   "obtenido": {
+    "accion": "crear_producto",
+    "nombre": "guantes de látex",
+    "precio": 4500,
+    "costo": null,
+    "unidad": "unidades",
+    "categoria": "protección",
+    "codigo": null,
+    "cantidad": 50,
+    "minimo": 10,
+    "maximo": 100,
+    "iva": 0
+   },
+   "fallas": [],
+   "total_s": 6.86,
+   "prompt_tokens": 35,
+   "prompt_ms": 1195,
+   "gen_tokens": 65,
+   "gen_ms": 5652
+  },
+  {
+   "texto": "Llegaron 20 bultos de cemento gris",
+   "obtenido": {
+    "accion": "entrada",
+    "producto": "bultos de cemento gris",
+    "cantidad": 20,
+    "motivo": "llegaron"
+   },
+   "fallas": [],
+   "total_s": 3.06,
+   "prompt_tokens": 18,
+   "prompt_ms": 649,
+   "gen_tokens": 28,
+   "gen_ms": 2394
+  },
+  {
+   "texto": "súmale cinco al martillo de uña",
+   "obtenido": {
+    "accion": "entrada",
+    "producto": "martillo de uña",
+    "cantidad": 5,
+    "motivo": "súmale cinco"
+   },
+   "fallas": [],
+   "total_s": 2.84,
+   "prompt_tokens": 15,
+   "prompt_ms": 601,
+   "gen_tokens": 26,
+   "gen_ms": 2221
+  },
+  {
+   "texto": "Ajusta la existencia del yeso a 12, se había contado mal",
+   "obtenido": {
+    "accion": "ajustar",
+    "producto": "yeso",
+    "cantidad": 12,
+    "motivo": "se había contado mal"
+   },
+   "fallas": [],
+   "total_s": 3.2,
+   "prompt_tokens": 24,
+   "prompt_ms": 829,
+   "gen_tokens": 27,
+   "gen_ms": 2359
+  },
+  {
+   "texto": "deja el thinner en 8 galones",
+   "obtenido": {
+    "accion": "ajustar",
+    "producto": "thinner",
+    "cantidad": 8,
+    "motivo": "deja en 8 galones"
+   },
+   "fallas": [],
+   "total_s": 2.99,
+   "prompt_tokens": 14,
+   "prompt_ms": 561,
+   "gen_tokens": 28,
+   "gen_ms": 2412
+  },
+  {
+   "texto": "Se rompieron dos bombillos de 9 vatios",
+   "obtenido": {
+    "accion": "danado",
+    "producto": "bombillos de 9 vatios",
+    "cantidad": 2,
+    "motivo": "se rompieron"
+   },
+   "fallas": [],
+   "total_s": 3.17,
+   "prompt_tokens": 17,
+   "prompt_ms": 615,
+   "gen_tokens": 29,
+   "gen_ms": 2543
+  },
+  {
+   "texto": "hay tres galones de esmalte blanco vencidos",
+   "obtenido": {
+    "accion": "danado",
+    "producto": "galones de esmalte blanco",
+    "cantidad": 3,
+    "motivo": "vencidos"
+   },
+   "fallas": [],
+   "total_s": 3.13,
+   "prompt_tokens": 17,
+   "prompt_ms": 613,
+   "gen_tokens": 28,
+   "gen_ms": 2505
+  },
+  {
+   "texto": "Sube el precio de la arena de río a 9500",
+   "obtenido": {
+    "accion": "precio",
+    "producto": "arena de río",
+    "precio": 9500
+   },
+   "fallas": [],
+   "total_s": 2.66,
+   "prompt_tokens": 21,
+   "prompt_ms": 808,
+   "gen_tokens": 20,
+   "gen_ms": 1832
+  },
+  {
+   "texto": "cámbiale el precio al candado de 40 a veinticinco mil",
+   "obtenido": {
+    "accion": "precio",
+    "producto": "candado",
+    "precio": 25000
+   },
+   "fallas": [],
+   "total_s": 2.71,
+   "prompt_tokens": 24,
+   "prompt_ms": 961,
+   "gen_tokens": 20,
+   "gen_ms": 1732
+  },
+  {
+   "texto": "Pon el mínimo de la gravilla en 10 y el máximo en 40",
+   "obtenido": {
+    "accion": "minimo",
+    "producto": "gravilla",
+    "minimo": 10,
+    "maximo": 40
+   },
+   "fallas": [],
+   "total_s": 2.95,
+   "prompt_tokens": 24,
+   "prompt_ms": 875,
+   "gen_tokens": 24,
+   "gen_ms": 2054
+  },
+  {
+   "texto": "el flexómetro de 5 metros ahora va en el pasillo 4 estante c",
+   "obtenido": {
+    "accion": "ubicar",
+    "producto": "flexómetro de 5 metros",
+    "ubicacion": "pasillo 4 estante c"
+   },
+   "fallas": [],
+   "total_s": 3.29,
+   "prompt_tokens": 24,
+   "prompt_ms": 831,
+   "gen_tokens": 28,
+   "gen_ms": 2446
+  },
+  {
+   "texto": "Recuerda que el proveedor de tornillos viene los lunes",
+   "obtenido": {
+    "accion": "recordar",
+    "texto": "El proveedor de tornillos viene los lunes"
+   },
+   "fallas": [],
+   "total_s": 2.45,
+   "prompt_tokens": 19,
+   "prompt_ms": 704,
+   "gen_tokens": 20,
+   "gen_ms": 1728
+  },
+  {
+   "texto": "anota que la señora Martha viene el viernes por el pedido de tubería",
+   "obtenido": {
+    "accion": "recordar",
+    "texto": "La señora Martha viene el viernes para el pedido de tubería"
+   },
+   "fallas": [],
+   "total_s": 3.11,
+   "prompt_tokens": 22,
+   "prompt_ms": 913,
+   "gen_tokens": 24,
+   "gen_ms": 2185
+  },
+  {
+   "texto": "Hola, buenos días",
+   "obtenido": {
+    "accion": "responder",
+    "texto": "Buenos días. ¿En qué puedo ayudarte hoy?"
+   },
+   "fallas": [],
+   "total_s": 2.57,
+   "prompt_tokens": 10,
+   "prompt_ms": 522,
+   "gen_tokens": 23,
+   "gen_ms": 2028
+  },
+  {
+   "texto": "¿Qué puedes hacer?",
+   "obtenido": {
+    "accion": "responder",
+    "texto": "Puedo verificar existencias, precios, productos agotados, hacer pedidos, revisar ventas, y ayudarte con inventarios o movimientos. También puedo recordar cosas o ajustar datos si necesitas."
+   },
+   "fallas": [],
+   "total_s": 5.43,
+   "prompt_tokens": 10,
+   "prompt_ms": 461,
+   "gen_tokens": 55,
+   "gen_ms": 4952
+  },
+  {
+   "texto": "Muchas gracias",
+   "obtenido": {
+    "accion": "responder",
+    "texto": "De nada. ¿Hay algo más en lo que pueda ayudarte?"
+   },
+   "fallas": [],
+   "total_s": 2.43,
+   "prompt_tokens": 8,
+   "prompt_ms": 352,
+   "gen_tokens": 24,
+   "gen_ms": 2067
+  },
+  {
+   "texto": "¿Qué diferencia hay entre el tubo de presión y el sanitario?",
+   "obtenido": {
+    "accion": "responder",
+    "texto": "El tubo de presión es un componente para sistemas de agua o gas, mientras que el sanitario es un elemento de baño para descarga de residuos. Son productos distintos y sirven funciones diferentes."
+   },
+   "fallas": [],
+   "total_s": 5.58,
+   "prompt_tokens": 21,
+   "prompt_ms": 752,
+   "gen_tokens": 53,
+   "gen_ms": 4809
+  },
+  {
+   "texto": "¿Qué día entrega el de cemento?",
+   "obtenido": {
+    "accion": "responder",
+    "texto": "El proveedor de cemento entrega los martes."
+   },
+   "fallas": [],
+   "total_s": 2.41,
+   "prompt_tokens": 12,
+   "prompt_ms": 468,
+   "gen_tokens": 21,
+   "gen_ms": 1929
+  },
+  {
+   "texto": "¿y en el norte?",
+   "obtenido": {
+    "accion": "existencia",
+    "producto": "cemento gris 50 kg",
+    "sede": "norte"
+   },
+   "fallas": [],
+   "total_s": 4.29,
+   "prompt_tokens": 64,
+   "prompt_ms": 1199,
+   "gen_tokens": 23,
+   "gen_ms": 3078
+  },
+  {
+   "texto": "¿y a cómo lo vendemos?",
+   "obtenido": {
+    "accion": "info_producto",
+    "producto": "cemento gris 50 kg`,`precio`"
+   },
+   "fallas": [],
+   "total_s": 2.42,
+   "prompt_tokens": 11,
+   "prompt_ms": 495,
+   "gen_tokens": 20,
+   "gen_ms": 1913
+  },
+  {
+   "texto": "sí, hágale",
+   "obtenido": {
+    "accion": "entrada",
+    "producto": "cemento gris 50 kg",
+    "cantidad": 20,
+    "motivo": "llegaron"
+   },
+   "fallas": [
+    "accion=entrada"
+   ],
+   "total_s": 4.4,
+   "prompt_tokens": 90,
+   "prompt_ms": 1844,
+   "gen_tokens": 28,
+   "gen_ms": 2542
+  },
+  {
+   "texto": "no, mejor no",
+   "obtenido": {
+    "accion": "responder",
+    "texto": "Entendido, no se realizará la entrada."
+   },
+   "fallas": [
+    "accion=responder"
+   ],
+   "total_s": 2.32,
+   "prompt_tokens": 9,
+   "prompt_ms": 483,
+   "gen_tokens": 21,
+   "gen_ms": 1823
+  },
+  {
+   "texto": "la segunda",
+   "obtenido": {
+    "accion": "danado",
+    "producto": "brocha 2 pulgadas",
+    "cantidad": 1,
+    "motivo": "se dañó"
+   },
+   "fallas": [
+    "accion=danado",
+    "numero=None (esperaba 2)"
+   ],
+   "total_s": 4.56,
+   "prompt_tokens": 103,
+   "prompt_ms": 2003,
+   "gen_tokens": 29,
+   "gen_ms": 2545
+  },
+  {
+   "texto": "a treinta y dos mil quinientos",
+   "obtenido": {
+    "accion": "crear_producto",
+    "nombre": "cemento blanco 25 kg",
+    "precio": 32500,
+    "costo": 26000,
+    "unidad": "kilos",
+    "categoria": "construcción",
+    "codigo": null,
+    "cantidad": 0,
+    "minimo": 10,
+    "maximo": 50,
+    "iva": 19
+   },
+   "fallas": [],
+   "total_s": 8.31,
+   "prompt_tokens": 86,
+   "prompt_ms": 1691,
+   "gen_tokens": 71,
+   "gen_ms": 6603
+  }
+ ]
+}

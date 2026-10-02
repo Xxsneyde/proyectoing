@@ -1,0 +1,14 @@
+# Render (render.com): New → Blueprint → elegir este repositorio. Plan gratis.
+# Arranca con datos de demostración nuevos cada vez (el disco del plan gratis no es permanente).
+services:
+  - type: web
+    name: ferreteria-erp
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python servidor_erp.py --nube
+    healthCheckPath: /ingresar
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7

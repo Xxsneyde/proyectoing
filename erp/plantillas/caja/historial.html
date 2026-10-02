@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% from "macros.html" import vacio %}
+{% block titulo %}Cierres de caja{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <div><div class="migas"><a href="/caja">Caja</a></div><h1>Cierres de caja</h1><p>Últimos 120 cierres</p></div>
+</div>
+{% if por_usuario|length > 1 %}
+<section class="tarjeta">
+  <div class="tarjeta-titulo"><div><h2>Descuadres por cajero</h2><p>Suma de diferencias: negativo es faltante</p></div></div>
+  <div class="tarjeta-cuerpo"><table class="tabla">
+    <thead><tr><th>Cajero</th><th class="num">Cierres</th><th class="num">Con diferencia</th><th class="num">Neto</th></tr></thead>
+    <tbody>{% for u in por_usuario %}<tr><td><b>{{ u.usuario }}</b></td><td class="num">{{ u.cierres }}</td>
+      <td class="num">{% if u.descuadres %}<span class="insignia {{ 'serio' if u.descuadres > 2 else 'aviso' }}">{{ u.descuadres }}</span>{% else %}0{% endif %}</td>
+      <td class="num" style="color:{{ 'var(--critico-texto)' if u.neto < 0 else 'inherit' }}"><b>{{ u.neto|pesos }}</b></td></tr>{% endfor %}</tbody>
+  </table></div>
+</section>
+{% endif %}
+<section class="tarjeta">
+  {% if filas %}
+  <div class="tabla-contenedor"><table class="tabla">
+    <thead><tr><th>Cierre</th><th>Cajero</th><th class="ocultar-movil">Sede</th><th class="num ocultar-movil">Contado</th><th class="num">Diferencia</th></tr></thead>
+    <tbody>{% for c in filas %}<tr>
+      <td><a class="fila-enlace" href="/caja/{{ c.id }}">{{ c.cerrada|fecha }}</a></td><td>{{ c.usuario }}</td><td class="ocultar-movil secundario">{{ c.sede }}</td>
+      <td class="num ocultar-movil">{{ c.efectivo_contado|pesos }}</td>
+      <td class="num">{% if c.diferencia == 0 %}<span class="insignia bien">Cuadró</span>{% else %}<span class="insignia {{ 'critico' if c.diferencia < 0 else 'aviso' }}">{{ c.diferencia|pesos }}</span>{% endif %}</td>
+    </tr>{% endfor %}</tbody>
+  </table></div>
+  {% else %}{{ vacio('Todavía no hay cierres', '', 'caja') }}{% endif %}
+</section>
+{% endblock %}

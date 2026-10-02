@@ -1,0 +1,16 @@
+bench/audios/
+bench/real/
+bench/resultados/*.log
+certs/
+datos/
+*.db
+*.db-shm
+*.db-wal
+models/
+*.pyc
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+tests/capturas/
+tools/
+.venv/
